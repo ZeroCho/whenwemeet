@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion
@@ -49,6 +50,8 @@ crashlytics-build.properties
 
 
 ### Node template
+=======
+>>>>>>> 2eeedf6a466734892a0f0a9137e8ddd328304dc7
 # Logs
 logs
 *.log
@@ -74,7 +77,12 @@ coverage
 build/Release
 
 # Dependency directory
+<<<<<<< HEAD
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
 
 
+=======
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+>>>>>>> 2eeedf6a466734892a0f0a9137e8ddd328304dc7
