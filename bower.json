@@ -1,0 +1,25 @@
+{
+  "name": "whenwemeet",
+  "version": "0.1.0",
+  "authors": [
+    "ZeroCho <zerohch0@gmail.com>"
+  ],
+  "description": "application that shows graphically when people can meet",
+  "main": "app.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "homepage": "zeroit.info",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "dustjs-linkedin": "~2.7.2",
+  }
+}
