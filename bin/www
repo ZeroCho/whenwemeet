@@ -4,37 +4,29 @@
  */
 var app = require('../app');
 var debug = require('debug')('whenwemeet:server');
-var https = require('https');
 var http = require('http');
 var fs = require('fs');
-var options = {
-	key: fs.readFileSync('conf/key.pem'),
-	cert: fs.readFileSync('conf/cert.pem')
-};
+
 /**
  * Get port from environment and store in Express.
  */
 
-var port1 = normalizePort(process.env.PORT || '1045');
-var port2 = normalizePort(process.env.PORT || '1046');
+var port = normalizePort(process.env.PORT || '4000');
 /**
  * Create HTTP server.
  */
 var httpServer = http.createServer(app);
-var httpsServer = https.createServer(options, app);
-var io = require('socket.io').listen(httpsServer);
+var io = require('socket.io').listen(httpServer);
 io.on('connection', function (socket) {
 	console.log('a user connected');
 });
 /**
  * Listen on provided port, on all network interfaces.
  */
-httpServer.listen(port1);
-httpsServer.listen(port2, function () {
-	console.log('listening on *:' + port2);
-});
-httpsServer.on('error', onError);
-httpsServer.on('listening', onListening);
+httpServer.listen(port);
+
+httpServer.on('error', onError);
+httpServer.on('listening', onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
@@ -59,9 +51,9 @@ function onError(error) {
 	if (error.syscall !== 'listen') {
 		throw error;
 	}
-	var bind = typeof port2 === 'string'
-		? 'Pipe ' + port2
-		: 'Port ' + port2;
+	var bind = typeof port === 'string'
+		? 'Pipe ' + port
+		: 'Port ' + port;
 	// handle specific listen errors with friendly messages
 	switch (error.code) {
 		case 'EACCES':
@@ -81,7 +73,7 @@ function onError(error) {
  */
 
 function onListening() {
-	var addr = httpsServer.address();
+	var addr = httpsr.address();
 	var bind = typeof addr === 'string'
 		? 'pipe ' + addr
 		: 'port ' + addr.port;
