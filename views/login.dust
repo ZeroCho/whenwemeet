@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko_KR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>우리 언제 만나</title>
+	<link rel="stylesheet" href="dist/whenwemeet.min.css"/>
+</head>
+<body>
+<div id="whenwemeet">
+	<div id="logo"></div>
+	<div id="login">
+		<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png">
+		<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+	</div>
+</div>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script>
+$('#kakao-login-btn').on({
+			click: function () {
+				location.href = '/login/kakao';
+			},
+			mouseover: function () {
+				this.src = '/kakao_account_login_btn_medium_narrow_ov.png';
+			},
+			mouseout: function () {
+				this.src = '/kakao_account_login_btn_medium_narrow.png';
+			}
+		});
+</script>
+</html>

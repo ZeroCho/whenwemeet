@@ -9,17 +9,20 @@
 
 </head>
 <body>
-<div id="whenwemeet"></div>
+<div id="whenwemeet">
+	<div id="container"></div>
+	<div id="modal"></div>
+</div>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/dustjs-linkedin/dist/dust-full.js"></script>
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script src="dist/whenwemeet.js"></script>
-<script type="text/dust" id="wwm-front">
-<div id="logo"></div>
-<div id="login">
-<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png">
-	<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-</div>
+<script type="text/dust" id="wwm-login">
+	<div id="logo"></div>
+	<div id="login">
+		<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png">
+		<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+	</div>
 </script>
 <script type="text/dust" id="wwm-lobby">
 	<div id="room-list">리스트</div>
