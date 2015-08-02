@@ -79,19 +79,19 @@ gulp.task('serve', ['build'], function () {
 });
 gulp.task('scripts', ['js:uglify']);
 gulp.task('styles', function () {
-	gulp.src(dir.sass.src)
-		.pipe(plumber(plumberErrorHandler))
-		.pipe(compass({
-			css: dir.js.dest,
-			sass: dir.sass.compassSrc
-		}))
-		.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie9', 'opera 12.1', 'ios 6'))
-		.pipe(rename('whenwemeet.css'))
-		.pipe(gulp.dest(dir.js.dest))
-		.pipe(minifycss())
-		.pipe(rename({suffix: '.min'}))
-		.pipe(gulp.dest(dir.js.dest))
-		.pipe(gulp.dest(dir.www.dist));
+	//gulp.src(dir.sass.src)
+	//	.pipe(plumber(plumberErrorHandler))
+	//	.pipe(compass({
+	//		css: dir.js.dest,
+	//		sass: dir.sass.compassSrc
+	//	}))
+	//.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie9', 'opera 12.1', 'ios 6'))
+	//	.pipe(rename('whenwemeet.css'))
+	//	.pipe(gulp.dest(dir.js.dest))
+	//	.pipe(minifycss())
+	//	.pipe(rename({suffix: '.min'}))
+	//	.pipe(gulp.dest(dir.js.dest))
+	//.pipe(gulp.dest(dir.www.dist));
 });
 gulp.task('clean', function () {
 	del([dir.js.dest + '*']);

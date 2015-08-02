@@ -20,7 +20,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({secret: 'wwmsec'}));
+app.use(session({secret: 'wwmsec', saveUninitialized: true, resave: true}));
 app.use(express.static(path.join(__dirname, 'public')));
 var passport = require('./passport')(app);
 var routes = require('./routes/index')(passport);
