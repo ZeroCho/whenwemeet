@@ -6,8 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var adaro = require('adaro');
-var passport = require('./passport')(app);
-var routes = require('./routes/index')(passport);
 
 var app = express();
 
@@ -24,6 +22,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret: 'wwmsec'}));
 app.use(express.static(path.join(__dirname, 'public')));
+var passport = require('./passport')(app);
+var routes = require('./routes/index')(passport);
 
 app.use('/', routes);
 
