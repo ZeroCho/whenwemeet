@@ -11,20 +11,20 @@ wwm.shell = (function () {
 	function initModule($con) {
 		var logged = localStorage.login && !!JSON.parse(localStorage.login);
 		var first = localStorage.login && JSON.parse(localStorage.first);
-		if (first) {
-			wwm.modal.initModule($('#wwm-intro').html());
-		}
+		//if (first) {
+		//	wwm.modal.initModule($('#wwm-intro').html());
+		//}
 		if (logged) {
-			wwm.lobby.initModule($con);
+			wwm.lobby.initModule(jqMap.$view);
 		} else {
-			$container.html($('#wwm-login').html());
+			$con.find('#view').html($('#wwm-login').html());
 			setJqMap($con);
 			jqMap.$kakaoLogin.on({
 				click: function () {
 					$.get('/login/kakao').done(function (res) {
 						if (res === 'success') {
 							alert('로그인되었습니다!');
-							wwm.lobby.initModule($container);
+							wwm.lobby.initModule(jqMap.$view);
 						}
 					}).fail(function (err) {
 						alert(err);

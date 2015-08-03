@@ -6,11 +6,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<title>우리 언제 만나</title>
 	<link rel="stylesheet" href="dist/whenwemeet.css"/>
-
 </head>
 <body>
 <div id="whenwemeet">
-	<div id="container"></div>
+	<div id="view"></div>
 	<div id="modal"></div>
 </div>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
