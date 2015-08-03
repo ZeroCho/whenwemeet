@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var adaro = require('adaro');
+var Pgb = require('pg-bluebird');
+var pgb = new Pgb();
 
 var app = express();
 
@@ -22,8 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret: 'wwmsec', saveUninitialized: true, resave: true}));
 app.use(express.static(path.join(__dirname, 'public')));
-var passport = require('./passport')(app);
-var routes = require('./routes/index')(passport);
+var passport = require('./passport')(app, pgb);
+var routes = require('./routes/index')(passport, pgb);
 
 app.use('/', routes);
 
