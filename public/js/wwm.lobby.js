@@ -1,6 +1,7 @@
 wwm.lobby = (function (){
+	var jqMap;
 	function setJqMap ($container) {
-		var jqMap = {
+		jqMap = {
 			$container: $container,
 			$showCreateroom: $container.find('#show-createroom-modal'),
 			$searchroomBtn: $container.find('#searchroom-btn')
