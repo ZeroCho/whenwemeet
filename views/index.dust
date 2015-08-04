@@ -18,7 +18,7 @@
 <script src="dist/whenwemeet.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/dust" id="wwm-login">
-	<div id="logo"></div>
+	<div id="logo">우리언제만나</div>
 	<div id="login">
 		<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png">
 		<a id="fb-login-btn">페이스북</a>
