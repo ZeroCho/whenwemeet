@@ -1,15 +1,16 @@
 wwm.lobby = (function (){
 	var jqMap;
 	var userInfo;
-	function setJqMap ($container) {
+	function setJqMap ($con) {
 		jqMap = {
-			$container: $container,
-			$showCreateroom: $container.find('#show-createroom-modal'),
-			$searchroomBtn: $container.find('#searchroom-btn'),
-			$logout: $container.find('#logout-btn')
+			$con: $con,
+			$showCreateroom: $con.find('#show-createroom-modal'),
+			$searchroomBtn: $con.find('#searchroom-btn'),
+			$list: $con.find('#room-list'),
+			$logout: $con.find('#logout-btn')
 		};
 	}
-	function initModule ($container) {
+	function initModule ($con) {
 		userInfo = JSON.parse(localStorage.login);
 		var src = $('#wwm-lobby').text();
 		dust.render(dust.loadSource(dust.compile(src)), {
@@ -17,7 +18,7 @@ wwm.lobby = (function (){
 		}, function(err, out) {
 			$container.html(out);
 		}
-		setJqMap($container);
+		setJqMap($con);
 		getList();
 		jqMap.$showCreateroom.click(showCreateroom);
 		jqMap.$searchroomBtn.click(onSearchRoom);
@@ -28,16 +29,15 @@ wwm.lobby = (function (){
 	}
 	function getList() {
 		$.get('/roomlist').done(function(res){
-			
+			jqMap.$list.html();
 		});
 	}
 	function changeList(data) {
-		
+		var $frag = $(document.createDocumentFragment());
+		jqMap.$list.html();
 	}
 	function onSearchRoom (query) {
-		$.get('/search', {
-			query: query
-		}, function(res) {
+		$.get('/search/' + query, function(res) {
 			changeList(res);
 		});
 	}
