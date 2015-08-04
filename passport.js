@@ -16,7 +16,7 @@ module.exports = function (app) {
 	passport.use(new FacebookStrategy({
 		clientID: '936431363034863',
 		clientSecret: '4c24c1d1d9b4a12351d69c05a9d43213',
-		callbackURL: "http://www.zeroit.info/oauth/facebook"
+		callbackURL: "/oauth/facebook"
 	}, function(accessToken, refreshToken, profile, done) {
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
@@ -31,7 +31,7 @@ module.exports = function (app) {
 
 	passport.use(new KakaoStrategy({    
 		clientID : 'bd5a25909c1a4e32759f75a44b9abc45',
-		callbackURL : 'http://whenwemeet.herokuapp.com/oauth/kakao'
+		callbackURL : '/oauth/kakao'
 	}, function(accessToken, refreshToken, profile, done){
 		console.log("accessToken: " + accessToken);
 
