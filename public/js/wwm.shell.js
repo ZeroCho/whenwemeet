@@ -28,14 +28,14 @@ wwm.shell = (function () {
 			jqMap.$kakaoLogin.on({
 				click: function() {
 					Kakao.Auth.login({
-		        success: function(authObj) {
-		        	localStorage.login = JSON.stringify(res);
+					        success: function(authObj) {
+					        	localStorage.login = JSON.stringify(authObj);
 							wwm.lobby.initModule(jqMap.$view);
-		        },
-		        fail: function(err) {
-		        	alert(JSON.stringify(err))
-		        }
-		      });
+					        },
+					        fail: function(err) {
+					        	alert(JSON.stringify(err))
+					        }
+					});
 				},
 				mouseover: function() {
 					this.src = '/kakao_account_login_btn_medium_narrow_ov.png';
