@@ -18,7 +18,7 @@ wwm.lobby = (function (){
 			name: userInfo.username
 		}, function(err, out) {
 			$container.html(out);
-		}
+		});
 		setJqMap($con);
 		getList();
 		jqMap.$showCreateroom.click(showCreateroom);
