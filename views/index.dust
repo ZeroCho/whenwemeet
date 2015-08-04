@@ -105,7 +105,7 @@
 	</main>
 	<footer>
 		<div id="my-menu">
-			{@if cond="admin === true"}
+			{@eq key="admin" value=true}
 			<div id="admin-menu">
 				<button>관리자 메뉴</button>
 				<ul>
@@ -119,7 +119,7 @@
 					<li id="explode-room">방 폭파</li>
 				</ul>
 			</div>
-			{:/if}
+			{/eq}
 			<div id="day-exception">
 				<button>요일 예외</button>
 				<ul>
