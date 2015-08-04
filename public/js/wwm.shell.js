@@ -16,28 +16,38 @@ wwm.shell = (function () {
 		//}
 		if (logged) {
 			wwm.lobby.initModule(jqMap.$view);
-		} else {
-			$con.find('#view').html($('#wwm-login').html());
-			setJqMap($con);
-			jqMap.$kakaoLogin.on({
-				click: function () {
-					$.get('/login/kakao').done(function (res) {
-						if (res === 'success') {
-							alert('로그인되었습니다!');
-							wwm.lobby.initModule(jqMap.$view);
-						}
-					}).fail(function (err) {
-						console.log(err);
-						alert('오류 발생! 콘솔 확인');
-					});
-				},
-				mouseover: function () {
-					this.src = '/kakao_account_login_btn_medium_narrow_ov.png';
-				},
-				mouseout: function () {
-					this.src = '/kakao_account_login_btn_medium_narrow.png';
-				}
-			});
+			return;
+		}
+		$.get('/status').done(function(res) {
+			if (res) {
+				localStorage.login = JSON.stringify(res);
+				wwm.lobby.initModule(jqMap.$view);
+			} else {
+				$con.find('#view').html($('#wwm-login').html());
+				setJqMap($con);
+				jqMap.$kakaoLogin.on({
+					click: function () {
+						$.get('/oauth/kakao').done(function (res) {
+							if (res === 'success') {
+								alert('로그인되었습니다!');
+								wwm.lobby.initModule(jqMap.$view);
+							}
+						}).fail(function (err) {
+							console.log(err);
+							alert('오류 발생! 콘솔 확인');
+						});
+					},
+					mouseover: function () {
+						this.src = '/kakao_account_login_btn_medium_narrow_ov.png';
+					},
+					mouseout: function () {
+						this.src = '/kakao_account_login_btn_medium_narrow.png';
+					}
+				});
+			}
+		});
+		if (logged) {
+		
 		}		
 		Kakao.init('a35623411563ec424430d3bd5dc7a93e');
 	}
