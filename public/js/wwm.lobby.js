@@ -12,7 +12,9 @@ wwm.lobby = (function (){
 	function initModule ($container) {
 		userInfo = JSON.parse(localStorage.login);
 		var src = $('#wwm-lobby').text();
-		dust.render(dust.loadSource(dust.compile(src)), function(err, out) {
+		dust.render(dust.loadSource(dust.compile(src)), {
+			name: userInfo.username
+		}, function(err, out) {
 			$container.html(out);
 		}
 		setJqMap($container);
