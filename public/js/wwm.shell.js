@@ -27,7 +27,8 @@ wwm.shell = (function () {
 							wwm.lobby.initModule(jqMap.$view);
 						}
 					}).fail(function (err) {
-						alert(err);
+						console.log(err);
+						alert('오류 발생! 콘솔 확인');
 					});
 				},
 				mouseover: function () {
