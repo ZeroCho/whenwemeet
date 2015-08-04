@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko_KR">
 <head>
 	<meta charset="utf-8">
@@ -105,6 +105,20 @@
 	</main>
 	<footer>
 		<div id="my-menu">
+			{@if cond="admin === true"}
+			<div id="admin-menu">
+				<ul>
+					<li id="ban-people">
+						<select id="member-list'>
+						</select>
+						강퇴
+					</li>
+					<li id="change-room-title>방 제목 변경</li>
+					<li>인원수 조정 <b id="room-people-number"></b><button id="change-number-btn">변경</button></li>
+					<li id="explode-room">방 폭파</li>
+				</ul>
+			</div>
+			{:/if}
 			<div id="day-exception">
 				<ul>
 					<li>월요일은 안 돼요</li>
