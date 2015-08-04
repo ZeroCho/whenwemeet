@@ -9,8 +9,10 @@ wwm.shell = (function () {
 		};
 	}
 	function initModule($con) {
+		console.log('login: ' + localStorage.login);
+		console.log('first: ' + localStorage.first)
 		var logged = localStorage.login && !!JSON.parse(localStorage.login);
-		var first = localStorage.login && JSON.parse(localStorage.first);
+		var first = localStorage.first && JSON.parse(localStorage.first);
 		//if (first) {
 		//	wwm.modal.initModule($('#wwm-intro').html());
 		//}
