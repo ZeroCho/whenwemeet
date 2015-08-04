@@ -17,7 +17,7 @@ wwm.lobby = (function (){
 		dust.render(dust.loadSource(dust.compile(src)), {
 			name: userInfo.username
 		}, function(err, out) {
-			$container.html(out);
+			$con.html(out);
 		});
 		setJqMap($con);
 		getList();
