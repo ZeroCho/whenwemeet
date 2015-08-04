@@ -24,6 +24,7 @@
 	</div>
 </script>
 <script type="text/dust" id="wwm-lobby">
+	<p>{user.username}님 안녕하세요!</p>
 	<a href="/logout"><button>로그아웃</button></a>
 	<div id="room-list">리스트</div>
 	<button id="show-createroom-modal">방 만들기</button>
