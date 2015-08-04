@@ -14,14 +14,18 @@ module.exports = function (passport) {
 			});
 		}
 	});
-	router.get('/login/kakao', passport.authenticate('kakao'));
+	router.get('/status', function(req, res) {
+		console.log(req.user);
+		res.send(req.user);
+	});
+	//router.get('/login/kakao', passport.authenticate('kakao'));
 	router.get('/oauth/kakao', passport.authenticate('kakao', {
 	    failureRedirect: '/'
 	}), function (req, res) {
 		console.log('kakao login success!');
 		res.send('success');
 	});
-	router.get('/login/facebook', passport.authenticate('facebook'));
+	//router.get('/login/facebook', passport.authenticate('facebook'));
 	router.get('/oauth/facebook', passport.authenticate('facebook', {
 	    failureRedirect: '/'
 	}), function (req, res) {
