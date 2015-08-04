@@ -19,6 +19,9 @@ var httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer);
 io.on('connection', function (socket) {
 	console.log('a user connected');
+	socket.on('disconnect', function(){
+		console.log('user disconnected');
+	});
 });
 /**
  * Listen on provided port, on all network interfaces.
