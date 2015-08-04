@@ -5,17 +5,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<title>우리 언제 만나</title>
-	<link rel="stylesheet" href="dist/whenwemeet.css"/>
+	<link rel="stylesheet" href="/dist/whenwemeet.css"/>
 </head>
 <body>
 <div id="whenwemeet">
 	<div id="view"></div>
 	<div id="modal"></div>
 </div>
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script src="dist/whenwemeet.js"></script>
+<script src="/dist/whenwemeet.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/dust" id="wwm-login">
 	<div id="logo">우리언제만나</div>
