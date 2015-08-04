@@ -27,15 +27,7 @@ wwm.shell = (function () {
 				setJqMap($con);
 				jqMap.$kakaoLogin.on({
 					click: function () {
-						$.get('/oauth/kakao').done(function (res) {
-							if (res === 'success') {
-								alert('로그인되었습니다!');
-								wwm.lobby.initModule(jqMap.$view);
-							}
-						}).fail(function (err) {
-							console.log(err);
-							alert('오류 발생! 콘솔 확인');
-						});
+						location.href = '/login/kakao';
 					},
 					mouseover: function () {
 						this.src = '/kakao_account_login_btn_medium_narrow_ov.png';
