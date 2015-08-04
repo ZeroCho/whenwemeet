@@ -16,7 +16,7 @@ var port = normalizePort(process.env.PORT || '4000');
  * Create HTTP server.
  */
 var httpServer = http.createServer(app);
-var io = require('socket.io').listen(httpServer);
+var io = require('socket.io')(httpServer);
 io.on('connection', function (socket) {
 	console.log('a user connected');
 });
