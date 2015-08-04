@@ -36,7 +36,7 @@
 		<button id="show-createroom-modal">방 만들기</button>
 		<div id="search">
 			<input type="text" placeholder="방 제목"/>
-			<div id="searchroom-button">방 검색</div>
+			<button id="searchroom-button">방 검색</button>
 		</div>
 	</footer>
 </script>

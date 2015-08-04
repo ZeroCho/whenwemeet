@@ -13,10 +13,12 @@ wwm.lobby = (function (){
 	}
 	function initModule($con) {
 		userInfo = JSON.parse(localStorage.login);
+		console.log('lobby', localStorage.login);
 		var src = $('#wwm-lobby').text();
-		dust.render(dust.loadSource(dust.compile(src)), {
+		console.log(src);	dust.render(dust.loadSource(dust.compile(src)), {
 			name: userInfo.username
 		}, function(err, out) {
+			console.log(out);
 			$con.html(out);
 		});
 		setJqMap($con);
