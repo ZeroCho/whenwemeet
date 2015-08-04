@@ -3,20 +3,10 @@ var router = express.Router();
 
 module.exports = function (passport) {
 	router.get('/', function(req, res, next) {
-		if (req.user) {
-			res.render('index', {
-				title: '우리언제만나',
-				user: req.user
-			});
-		} else {
-			res.render('login', {
-				title: '로그인::우리언제만나'
-			});
-		}
-	});
-	router.get('/status', function(req, res) {
-		console.log(req.user);
-		res.send(req.user);
+		res.render('index', {
+			title: '우리언제만나',
+			user: req.user
+		});		
 	});
 	router.get('/login/kakao', passport.authenticate('kakao'));
 	router.get('/oauth/kakao', passport.authenticate('kakao', {
