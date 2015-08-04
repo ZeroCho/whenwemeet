@@ -50,7 +50,6 @@ wwm.shell = (function () {
 			});
 		}
 		$(window).on('error', onError);
-	};
 	}
 	return {
 		initModule: initModule
