@@ -17,11 +17,13 @@ wwm.shell = (function () {
 		//if (first) {
 		//	wwm.modal.initModule($('#wwm-intro').html());
 		//}
+		console.log('logged: ', logged);
 		if (logged) {
 			wwm.lobby.initModule(jqMap.$view);
 			return;
 		}
 		$.get('/status').done(function(res) {
+			console.log('res: ', res)
 			if (res) {
 				localStorage.login = JSON.stringify(res);
 				wwm.lobby.initModule(jqMap.$view);
