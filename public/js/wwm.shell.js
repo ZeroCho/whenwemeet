@@ -9,6 +9,9 @@ wwm.shell = (function () {
 			$kakaoLogin: $con.find('#kakao-login-btn')
 		};
 	}
+	function onError = function (errorMsg, url, lineNumber, column, errorObj) {
+		if (typeof errorMsg === 'string' && errorMsg.indexOf('Script error.') > -1) { return; }
+		console.log('Error: ', errorMsg, ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' + errorObj);
 	function initModule($con) {
 		console.log('login: ' + localStorage.login);
 		console.log('first: ' + localStorage.first)
@@ -45,6 +48,8 @@ wwm.shell = (function () {
 				}
 			});
 		}
+		$(window).on('error', onError);
+	};
 	}
 	return {
 		initModule: initModule
