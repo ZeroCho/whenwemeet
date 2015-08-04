@@ -22,17 +22,17 @@ io.on('connection', function (socket) {
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
 	});
+	socket.on('busy', function(msg) {
+		io.emit('busy', msg);
+	});
+	socket.on('not-busy', function(msg) {
+		io.emit('not-busy', msg);
+	});
 });
-/**
- * Listen on provided port, on all network interfaces.
- */
-httpServer.listen(port);
 
+httpServer.listen(port);
 httpServer.on('error', onError);
 httpServer.on('listening', onListening);
-/**
- * Normalize a port into a number, string, or false.
- */
 
 function normalizePort(val) {
 	var port = parseInt(val, 10);
@@ -46,9 +46,6 @@ function normalizePort(val) {
 	}
 	return false;
 }
-/**
- * Event listener for HTTP server "error" event.
- */
 
 function onError(error) {
 	if (error.syscall !== 'listen') {
@@ -71,9 +68,6 @@ function onError(error) {
 			throw error;
 	}
 }
-/**
- * Event listener for HTTP server "listening" event.
- */
 
 function onListening() {
 	var addr = httpServer.address();
