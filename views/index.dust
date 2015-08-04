@@ -143,6 +143,10 @@
 		<div id="my-info">
 			{name}
 		</div>
+		<div id="chat">
+			<input id="chatbox"/>
+			<button id="send-chat">전송</button>
+		</div>
 	</footer>
 </script>
 </body>
