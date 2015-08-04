@@ -14,8 +14,8 @@ wwm.lobby = (function (){
 	function initModule($con) {
 		userInfo = JSON.parse(localStorage.login);
 		console.log('lobby', localStorage.login);
-		var src = $('#wwm-lobby').text();
-		console.log(src);	dust.render(dust.loadSource(dust.compile(src)), {
+		var src = $('#wwm-lobby').html();
+		console.log(userInfo.properties.nickname);	dust.render(dust.loadSource(dust.compile(src)), {
 			name: userInfo.properties.nickname
 		}, function(err, out) {
 			console.log(out);
