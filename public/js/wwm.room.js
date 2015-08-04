@@ -14,14 +14,18 @@ wwm.room = (function(){
   }
   function onClickCell() {
     if ($(this).hasClass('busy')) {
-      socket.emit('not-busy', tableToArr($(this)));
+      socket.emit('not-busy', tableToArr(this));
       $(this).removeClass('busy');
     } else {
-      socket.emit('busy', tableToArr($(this)));
+      socket.emit('busy', tableToArr(this));
       $(this).addClass('busy');
     }
   }
-  function tableToArr() {}
+  function tableToArr(cell) {
+    var arr = [cell.cellIndex, cell.parentNode.rowIndex];
+    console.log('tableToArr', arr);
+    return arr;
+  }
   function initModule($con) {
     userInfo = JSON.parse(localStorage.login);
     var src = $('#wwm-room').text();
