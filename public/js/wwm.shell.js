@@ -32,13 +32,21 @@ wwm.shell = (function () {
 			jqMap.$kakaoLogin.on({
 				click: function() {
 					Kakao.Auth.login({
-					        success: function(authObj) {
-					        	localStorage.login = JSON.stringify(authObj);
-							wwm.lobby.initModule(jqMap.$view);
-					        },
-					        fail: function(err) {
-					        	alert(JSON.stringify(err))
-					        }
+					 success: function(authObj) {
+					  Kakao.API.request({
+    					url: '/v1/user/me',
+       		success: function(res) {
+       			localStorage.login = JSON.stringify(res);
+								wwm.lobby.initModule(jqMap.$view);
+    				 },
+     				fail: function(error) {
+    						 alert(JSON.stringify(error))
+    						}
+							});			     
+						},
+						fail: function(err) {
+					  alert(JSON.stringify(err))
+					 }
 					});
 				},
 				mouseover: function() {
