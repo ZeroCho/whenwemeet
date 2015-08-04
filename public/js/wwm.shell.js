@@ -45,10 +45,10 @@ wwm.shell = (function () {
 					}
 				});
 			}
+		}).fail(function(err) {
+			console.log(err);
+			alert('인터넷 연결이 필요합니다.');
 		});
-		if (logged) {
-		
-		}		
 		Kakao.init('a35623411563ec424430d3bd5dc7a93e');
 	}
 	return {
