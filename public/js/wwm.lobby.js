@@ -1,5 +1,6 @@
 wwm.lobby = (function (){
 	var jqMap;
+	var userInfo;
 	function setJqMap ($container) {
 		jqMap = {
 			$container: $container,
@@ -9,7 +10,11 @@ wwm.lobby = (function (){
 		};
 	}
 	function initModule ($container) {
-		$container.html($('#wwm-lobby').html());
+		userInfo = JSON.parse(localStorage.login);
+		var src = $('#wwm-lobby').text();
+		dust.render(dust.loadSource(dust.compile(src)), function(err, out) {
+			$container.html(out);
+		}
 		setJqMap($container);
 		jqMap.$showCreateroom.click(showCreateroom);
 		jqMap.$searchroomBtn.click(onSearchRoom);
