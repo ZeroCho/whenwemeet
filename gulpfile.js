@@ -65,12 +65,12 @@ gulp.task('watch', ['clean'], function () {
 			.pipe(plumber(plumberErrorHandler))
 			.pipe(livereload());
 	});
-	gulp.watch(['public/phonegapHandler.js'], function (event) {
-		gulp.src(event.path)
-			.pipe(plumber(plumberErrorHandler))
-			.pipe(gulp.dest(dir.www.index))
-			.pipe(livereload());
-	});
+	//gulp.watch(['public/phonegapHandler.js'], function (event) {
+	//	gulp.src(event.path)
+	//		.pipe(plumber(plumberErrorHandler))
+	//		.pipe(gulp.dest(dir.www.index))
+	//		.pipe(livereload());
+	//});
 });
 gulp.task('serve', ['build'], function () {
 	return nodemon({
@@ -107,16 +107,16 @@ gulp.task('js:concat', function () {
 		])
 		.pipe(plumber(plumberErrorHandler))
 		.pipe(concat(dir.js.filename))
-		.pipe(gulp.dest(dir.js.dest))
-		.pipe(gulp.dest(dir.www.dist));
+		//.pipe(gulp.dest(dir.www.dist))
+		.pipe(gulp.dest(dir.js.dest));
 });
 gulp.task('js:uglify', ['js:concat'], function () {
 	gulp.src(dir.js.dest + dir.js.filename)
 		.pipe(plumber(plumberErrorHandler))
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
-		.pipe(gulp.dest(dir.js.dest))
-		.pipe(gulp.dest(dir.www.dist));
+		//.pipe(gulp.dest(dir.www.dist))
+		.pipe(gulp.dest(dir.js.dest));
 });
 gulp.task('dust', function () {
 	gulp.src('views/index.dust')
@@ -124,12 +124,12 @@ gulp.task('dust', function () {
 		.pipe(dusthtml({
 			whitespace: true,
 			data: {
-				title: 'Zplanner'
+				title: '우리언제만나'
 			}
 		}))
 		.pipe(gulp.dest('public/'))
-		.pipe(gulp.dest(dir.www.index))
+		//.pipe(gulp.dest(dir.www.index))
 		.pipe(livereload());
-	gulp.src('public/zplanner.appcache')
+	gulp.src('public/wwm.appcache')
 		.pipe(gulp.dest(dir.www.index));
 });
