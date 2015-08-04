@@ -1,7 +1,21 @@
 wwm.modal = (function (){
-	function initModule($container, $target, options) {
-		var $div = $('<div/>').addClass('modal').append($target);
-		$container.append($div)
+	var stMap = {
+		$modal: $('#modal')
+	};
+	var jqMap;
+	function initModule($target) {
+		stMap.$modal.html($target);
+		setJqMap($target);
+		jqMap.$close.click(oncloseModal);
+	}
+	function setJqMap($con) {
+		jqMap = {
+			$con: $con,
+			$close: $con.find('.modal-close')
+		};
+	}
+	function onCloseModal() {
+		stMap.$modal.hide();
 	}
 	return {
 		initModule: initModule
