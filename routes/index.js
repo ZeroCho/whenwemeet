@@ -33,7 +33,6 @@ module.exports = function (passport) {
 		res.redirect('/');
 	});
 	router.get('/logout', function(req, res){
-		req.session.destroy()
 	  	req.logout();
 	  	console.log('logged out!')
 	  	res.redirect('/');
