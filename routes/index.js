@@ -23,14 +23,14 @@ module.exports = function (passport) {
 	    failureRedirect: '/'
 	}), function (req, res) {
 		console.log('kakao login success!');
-		res.send('success');
+		res.redirect('/');
 	});
 	router.get('/login/facebook', passport.authenticate('facebook'));
 	router.get('/oauth/facebook', passport.authenticate('facebook', {
 	    failureRedirect: '/'
 	}), function (req, res) {
 		console.log('facebook login success!');
-		res.send('success');
+		res.redirect('/');
 	});
 	router.get('/logout', function(req, res){
 		req.session.destroy()
