@@ -24,6 +24,7 @@
 	</div>
 </script>
 <script type="text/dust" id="wwm-lobby">
+	<a href="/logout"><button>로그아웃</button></a>
 	<div id="room-list">리스트</div>
 	<button id="show-createroom-modal">방 만들기</button>
 	<div id="search">
@@ -57,6 +58,7 @@
 	</main>
 	<footer>
 		<button id="create-room-btn">방생성</button>
+		<button class="modal-close">취소</button>
 	</footer>
 </script>
 </body>
