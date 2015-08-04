@@ -18,6 +18,7 @@ wwm.lobby = (function (){
 			$container.html(out);
 		}
 		setJqMap($container);
+		getList();
 		jqMap.$showCreateroom.click(showCreateroom);
 		jqMap.$searchroomBtn.click(onSearchRoom);
 		jqMap.$logout.click(onLogout);
@@ -25,8 +26,20 @@ wwm.lobby = (function (){
 	function showCreateroom () {
 		wwm.modal.initModule($('#wwm-createroom'));
 	}
-	function onSearchRoom () {
-	
+	function getList() {
+		$.get('/roomlist').done(function(res){
+			
+		});
+	}
+	function changeList(data) {
+		
+	}
+	function onSearchRoom (query) {
+		$.get('/search', {
+			query: query
+		}, function(res) {
+			changeList(res);
+		});
 	}
 	function onLogout() {
 		localStorage.removeItem('login');
