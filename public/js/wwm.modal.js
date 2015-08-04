@@ -7,6 +7,7 @@ wwm.modal = (function (){
 		stMap.$modal.html($target);
 		setJqMap($target);
 		jqMap.$close.click(oncloseModal);
+		stMap.$modal.show();
 	}
 	function setJqMap($con) {
 		jqMap = {
