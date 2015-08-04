@@ -50,18 +50,18 @@
 		<div>
 			<label for="room-people-number">인원수</label>
 			<select id="room-people-number">
-				<option value-"2"/>2
-				<option value-"3"/>3
-				<option value-"4"/>4
-				<option value-"5"/>5
-				<option value-"6"/>6
-				<option value-"7"/>7
-				<option value-"8"/>8
+				<option value="2"/>2
+				<option value="3"/>3
+				<option value="4"/>4
+				<option value="5"/>5
+				<option value="6"/>6
+				<option value="7"/>7
+				<option value="8"/>8
 			</select>
 		</div>
 		<div>
 			<label for="room-password">비밀번호</label>
-			<input id="room-password">
+			<input id="room-password" placeholer="빈칸이면 공개방">
 		</div>
 	</main>
 	<footer>
