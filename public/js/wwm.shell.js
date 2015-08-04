@@ -1,5 +1,6 @@
 wwm.shell = (function () {
 	var jqMap;
+	var KAKAO_KEY = 'a35623411563ec424430d3bd5dc7a93e';
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
@@ -14,39 +15,36 @@ wwm.shell = (function () {
 		var logged = localStorage.login && JSON.parse(localStorage.login);
 		var first = localStorage.first && JSON.parse(localStorage.first);
 		setJqMap($con);
+		Kakao.init(KAKAO_KEY);
 		//if (first) {
 		//	wwm.modal.initModule($('#wwm-intro').html());
 		//}
 		console.log('logged: ', logged);
 		if (logged) {
 			wwm.lobby.initModule(jqMap.$view);
-			return;
+		} else {
+			$con.find('#view').html($('#wwm-login').html());
+			setJqMap($con);
+			jqMap.$kakaoLogin.on({
+				click: function() {
+					Kakao.Auth.login({
+		        success: function(authObj) {
+		        	localStorage.login = JSON.stringify(res);
+							wwm.lobby.initModule(jqMap.$view);
+		        },
+		        fail: function(err) {
+		        	alert(JSON.stringify(err))
+		        }
+		      });
+				},
+				mouseover: function() {
+					this.src = '/kakao_account_login_btn_medium_narrow_ov.png';
+				},
+				mouseout: function() {
+					this.src = '/kakao_account_login_btn_medium_narrow.png';
+				}
+			});
 		}
-		$.get('/status').done(function(res) {
-			console.log('res: ', res)
-			if (res) {
-				localStorage.login = JSON.stringify(res);
-				wwm.lobby.initModule(jqMap.$view);
-			} else {
-				$con.find('#view').html($('#wwm-login').html());
-				setJqMap($con);
-				jqMap.$kakaoLogin.on({
-					click: function () {
-						location.href = '/login/kakao';
-					},
-					mouseover: function () {
-						this.src = '/kakao_account_login_btn_medium_narrow_ov.png';
-					},
-					mouseout: function () {
-						this.src = '/kakao_account_login_btn_medium_narrow.png';
-					}
-				});
-			}
-		}).fail(function(err) {
-			console.log(err);
-			alert('인터넷 연결이 필요합니다.');
-		});
-		Kakao.init('a35623411563ec424430d3bd5dc7a93e');
 	}
 	return {
 		initModule: initModule
