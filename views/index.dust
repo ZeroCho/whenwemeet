@@ -13,25 +13,31 @@
 	<div id="modal"></div>
 </div>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/dustjs-linkedin/dist/dust-full.js"></script>
+<script src="bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script src="dist/whenwemeet.js"></script>
 <script type="text/dust" id="wwm-login">
 	<div id="logo"></div>
 	<div id="login">
 		<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png">
-		<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+		<a id="fb-login-btn">페이스북</a>
 	</div>
 </script>
 <script type="text/dust" id="wwm-lobby">
-	<p>{name}님 안녕하세요!</p>
-	<button id="logout-btn">로그아웃</button>
-	<div id="room-list">리스트</div>
-	<button id="show-createroom-modal">방 만들기</button>
-	<div id="search">
-		<input type="text" placeholder="방 제목"/>
-		<div id="searchroom-button">방 검색</div>
-	</div>
+	<header>
+		<p>{name}님 안녕하세요!</p>
+	</header>
+	<main>
+		<button id="logout-btn">로그아웃</button>
+		<div id="room-list">리스트</div>
+	</main>
+	<footer>
+		<button id="show-createroom-modal">방 만들기</button>
+		<div id="search">
+			<input type="text" placeholder="방 제목"/>
+			<div id="searchroom-button">방 검색</div>
+		</div>
+	</footer>
 </script>
 <script type="text/dust" id="wwm-createroom-modal">
 	<header><h1>방생성</h1></header>
@@ -60,6 +66,65 @@
 	<footer>
 		<button id="create-room-btn">방생성</button>
 		<button class="modal-close">취소</button>
+	</footer>
+</script>
+<script type="text/dust" id="wwm-room">
+	<header>
+		<b id="room-title>{title}</b>
+		<span>현재원: <b id="current-number>0</b>명</span>
+	</header>
+	<main>
+		<div id="member-list">
+			<ul>
+			</ul>
+		</div>
+		<table>
+			<tr>
+				<th></th>
+				<th>일</th>
+				<th>월</th>
+				<th>화</th>
+				<th>수</th>
+				<th>목</th>
+				<th>금</th>
+				<th>토</th>
+			</tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>
+		</table>
+		<button>확정!</button>
+	</main>
+	<footer>
+		<div id="my-menu">
+			<div id="day-exception">
+				<ul>
+					<li>월요일은 안 돼요</li>
+					<li>화요일은 안 돼요</li>
+					<li>수요일은 안 돼요</li>
+					<li>목요일은 안 돼요</li>
+					<li>금요일은 안 돼요</li>
+					<li>토요일은 안 돼요</li>
+					<li>일요일은 안 돼요</li>
+				</ul>
+			</div>
+			<div id="time-exception>
+				<ul>
+					<li><input id="time-before"/>시 이전은 안돼요</li>
+					<li><input id="time-after"/>시 이후는 안돼요</li>
+				</ul>
+			</div>
+		</div>
+		<div id="my-info">
+			{name}
+		</div>	
 	</footer>
 </script>
 </body>
