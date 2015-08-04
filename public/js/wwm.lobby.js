@@ -1,16 +1,17 @@
 wwm.lobby = (function (){
 	var jqMap;
 	var userInfo;
-	function setJqMap ($con) {
+	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
 			$showCreateroom: $con.find('#show-createroom-modal'),
 			$searchroomBtn: $con.find('#searchroom-btn'),
 			$list: $con.find('#room-list'),
-			$logout: $con.find('#logout-btn')
+			$logout: $con.find('#logout-btn'),
+			$room: $con.find('.room')
 		};
 	}
-	function initModule ($con) {
+	function initModule($con) {
 		userInfo = JSON.parse(localStorage.login);
 		var src = $('#wwm-lobby').text();
 		dust.render(dust.loadSource(dust.compile(src)), {
@@ -22,9 +23,10 @@ wwm.lobby = (function (){
 		getList();
 		jqMap.$showCreateroom.click(showCreateroom);
 		jqMap.$searchroomBtn.click(onSearchRoom);
-		jqMap.$logout.click(onLogout);
+		jqMap.$logout.click(logout);
+		jqMap.$room.click(enterRoom);
 	}
-	function showCreateroom () {
+	function showCreateroom() {
 		wwm.modal.initModule($('#wwm-createroom'));
 	}
 	function getList() {
@@ -41,9 +43,12 @@ wwm.lobby = (function (){
 			changeList(res);
 		});
 	}
-	function onLogout() {
+	function logout() {
 		localStorage.removeItem('login');
 		location.href = '/logout';
+	}
+	function enterRoom() {
+		wwm.room.initModule(jqMap.$con);
 	}
 	return {
 		initModule: initModule
