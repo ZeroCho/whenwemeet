@@ -7,6 +7,9 @@ height: 100%;
 font-size: 15px;
 box-sizing: border-box;
 }
+body {
+height: 100%;
+}
 a:link, a:visited {
 text-decoration: none;
 color: inherit;
@@ -21,4 +24,16 @@ border: 1px solid #bbb;
 cursor: pointer;
 box-shadow: 1px 2px 3px #22d;
 height: 26px;
+}
+#whenwemeet {
+position: absolute;
+height: 100%;
+width: 100%;
+}
+#modal {
+position: absolute;
+top: 0;
+width: 100%;
+display: none;
+height: 100%;
 }
