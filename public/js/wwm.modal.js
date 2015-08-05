@@ -6,7 +6,7 @@ wwm.modal = (function (){
 	function initModule($target) {
 		stMap.$modal.html($target);
 		setJqMap($target);
-		jqMap.$close.click(oncloseModal);
+		jqMap.$close.click(onCloseModal);
 		stMap.$modal.show();
 		jqMap.$createRoom.click(createRoom);
 	}
