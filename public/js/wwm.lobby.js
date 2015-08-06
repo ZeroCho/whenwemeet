@@ -21,13 +21,13 @@ wwm.lobby = (function (){
 		}, function(err, out) {
 			console.log(out);
 			$con.html(out);
+			setJqMap($con);
+			getList();
+			jqMap.$showCreateroom.click(showCreateroom);
+			jqMap.$searchroomBtn.click(onSearchRoom);
+			jqMap.$logout.click(logout);
+			jqMap.$room.click(enterRoom);
 		});
-		setJqMap($con);
-		getList();
-		jqMap.$showCreateroom.click(showCreateroom);
-		jqMap.$searchroomBtn.click(onSearchRoom);
-		jqMap.$logout.click(logout);
-		jqMap.$room.click(enterRoom);
 	}
 	function showCreateroom() {
 		wwm.modal.initModule($('#wwm-createroom'));
