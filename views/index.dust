@@ -8,146 +8,352 @@
 	<link rel="stylesheet" href="/dist/whenwemeet.css"/>
 </head>
 <body>
-<div id="whenwemeet">
-	<div id="view"></div>
-	<div id="modal"></div>
-</div>
-<script src="/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
-<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script src="/dist/whenwemeet.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script type="text/dust" id="wwm-login">
-	<div id="logo">우리언제만나</div>
-	<div id="login">
-		<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png">
-		<a id="fb-login-btn">페이스북</a>
+	<div id="whenwemeet">
+		<div id="view"></div>
+		<div id="modal"></div>
 	</div>
-</script>
-<script type="text/dust" id="wwm-lobby">
-	<header>
-		<p>{name}님 안녕하세요!</p>
-	</header>
-	<main>
-		<button id="logout-btn">로그아웃</button>
-		<div id="room-list">리스트</div>
-	</main>
-	<footer>
-		<button id="show-createroom-modal">방 만들기</button>
-		<div id="search">
-			<input type="text" placeholder="방 제목"/>
-			<button id="searchroom-button">방 검색</button>
+	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
+	<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/dist/whenwemeet.js"></script>
+	
+	<script type="text/dust" id="wwm-login">
+		<div id="logo">우리언제만나</div>
+		<div id="login">
+			<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png">
+			<a id="fb-login-btn">페이스북</a>
 		</div>
-	</footer>
-</script>
-<script type="text/dust" id="wwm-createroom-modal">
-	<header><h1>방생성</h1></header>
-	<main>
-		<div>
-			<label for="room-title">방제목</label>
-			<input id="room-title"></input>
-		</div>
-		<div>
-			<label for="room-people-number">인원수</label>
-			<select id="room-people-number">
-				<option value="2"/>2
-				<option value="3"/>3
-				<option value="4"/>4
-				<option value="5"/>5
-				<option value="6"/>6
-				<option value="7"/>7
-				<option value="8"/>8
-			</select>
-		</div>
-		<div>
-			<label for="room-password">비밀번호</label>
-			<input id="room-password" placeholer="빈칸이면 공개방">
-		</div>
-	</main>
-	<footer>
-		<button id="create-room-btn">방생성</button>
-		<button class="modal-close">취소</button>
-	</footer>
-</script>
-<script type="text/dust" id="wwm-room">
-	<header>
-		<b id="room-title>{title}</b>
-		<span>현재원: <b id="current-number>0</b>명</span>
-	</header>
-	<main>
-		<div id="member-list">
-			<ul>
-			</ul>
-		</div>
-		<table>
-			<tr>
-				<th></th>
-				<th>일</th>
-				<th>월</th>
-				<th>화</th>
-				<th>수</th>
-				<th>목</th>
-				<th>금</th>
-				<th>토</th>
-			</tr>
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-			<tr></tr>
-		</table>
-		<button>확정!</button>
-	</main>
-	<footer>
-		<div id="my-menu">
-			{@eq key="admin" value=true}
-			<div id="admin-menu">
-				<button>관리자 메뉴</button>
+	</script>
+	<script type="text/dust" id="wwm-lobby">
+		<header>
+			<p>{name}님 안녕하세요!</p>
+		</header>
+		<main>
+			<button id="logout-btn">로그아웃</button>
+			<div id="room-list">리스트</div>
+		</main>
+		<footer>
+			<button id="show-createroom-modal">방 만들기</button>
+			<div id="search">
+				<input type="text" placeholder="방 제목"/>
+				<button id="searchroom-button">방 검색</button>
+			</div>
+		</footer>
+	</script>
+	<script type="text/dust" id="wwm-createroom-modal">
+		<header><h1>방생성</h1></header>
+		<main>
+			<div>
+				<label for="room-title">방제목</label>
+				<input id="room-title"></input>
+			</div>
+			<div>
+				<label for="room-people-number">인원수</label>
+				<select id="room-people-number">
+					<option value="2"/>2
+					<option value="3"/>3
+					<option value="4"/>4
+					<option value="5"/>5
+					<option value="6"/>6
+					<option value="7"/>7
+					<option value="8"/>8
+				</select>
+			</div>
+			<div>
+				<label for="room-password">비밀번호</label>
+				<input id="room-password" placeholer="빈칸이면 공개방">
+			</div>
+		</main>
+		<footer>
+			<button id="create-room-btn">방생성</button>
+			<button class="modal-close">취소</button>
+		</footer>
+	</script>
+	<script type="text/dust" id="wwm-room">
+		<header>
+			<b id="room-title>{title}</b>
+			<span>현재원: <b id="current-number>0</b>명</span>
+		</header>
+		<main>
+			<div id="member-list">
 				<ul>
-					<li id="ban-people">
-						<select id="member-list'>
-						</select>
-						<button id="ban-people-btn">강퇴</button>
-					</li>
-					<li><b id="room-title"></b><button id="change-room-title>변경</button></li>
-					<li>인원수 조정 <b id="room-people-number"></b><button id="change-number-btn">변경</button></li>
-					<li id="explode-room">방 폭파</li>
 				</ul>
 			</div>
-			{/eq}
-			<div id="day-exception">
-				<button>요일 예외</button>
-				<ul>
-					<li id="not-mon">월요일은 안 돼요</li>
-					<li id="not-tue">화요일은 안 돼요</li>
-					<li id="not-wed">수요일은 안 돼요</li>
-					<li id="not-thu">목요일은 안 돼요</li>
-					<li id="not-fri">금요일은 안 돼요</li>
-					<li id="not-sat">토요일은 안 돼요</li>
-					<li id="not-sun">일요일은 안 돼요</li>
-				</ul>
+			<table>
+				<tr>
+					<th>일</th>
+					<th>월</th>
+					<th>화</th>
+					<th>수</th>
+					<th>목</th>
+					<th>금</th>
+					<th>토</th>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>0</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>1</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>2</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>3</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>4</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>5</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>6</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>7</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>8</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>9</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>10</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>11</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>12</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>1</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>2</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>3</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>4</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>5</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>6</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>7</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>8</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>9</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>10</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>11</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</table>
+			<button>확정!</button>
+		</main>
+		<footer>
+			<div id="my-menu">
+				{@eq key="admin" value=true}
+				<div id="admin-menu">
+					<button>관리자 메뉴</button>
+					<ul>
+						<li id="ban-people">
+							<select id="member-list'>
+							</select>
+							<button id="ban-people-btn">강퇴</button>
+						</li>
+						<li><b id="room-title"></b><button id="change-room-title>변경</button></li>
+						<li>인원수 조정 <b id="room-people-number"></b><button id="change-number-btn">변경</button></li>
+						<li id="explode-room">방 폭파</li>
+					</ul>
+				</div>
+				{/eq}
+				<div id="day-exception">
+					<button>요일 예외</button>
+					<ul>
+						<li id="not-mon">월요일은 안 돼요</li>
+						<li id="not-tue">화요일은 안 돼요</li>
+						<li id="not-wed">수요일은 안 돼요</li>
+						<li id="not-thu">목요일은 안 돼요</li>
+						<li id="not-fri">금요일은 안 돼요</li>
+						<li id="not-sat">토요일은 안 돼요</li>
+						<li id="not-sun">일요일은 안 돼요</li>
+					</ul>
+				</div>
+				<div id="time-exception>
+					<button>시간 예외</button>
+					<ul>
+						<li id="not-before"><input id="time-before"/>시 이전은 안돼요</li>
+						<li id="not-after"><input id="time-after"/>시 이후는 안돼요</li>
+					</ul>
+				</div>
 			</div>
-			<div id="time-exception>
-				<button>시간 예외</button>
-				<ul>
-					<li id="not-before"><input id="time-before"/>시 이전은 안돼요</li>
-					<li id="not-after"><input id="time-after"/>시 이후는 안돼요</li>
-				</ul>
+			<div id="my-info">
+				{name}
 			</div>
-		</div>
-		<div id="my-info">
-			{name}
-		</div>
-		<div id="chat">
-			<input id="chatbox"/>
-			<button id="send-chat">전송</button>
-		</div>
-	</footer>
-</script>
+			<div id="chat">
+				<input id="chatbox"/>
+				<button id="send-chat">전송</button>
+			</div>
+		</footer>
+	</script>
 </body>
 </html>
