@@ -31,7 +31,7 @@ wwm.lobby = (function (){
 		});
 	}
 	function showCreateroom() {
-		wwm.modal.initModule($('#wwm-createroom'));
+		wwm.modal.initModule($('#wwm-createroom-modal'));
 	}
 	function getList() {
 		$.get('/roomlist').done(function(res){

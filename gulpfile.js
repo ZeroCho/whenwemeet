@@ -5,7 +5,6 @@ var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	rename = require('gulp-rename'),
 	watch = require('gulp-watch'),
-	notify = require('gulp-notify'),
 	nodemon = require('gulp-nodemon'),
 	livereload = require('gulp-livereload'),
 	compass = require('gulp-compass'),
@@ -36,16 +35,8 @@ var gulp = require('gulp'),
 			index: 'www',
 			dist: 'www/dist/'
 		}
-	},
-	notifyInfo = {
-		title: 'Gulp'
-	},
-	plumberErrorHandler = {
-		errorHandler: notify.onError({
-			title: notifyInfo.title,
-			message: "Error: <%= error.message %>"
-		})
 	};
+	
 gulp.task('default', ['product']);
 gulp.task('build', ['clean', 'styles', 'scripts', 'dust']);
 gulp.task('product', ['build', 'serve', 'watch']);
@@ -62,12 +53,12 @@ gulp.task('watch', ['clean'], function () {
 	});
 	gulp.watch([dir.dist.css, dir.dist.js], function (event) {
 		gulp.src(event.path)
-			.pipe(plumber(plumberErrorHandler))
+			.pipe(plumber())
 			.pipe(livereload());
 	});
 	//gulp.watch(['public/phonegapHandler.js'], function (event) {
 	//	gulp.src(event.path)
-	//		.pipe(plumber(plumberErrorHandler))
+	//		.pipe(plumber())
 	//		.pipe(gulp.dest(dir.www.index))
 	//		.pipe(livereload());
 	//});
@@ -80,7 +71,7 @@ gulp.task('serve', ['build'], function () {
 gulp.task('scripts', ['js:uglify']);
 gulp.task('styles', function () {
 	//gulp.src(dir.sass.src)
-	//	.pipe(plumber(plumberErrorHandler))
+	//	.pipe(plumber())
 	//	.pipe(compass({
 	//		css: dir.js.dest,
 	//		sass: dir.sass.compassSrc
@@ -94,7 +85,7 @@ gulp.task('styles', function () {
 	//.pipe(gulp.dest(dir.www.dist));
 });
 gulp.task('clean', function () {
-	del([dir.js.dest + '*']);
+	del([dir.js.dest + 'whenwemeet.min.js', dir.js.dest + 'whenwemeet.js']);
 });
 
 gulp.task('js:concat', function () {
@@ -105,14 +96,14 @@ gulp.task('js:concat', function () {
 			'public/js/wwm.shell.js',
 			dir.js.src
 		])
-		.pipe(plumber(plumberErrorHandler))
+		.pipe(plumber())
 		.pipe(concat(dir.js.filename))
 		//.pipe(gulp.dest(dir.www.dist))
 		.pipe(gulp.dest(dir.js.dest));
 });
 gulp.task('js:uglify', ['js:concat'], function () {
 	gulp.src(dir.js.dest + dir.js.filename)
-		.pipe(plumber(plumberErrorHandler))
+		.pipe(plumber())
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
 		//.pipe(gulp.dest(dir.www.dist))
@@ -120,7 +111,7 @@ gulp.task('js:uglify', ['js:concat'], function () {
 });
 gulp.task('dust', function () {
 	gulp.src('views/index.dust')
-		.pipe(plumber(plumberErrorHandler))
+		.pipe(plumber())
 		.pipe(dusthtml({
 			whitespace: true,
 			data: {
@@ -130,6 +121,6 @@ gulp.task('dust', function () {
 		.pipe(gulp.dest('public/'))
 		//.pipe(gulp.dest(dir.www.index))
 		.pipe(livereload());
-	gulp.src('public/wwm.appcache')
-		.pipe(gulp.dest(dir.www.index));
+	//gulp.src('public/wwm.appcache')
+	//	.pipe(gulp.dest(dir.www.index));
 });
