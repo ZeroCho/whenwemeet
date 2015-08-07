@@ -16,7 +16,8 @@ wwm.lobby = (function (){
 		console.log('lobby', localStorage.login);
 		var src = document.getElementById('wwm-lobby').textContent;
 		console.log(src);
-		console.log(userInfo.properties.nickname);	dust.render(dust.loadSource(dust.compile(src)), {
+		console.log(userInfo.properties.nickname);
+		dust.renderSource(src, {
 			name: userInfo.properties.nickname
 		}, function(err, out) {
 			console.log(out);

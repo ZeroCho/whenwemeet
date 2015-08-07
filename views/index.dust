@@ -338,7 +338,7 @@
 						<li id="not-sun">일요일은 안 돼요</li>
 					</ul>
 				</div>
-				<div id="time-exception>
+				<div id="time-exception">
 					<button>시간 예외</button>
 					<ul>
 						<li id="not-before"><input id="time-before"/>시 이전은 안돼요</li>
