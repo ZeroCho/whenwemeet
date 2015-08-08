@@ -57,7 +57,7 @@ wwm.lobby = (function (){
 		var username = userInfo.properties.nickname || userInfo.name;
 		console.log('username', username);
 		dust.render(dust.loadSource(dust.compile(src)), {
-			name: name
+			name: username
 		}, function(err, out) {
 			if (err) {
 				console.log(err);

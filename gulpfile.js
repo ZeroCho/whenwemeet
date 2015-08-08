@@ -1,41 +1,41 @@
-var gulp = require('gulp'),
-	minifycss = require('gulp-minify-css'),
-	autoprefixer = require('gulp-autoprefixer'),
-	uglify = require('gulp-uglify'),
-	concat = require('gulp-concat'),
-	rename = require('gulp-rename'),
-	watch = require('gulp-watch'),
-	nodemon = require('gulp-nodemon'),
-	livereload = require('gulp-livereload'),
-	compass = require('gulp-compass'),
-	del = require('del'),
-	dusthtml = require('gulp-dust-html'),
-	plumber = require('gulp-plumber'),
-	path = require('path'),
+var gulp = require('gulp');
+var	minifycss = require('gulp-minify-css');
+var	autoprefixer = require('gulp-autoprefixer');
+var	uglify = require('gulp-uglify');
+var	concat = require('gulp-concat');
+var	rename = require('gulp-rename');
+var	watch = require('gulp-watch');
+var	nodemon = require('gulp-nodemon');
+var	livereload = require('gulp-livereload');
+//var compass = require('gulp-compass');
+var	del = require('del');
+var	dusthtml = require('gulp-dust-html');
+var	plumber = require('gulp-plumber');
+var	path = require('path');
 
-	dir = {
-		sass: {
-			src: 'public/sass/*.sass',
-			cssSrc: 'public/css',
-			compassSrc: 'public/sass'
-		},
-		js: {
-			src: 'public/js/*.js',
-			filename: 'whenwemeet.js',
-			dest: 'public/dist/'
-		},
-		dust: {
-			src: 'views/*.dust'
-		},
-		dist: {
-			js: 'public/dist/whenwemeet.js',
-			css: 'public/dist/whenwemeet.min.css'
-		},
-		www: {
-			index: 'www',
-			dist: 'www/dist/'
-		}
-	};
+var	dir = {
+	sass: {
+		src: 'public/sass/*.sass',
+		cssSrc: 'public/css',
+		compassSrc: 'public/sass'
+	},
+	js: {
+		src: 'public/js/*.js',
+		filename: 'whenwemeet.js',
+		dest: 'public/dist/'
+	},
+	dust: {
+		src: 'views/*.dust'
+	},
+	dist: {
+		js: 'public/dist/whenwemeet.js',
+		css: 'public/dist/whenwemeet.css'
+	},
+	www: {
+		index: 'www',
+		dist: 'www/dist/'
+	}
+};
 	
 gulp.task('default', ['product']);
 gulp.task('build', ['clean', 'styles', 'scripts', 'dust']);
@@ -70,18 +70,18 @@ gulp.task('serve', ['build'], function () {
 });
 gulp.task('scripts', ['js:uglify']);
 gulp.task('styles', function () {
-	//gulp.src(dir.sass.src)
-	//	.pipe(plumber())
+	gulp.src(dir.dist.css)
+		.pipe(plumber())
 	//	.pipe(compass({
 	//		css: dir.js.dest,
 	//		sass: dir.sass.compassSrc
 	//	}))
-	//.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie9', 'opera 12.1', 'ios 6'))
+		.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie9', 'opera 12.1', 'ios 6'))
 	//	.pipe(rename('whenwemeet.css'))
 	//	.pipe(gulp.dest(dir.js.dest))
-	//	.pipe(minifycss())
-	//	.pipe(rename({suffix: '.min'}))
-	//	.pipe(gulp.dest(dir.js.dest))
+		.pipe(minifycss())
+		.pipe(rename({suffix: '.min'}))
+		.pipe(gulp.dest(dir.js.dest));
 	//.pipe(gulp.dest(dir.www.dist));
 });
 gulp.task('clean', function () {

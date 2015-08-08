@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<title>우리 언제 만나</title>
-	<link rel="stylesheet" href="/dist/whenwemeet.css"/>
+	<link rel="stylesheet" href="/dist/whenwemeet.min.css"/>
 </head>
 <body>
 	<div id="whenwemeet">
@@ -52,11 +52,11 @@
 	<script type="text/html" id="wwm-createroom-modal">
 		<header id="createroom-header"><h1>방생성</h1></header>
 		<main id="createroom-main">
-			<div>
+			<div class="input-group">
 				<label for="room-title">방제목</label>
 				<input id="room-title"/>
 			</div>
-			<div>
+			<div class="input-group">
 				<label for="room-people-number">인원수</label>
 				<select id="room-people-number">
 					<option value="2">2</option>
@@ -68,7 +68,7 @@
 					<option value="8">8</option>
 				</select>
 			</div>
-			<div>
+			<div class="input-group">
 				<label for="room-password">비밀번호</label>
 				<input id="room-password" placeholder="빈칸이면 공개방">
 			</div>
