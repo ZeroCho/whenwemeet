@@ -26,6 +26,7 @@ wwm.lobby = (function (){
 	}
 	function logout() {
 		localStorage.removeItem('login');
+		localStorage.removeItem('loginType');
 		location.href = '/logout';
 	}
 	function enterRoom() {

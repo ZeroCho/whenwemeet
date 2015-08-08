@@ -51,6 +51,7 @@ wwm.shell = (function () {
 								url: '/v1/user/me',
 								success: function (res) {
 									localStorage.login = JSON.stringify(res);
+									localStorage.loginType = 'kakao';
 									wwm.lobby.initModule(jqMap.$view);
 								},
 								fail: function (error) {
@@ -76,6 +77,7 @@ wwm.shell = (function () {
 						if (res.status === 'connected') {
 							FB.api('/me', function (res) {
 								localStorage.login = JSON.stringify(res);
+								localStorage.loginType = 'facebook';
 								wwm.lobby.initModule(jqMap.$view);
 							});
 						} else if (res.status === 'not_authorized') {

@@ -3,30 +3,43 @@
  */
 wwm.model = (function () {
 	function getRoomList(query) {
+		var deferred = $.Deferred();
 		if (query) {
-
+			$.get('/rooms/' + query).done(function (res) {
+				deferred.resolve(res);
+			}).fail(function (err) {
+				deferred.reject(err);
+			});
+		} else {
+			$.get('/rooms').done(function (res) {
+				deferred.resolve(res);
+			}).fail(function (err) {
+				deferred.reject(err);
+			});
 		}
+		return deferred.promise();
 	}
 	function createRoom(data) {
 		var deferred = $.Deferred();
-		$.get('/member/' + data.maker, function (res) {
+		$.get('/member/' + data.maker).done(function(res) {
 			if (res > 3) {
-				var msg = '¹æÀº ÃÖ´ë ¼¼ °³±îÁö ¸¸µé ¼ö ÀÖ½À´Ï´Ù.';
+				var msg = 'ë°©ì€ ìµœëŒ€ ì„¸ ê°œê¹Œì§€ ë§Œë“¤ ìˆ˜ ìˆìŠµë‹ˆë‹¤.';
 				deferred.reject(msg);
 			}
 		});
-		$.post('/room/' + data.id, data, function (res) {
+		$.post('/room/' + data.id, data).done(function(res) {
 			deferred.resolve(res);
 		});
 		return deferred.promise();
 	}
 	function initModule() {
 		if (localStorage.login) {
-			alert('·Î±×ÀÎµÇ¾î ÀÖ½À´Ï´Ù.');
+			alert('ë¡œê·¸ì¸ë˜ì–´ ìˆìŠµë‹ˆë‹¤.');
 		}
 	}
 	return {
 		initModule: initModule,
-		createRoom: createRoom
+		createRoom: createRoom,
+		getRoomList: getRoomList
 	};
 }());
