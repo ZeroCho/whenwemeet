@@ -14,11 +14,6 @@ module.exports = function () {
 			user: req.user
 		});		
 	});
-	router.get('/logout', function(req, res){
-	  	req.logout();
-	  	console.log('logged out!');
-	  	res.redirect('/');
-	})
 	router.get('/member/:id', function (req, res) {
 		var id = req.params.id;
 		pgb.then(function (connection) {

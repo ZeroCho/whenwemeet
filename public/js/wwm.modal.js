@@ -47,7 +47,6 @@ wwm.modal = (function (){
 		});
 	}
 	function initModule($target) {
-		console.log($target);
 		stMap.$modal.html($target);
 		setJqMap(stMap.$modal);
 		jqMap.$close.click(onCloseModal);

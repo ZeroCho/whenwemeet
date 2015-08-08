@@ -34,7 +34,7 @@ wwm.model = (function () {
 	}
 	function initModule() {
 		if (localStorage.login) {
-			alert('로그인되어 있습니다.');
+			window.userInfo = JSON.parse(localStorage.login);
 		}
 	}
 	return {

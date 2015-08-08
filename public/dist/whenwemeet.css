@@ -121,7 +121,6 @@ label {
 }
 #refresh-list {
 	position: absolute;
-	bottom: 0;
 	right: 0;
 	margin-right: 5px;
 }

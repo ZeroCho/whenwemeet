@@ -5,6 +5,8 @@ wwm.lobby = (function (){
 		wwm.modal.initModule($('#wwm-createroom-modal').html());
 	}
 	function getList() {
+		var spinner = new Spinner().spin();
+		jqMap.$list.append(spinner.el);
 		var $frag = $(document.createDocumentFragment());
 		var getListPromise = wwm.model.getRoomList();
 		getListPromise.done(function (res) {
@@ -13,7 +15,7 @@ wwm.lobby = (function (){
 		});
 		getListPromise.fail(function (err) {
 			console.log(err);
-			jqMap.$list.text(err.responseText);
+			jqMap.$list.html(err.responseText);
 		});
 	}
 	function onSearchRoom (query) {
@@ -25,13 +27,13 @@ wwm.lobby = (function (){
 		});
 		searchPromise.fail(function (err) {
 			console.log(err);
-			jqMap.$list.text(err.responseText);
+			jqMap.$list.html(err.responseText);
 		});
 	}
 	function logout() {
 		localStorage.removeItem('login');
 		localStorage.removeItem('loginType');
-		location.href = '/logout';
+		wwm.lobby.initModule(jqMap.$con);
 	}
 	function enterRoom() {
 		wwm.room.initModule(jqMap.$con, $(this));
@@ -65,8 +67,6 @@ wwm.lobby = (function (){
 			} else {
 				$con.html(out);
 				setJqMap($con);
-				var spinner = new Spinner().spin();
-				jqMap.$list.append(spinner.el);
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);
