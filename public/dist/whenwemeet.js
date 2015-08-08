@@ -17,35 +17,83 @@ $(function () {
  * Created by Zero on 2015-07-25.
  */
 wwm.model = (function () {
+	function getRoomList(query) {
+		var deferred = $.Deferred();
+		if (query) {
+			$.get('/rooms/' + query).done(function (res) {
+				deferred.resolve(res);
+			}).fail(function (err) {
+				deferred.reject(err);
+			});
+		} else {
+			$.get('/rooms').done(function (res) {
+				deferred.resolve(res);
+			}).fail(function (err) {
+				deferred.reject(err);
+			});
+		}
+		return deferred.promise();
+	}
+	function createRoom(data) {
+		var deferred = $.Deferred();
+		$.get('/member/' + data.maker).done(function(res) {
+			if (res > 3) {
+				var msg = '방은 최대 세 개까지 만들 수 있습니다.';
+				deferred.reject(msg);
+			}
+		});
+		$.post('/room/' + data.id, data).done(function(res) {
+			deferred.resolve(res);
+		});
+		return deferred.promise();
+	}
 	function initModule() {
-
+		if (localStorage.login) {
+			window.userInfo = JSON.parse(localStorage.login);
+		}
 	}
 	return {
-		initModule: initModule
+		initModule: initModule,
+		createRoom: createRoom,
+		getRoomList: getRoomList
 	};
 }());
 wwm.shell = (function () {
 	var jqMap;
 	var KAKAO_KEY = 'a35623411563ec424430d3bd5dc7a93e';
+
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
 			$view: $con.find('#view'),
 			$modal: $con.find('#modal'),
-			$kakaoLogin: $con.find('#kakao-login-btn')
+			$kakaoLogin: $con.find('#kakao-login-btn'),
+			$fbLogin: $con.find('#fb-login-btn')
 		};
 	}
-	function onError (errorMsg, url, lineNumber, column, errorObj) {
-		if (typeof errorMsg === 'string' && errorMsg.indexOf('Script error.') > -1) { return; }
+
+	function onError(errorMsg, url, lineNumber, column, errorObj) {
+		if (typeof errorMsg === 'string' && errorMsg.indexOf('Script error.') > -1) {
+			return;
+		}
 		console.log('Error: ', errorMsg, ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' + errorObj);
 	}
+
 	function initModule($con) {
+		$.ajaxSetup({cache: true});
+		$.getScript('//connect.facebook.net/ko_KR/sdk.js', function () {
+			FB.init({
+				appId: '1617440885181938',
+				xfbml: true,
+				version: 'v2.4'
+			});
+		});
+		Kakao.init(KAKAO_KEY);
 		console.log('login', localStorage.login);
 		console.log('first', localStorage.first);
 		var logged = localStorage.login && JSON.parse(localStorage.login);
 		var first = localStorage.first && JSON.parse(localStorage.first);
 		setJqMap($con);
-		Kakao.init(KAKAO_KEY);
 		//if (first) {
 		//	wwm.modal.initModule($('#wwm-intro').html());
 		//}
@@ -56,35 +104,61 @@ wwm.shell = (function () {
 			$con.find('#view').html($('#wwm-login').html());
 			setJqMap($con);
 			jqMap.$kakaoLogin.on({
-				click: function() {
+				click: function () {
 					Kakao.Auth.login({
-					 success: function(authObj) {
-					  Kakao.API.request({
-    					url: '/v1/user/me',
-       		success: function(res) {
-       			localStorage.login = JSON.stringify(res);
-								wwm.lobby.initModule(jqMap.$view);
-    				 },
-     				fail: function(error) {
-    						 alert(JSON.stringify(error))
-    						}
-							});			     
+						success: function (authObj) {
+							Kakao.API.request({
+								url: '/v1/user/me',
+								success: function (res) {
+									localStorage.login = JSON.stringify(res);
+									localStorage.loginType = 'kakao';
+									wwm.lobby.initModule(jqMap.$view);
+								},
+								fail: function (error) {
+									alert(JSON.stringify(error));
+								}
+							});
 						},
-						fail: function(err) {
-					  alert(JSON.stringify(err))
-					 }
+						fail: function (err) {
+							alert(JSON.stringify(err));
+						}
 					});
 				},
-				mouseover: function() {
+				mouseover: function () {
 					this.src = '/kakao_account_login_btn_medium_narrow_ov.png';
 				},
-				mouseout: function() {
+				mouseout: function () {
 					this.src = '/kakao_account_login_btn_medium_narrow.png';
+				}
+			});
+			jqMap.$fbLogin.on({
+				click: function () {
+					FB.login(function (res) {
+						if (res.status === 'connected') {
+							FB.api('/me', function (res) {
+								localStorage.login = JSON.stringify(res);
+								localStorage.loginType = 'facebook';
+								wwm.lobby.initModule(jqMap.$view);
+							});
+						} else if (res.status === 'not_authorized') {
+							// The person is logged into Facebook, but not your app.
+							alert('Please log log into this app.');
+						} else {
+							alert('Please log into Facebook.');
+						}
+					});
+				},
+				mouseover: function () {
+					this.src = '/facebook_ov.png';
+				},
+				mouseout: function () {
+					this.src = '/facebook.png';
 				}
 			});
 		}
 		$(window).on('error', onError);
 	}
+
 	return {
 		initModule: initModule
 	};
@@ -93,58 +167,80 @@ wwm.shell = (function () {
 wwm.lobby = (function (){
 	var jqMap;
 	var userInfo;
+	function showCreateroom() {
+		wwm.modal.initModule($('#wwm-createroom-modal').html());
+	}
+	function getList() {
+		var spinner = new Spinner().spin();
+		jqMap.$list.append(spinner.el);
+		var $frag = $(document.createDocumentFragment());
+		var getListPromise = wwm.model.getRoomList();
+		getListPromise.done(function (res) {
+			console.log(res);
+			jqMap.$list.text(res);
+		});
+		getListPromise.fail(function (err) {
+			console.log(err);
+			jqMap.$list.html(err.responseText);
+		});
+	}
+	function onSearchRoom (query) {
+		var $frag = $(document.createDocumentFragment());
+		var searchPromise = wwm.model.getRoomList(query);
+		searchPromise.done(function (res) {
+			console.log(res);
+			jqMap.$list.text(res);
+		});
+		searchPromise.fail(function (err) {
+			console.log(err);
+			jqMap.$list.html(err.responseText);
+		});
+	}
+	function logout() {
+		localStorage.removeItem('login');
+		localStorage.removeItem('loginType');
+		wwm.lobby.initModule(jqMap.$con);
+	}
+	function enterRoom() {
+		wwm.room.initModule(jqMap.$con, $(this));
+	}
+	function refreshList() {
+		getList();
+	}
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
 			$showCreateroom: $con.find('#show-createroom-modal'),
 			$searchroomBtn: $con.find('#searchroom-btn'),
-			$list: $con.find('#room-list'),
+			$list: $con.find('#rooms'),
 			$logout: $con.find('#logout-btn'),
-			$room: $con.find('.room')
+			$room: $con.find('.room'),
+			$refresh: $con.find('#refresh-list')
 		};
 	}
 	function initModule($con) {
+		var src = document.getElementById('wwm-lobby').textContent;
 		userInfo = JSON.parse(localStorage.login);
 		console.log('lobby', localStorage.login);
-		var src = document.getElementById('wwm-lobby').textContent;
-		console.log('src', src);
-		console.log(userInfo.properties.nickname);
+		var username = userInfo.properties.nickname || userInfo.name;
+		console.log('username', username);
 		dust.render(dust.loadSource(dust.compile(src)), {
-			name: userInfo.properties.nickname
+			name: username
 		}, function(err, out) {
-			console.log('out', out);
-			$con.html(out);
-			setJqMap($con);
-			getList();
-			jqMap.$showCreateroom.click(showCreateroom);
-			jqMap.$searchroomBtn.click(onSearchRoom);
-			jqMap.$logout.click(logout);
-			jqMap.$room.click(enterRoom);
+			if (err) {
+				console.log(err);
+				alert('error! �ܼ� Ȯ��');
+			} else {
+				$con.html(out);
+				setJqMap($con);
+				getList();
+				jqMap.$showCreateroom.click(showCreateroom);
+				jqMap.$searchroomBtn.click(onSearchRoom);
+				jqMap.$logout.click(logout);
+				jqMap.$room.click(enterRoom);
+				jqMap.$refresh.click(refreshList);
+			}
 		});
-	}
-	function showCreateroom() {
-		wwm.modal.initModule($('#wwm-createroom-modal'));
-	}
-	function getList() {
-		$.get('/roomlist').done(function(res){
-			jqMap.$list.html();
-		});
-	}
-	function changeList(data) {
-		var $frag = $(document.createDocumentFragment());
-		jqMap.$list.html();
-	}
-	function onSearchRoom (query) {
-		$.get('/search/' + query, function(res) {
-			changeList(res);
-		});
-	}
-	function logout() {
-		localStorage.removeItem('login');
-		location.href = '/logout';
-	}
-	function enterRoom() {
-		wwm.room.initModule(jqMap.$con);
 	}
 	return {
 		initModule: initModule
@@ -156,19 +252,12 @@ wwm.modal = (function (){
 		$modal: $('#modal')
 	};
 	var jqMap;
-	function initModule($target) {
-		stMap.$modal.html($target);
-		setJqMap($target);
-		jqMap.$close.click(onCloseModal);
-		stMap.$modal.show();
-		jqMap.$createRoom.click(createRoom);
-	}
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
 			$close: $con.find('.modal-close'),
 			$title: $con.find('#room-title'),
-			$number: $con.find('#room-number'),
+			$number: $con.find('#room-people-number'),
 			$password: $con.find('#room-password'),
 			$createRoom: $con.find('#create-room-btn')
 		};
@@ -177,24 +266,43 @@ wwm.modal = (function (){
 		stMap.$modal.hide();
 	}
 	function createRoom() {
+		var spinner = new Spinner().spin();
+		jqMap.$con.append(spinner.el);
 		var data;
 		var title = jqMap.$title.val();
 		var number = jqMap.$number.val();
 		var password = jqMap.$password.val();
+		var userInfo = JSON.parse(localStorage.login);
+		var maker = userInfo.id || userInfo._id;
 		if (!title) {
+			$(spinner.el).remove();
 			alert('제목을 입력하세요.');
 			return;
 		}
-		if (!number) {
-			alert('인원수를 선택하세요!');
-			return;
-		}
 		data = {
-			title: jqMap.$title.val(),
-			number: jqMap.$number.val(),
-			password: jqMap.$password.val()
-		}
-		wwm.model.createRoom(data);
+			id: String(new Date().getTime()) + Math.random() * 1000,
+			title: title,
+			maker: maker,
+			number: number,
+			password: password
+		};
+		var createRoomPromise = wwm.model.createRoom(data);
+		createRoomPromise.done(function (data) {
+			wwm.room.initModule(data);
+		});
+		createRoomPromise.fail(function (err) {
+			alert(err);
+		});
+		createRoomPromise.always(function () {
+			$(spinner.el).remove();
+		});
+	}
+	function initModule($target) {
+		stMap.$modal.html($target);
+		setJqMap(stMap.$modal);
+		jqMap.$close.click(onCloseModal);
+		stMap.$modal.show();
+		jqMap.$createRoom.click(createRoom);
 	}
 	return {
 		initModule: initModule

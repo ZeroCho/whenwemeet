@@ -26,6 +26,7 @@ wwm.modal = (function (){
 		var userInfo = JSON.parse(localStorage.login);
 		var maker = userInfo.id || userInfo._id;
 		if (!title) {
+			$(spinner.el).remove();
 			alert('제목을 입력하세요.');
 			return;
 		}
@@ -38,12 +39,13 @@ wwm.modal = (function (){
 		};
 		var createRoomPromise = wwm.model.createRoom(data);
 		createRoomPromise.done(function (data) {
-			$(spinner.el).remove();
 			wwm.room.initModule(data);
 		});
 		createRoomPromise.fail(function (err) {
-			$(spinner.el).remove();
 			alert(err);
+		});
+		createRoomPromise.always(function () {
+			$(spinner.el).remove();
 		});
 	}
 	function initModule($target) {
