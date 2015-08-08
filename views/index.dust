@@ -29,6 +29,7 @@
 			</div>
 		</div>
 	</script>
+	<script type="text/dust" id="hello">Hello {world}!</script>
 	<script type="text/dust" id="wwm-lobby">
 		<header id="lobby-header">
 			<p>{name}님 안녕하세요!</p>
@@ -38,7 +39,7 @@
 			<div id="room-list">
 				<div class="title">리스트</div>
 				<div id="rooms"></div>
-				<button id="refresh-rooms">새로고침</button>
+				<button id="refresh-list">새로고침</button>
 			</div>
 		</main>
 		<footer id="lobby-footer">
@@ -50,8 +51,8 @@
 		</footer>
 	</script>
 	<script type="text/dust" id="wwm-createroom-modal">
-		<header><h1>방생성</h1></header>
-		<main>
+		<header id="createroom-header"><h1>방생성</h1></header>
+		<main id="createroom-main">
 			<div>
 				<label for="room-title">방제목</label>
 				<input id="room-title"></input>
@@ -73,7 +74,7 @@
 				<input id="room-password" placeholer="빈칸이면 공개방">
 			</div>
 		</main>
-		<footer>
+		<footer id="createroom-footer">
 			<button id="create-room-btn">방생성</button>
 			<button class="modal-close">취소</button>
 		</footer>

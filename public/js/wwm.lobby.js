@@ -32,6 +32,9 @@ wwm.lobby = (function (){
 	function enterRoom() {
 		wwm.room.initModule(jqMap.$con, $(this));
 	}
+	function refreshList() {
+		getList();
+	}
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
@@ -39,7 +42,8 @@ wwm.lobby = (function (){
 			$searchroomBtn: $con.find('#searchroom-btn'),
 			$list: $con.find('#room-list'),
 			$logout: $con.find('#logout-btn'),
-			$room: $con.find('.room')
+			$room: $con.find('.room'),
+			$refresh: $con.find('#refresh-list')
 		};
 	}
 	function initModule($con) {
@@ -65,6 +69,7 @@ wwm.lobby = (function (){
 				jqMap.$searchroomBtn.click(onSearchRoom);
 				jqMap.$logout.click(logout);
 				jqMap.$room.click(enterRoom);
+				jqMap.$refresh.click(refreshList);
 			}
 		});
 	}
