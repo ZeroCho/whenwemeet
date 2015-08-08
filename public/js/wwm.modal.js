@@ -21,6 +21,8 @@ wwm.modal = (function (){
 		var title = jqMap.$title.val();
 		var number = jqMap.$number.val();
 		var password = jqMap.$password.val();
+		var userInfo = JSON.parse(localStorage.login);
+		var maker = userInfo.id || userInfo._id;
 		if (!title) {
 			alert('제목을 입력하세요.');
 			return;
@@ -30,15 +32,23 @@ wwm.modal = (function (){
 			return;
 		}
 		data = {
+			id: String(new Date().getTime()) + Math.random() * 1000,
 			title: title,
+			maker: maker,
 			number: number,
 			password: password
 		};
-		wwm.model.createRoom(data);
+		var createRoomPromise = wwm.model.createRoom(data);
+		createRoomPromise.done(function (data) {
+			wwm.room.initModule(data);
+		});
+		createRoomPromise.fail(function (err) {
+			alert(err);
+		});
 	}
 	function initModule($target) {
 		console.log($target);
-		stMap.$modal.html($target);
+		stMap.$modal.html($target.children());
 		setJqMap($target);
 		jqMap.$close.click(onCloseModal);
 		stMap.$modal.show();

@@ -6,17 +6,22 @@ wwm.lobby = (function (){
 	}
 	function getList() {
 		var $frag = $(document.createDocumentFragment());
-		$.get('/roomlist').done(function(res){
-			jqMap.$list.html();
+		var getListPromise = wwm.model.getRoomList();
+		getListPromise.done(function (res) {
+
+		});
+		getListPromise.fail(function (err) {
+			console.log(err);
 		});
 	}
-	function changeList(data) {
-		var $frag = $(document.createDocumentFragment());
-		jqMap.$list.html();
-	}
 	function onSearchRoom (query) {
-		$.get('/search/' + query, function(res) {
-			changeList(res);
+		var $frag = $(document.createDocumentFragment());
+		var searchPromise = wwm.model.getRoomList(query);
+		searchPromise.done(function (res) {
+
+		});
+		searchPromise.fail(function (err) {
+			console.log(err);
 		});
 	}
 	function logout() {
@@ -24,7 +29,7 @@ wwm.lobby = (function (){
 		location.href = '/logout';
 	}
 	function enterRoom() {
-		wwm.room.initModule(jqMap.$con);
+		wwm.room.initModule(jqMap.$con, $(this));
 	}
 	function setJqMap($con) {
 		jqMap = {
@@ -41,9 +46,10 @@ wwm.lobby = (function (){
 		userInfo = JSON.parse(localStorage.login);
 		console.log('lobby', localStorage.login);
 		console.log('src', src);
-		console.log('nickname', userInfo.properties.nickname);
+		var username = userInfo.properties.nickname || userInfo.name;
+		console.log('username', username);
 		dust.render(dust.loadSource(dust.compile(src)), {
-			name: userInfo.properties.nickname || userInfo.name
+			name: name
 		}, function(err, out) {
 			if (err) {
 				console.log(err);
