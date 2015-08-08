@@ -21,13 +21,17 @@
 	<script type="text/dust" id="wwm-login">
 		<div id="logo">우리언제만나</div>
 		<div id="login">
-			<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png">
-			<a id="fb-login-btn">페이스북</a>
+			<div>
+				<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png"/>
+			</div>
+			<div>
+				<img id="fb-login-btn" src="/facebook.png"/>
+			</div>
 		</div>
 	</script>
 	<script type="text/dust" id="wwm-lobby">
 		<header>
-			<p>{name}님 안녕하세요!</p>
+			<p> {name} 님 안녕하세요!</p>
 		</header>
 		<main>
 			<button id="logout-btn">로그아웃</button>

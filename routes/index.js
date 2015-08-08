@@ -24,8 +24,11 @@ module.exports = function (passport) {
 	});
 	router.get('/logout', function(req, res){
 	  	req.logout();
-	  	console.log('logged out!')
+	  	console.log('logged out!');
 	  	res.redirect('/');
+	});
+	router.get('/room/:name', function (req, res) {
+
 	});
 	return router;
 };

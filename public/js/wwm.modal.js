@@ -3,13 +3,6 @@ wwm.modal = (function (){
 		$modal: $('#modal')
 	};
 	var jqMap;
-	function initModule($target) {
-		stMap.$modal.html($target);
-		setJqMap($target);
-		jqMap.$close.click(onCloseModal);
-		stMap.$modal.show();
-		jqMap.$createRoom.click(createRoom);
-	}
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
@@ -37,11 +30,19 @@ wwm.modal = (function (){
 			return;
 		}
 		data = {
-			title: jqMap.$title.val(),
-			number: jqMap.$number.val(),
-			password: jqMap.$password.val()
-		}
+			title: title,
+			number: number,
+			password: password
+		};
 		wwm.model.createRoom(data);
+	}
+	function initModule($target) {
+		console.log($target);
+		stMap.$modal.html($target);
+		setJqMap($target);
+		jqMap.$close.click(onCloseModal);
+		stMap.$modal.show();
+		jqMap.$createRoom.click(createRoom);
 	}
 	return {
 		initModule: initModule

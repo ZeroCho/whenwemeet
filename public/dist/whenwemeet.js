@@ -40,8 +40,8 @@ wwm.shell = (function () {
 		console.log('Error: ', errorMsg, ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' + errorObj);
 	}
 	function initModule($con) {
-		console.log('login: ' + localStorage.login);
-		console.log('first: ' + localStorage.first)
+		console.log('login', localStorage.login);
+		console.log('first', localStorage.first);
 		var logged = localStorage.login && JSON.parse(localStorage.login);
 		var first = localStorage.first && JSON.parse(localStorage.first);
 		setJqMap($con);
@@ -49,7 +49,7 @@ wwm.shell = (function () {
 		//if (first) {
 		//	wwm.modal.initModule($('#wwm-intro').html());
 		//}
-		console.log('logged: ', logged);
+		console.log('logged', logged);
 		if (logged) {
 			wwm.lobby.initModule(jqMap.$view);
 		} else {
@@ -107,12 +107,12 @@ wwm.lobby = (function (){
 		userInfo = JSON.parse(localStorage.login);
 		console.log('lobby', localStorage.login);
 		var src = document.getElementById('wwm-lobby').textContent;
-		console.log(src);
+		console.log('src', src);
 		console.log(userInfo.properties.nickname);
-		dust.renderSource(src, {
+		dust.render(dust.loadSource(dust.compile(src)), {
 			name: userInfo.properties.nickname
 		}, function(err, out) {
-			console.log(out);
+			console.log('out', out);
 			$con.html(out);
 			setJqMap($con);
 			getList();
@@ -123,7 +123,7 @@ wwm.lobby = (function (){
 		});
 	}
 	function showCreateroom() {
-		wwm.modal.initModule($('#wwm-createroom'));
+		wwm.modal.initModule($('#wwm-createroom-modal'));
 	}
 	function getList() {
 		$.get('/roomlist').done(function(res){
