@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Pgb = require('pg-bluebird');
-process.env['DATABASE_URL'] = 'postgres://thxcqbbpfrgolx:92MMhUKaB1bD_0Ga0gwZ6LC2cs@ec2-54-83-51-0.compute-1.amazonaws.com:5432/d4fgfofmnomujs';
+
 var pgb = new Pgb().connect(process.env.DATABASE_URL);
 pgb.catch(function(err) {
 	console.log('app.js::pgb ' + err);

@@ -13,7 +13,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.engine('dust', adaro.dust());
 app.set('view engine', 'dust');
-
+process.env.DATABASE_URL = 'postgres://thxcqbbpfrgolx:92MMhUKaB1bD_0Ga0gwZ6LC2cs@ec2-54-83-51-0.compute-1.amazonaws.com:5432/d4fgfofmnomujs';
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());

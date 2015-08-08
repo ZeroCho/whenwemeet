@@ -9,9 +9,11 @@ wwm.lobby = (function (){
 		var getListPromise = wwm.model.getRoomList();
 		getListPromise.done(function (res) {
 			console.log(res);
+			jqMap.$list.text(res);
 		});
 		getListPromise.fail(function (err) {
 			console.log(err);
+			jqMap.$list.text(err);
 		});
 	}
 	function onSearchRoom (query) {

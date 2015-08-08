@@ -8,7 +8,7 @@ wwm.modal = (function (){
 			$con: $con,
 			$close: $con.find('.modal-close'),
 			$title: $con.find('#room-title'),
-			$number: $con.find('#room-number'),
+			$number: $con.find('#room-people-number'),
 			$password: $con.find('#room-password'),
 			$createRoom: $con.find('#create-room-btn')
 		};
@@ -25,10 +25,6 @@ wwm.modal = (function (){
 		var maker = userInfo.id || userInfo._id;
 		if (!title) {
 			alert('제목을 입력하세요.');
-			return;
-		}
-		if (!number) {
-			alert('인원수를 선택하세요!');
 			return;
 		}
 		data = {
