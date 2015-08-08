@@ -18,6 +18,19 @@ module.exports = function () {
 	  	req.logout();
 	  	console.log('logged out!');
 	  	res.redirect('/');
+	})
+	router.get('/member/:id', function (req, res) {
+		var id = req.params.id;
+		pgb.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query(
+				'SELECT * FROM members WHERE id = ' + id
+			);
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('member' + err);
+		});
 	});
 	router.post('/room/:name', function (req, res) {
 		var id = req.params.name;

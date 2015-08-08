@@ -17,6 +17,8 @@ wwm.modal = (function (){
 		stMap.$modal.hide();
 	}
 	function createRoom() {
+		var spinner = new Spinner().spin();
+		jqMap.$con.append(spinner.el);
 		var data;
 		var title = jqMap.$title.val();
 		var number = jqMap.$number.val();
@@ -36,9 +38,11 @@ wwm.modal = (function (){
 		};
 		var createRoomPromise = wwm.model.createRoom(data);
 		createRoomPromise.done(function (data) {
+			$(spinner.el).remove();
 			wwm.room.initModule(data);
 		});
 		createRoomPromise.fail(function (err) {
+			$(spinner.el).remove();
 			alert(err);
 		});
 	}

@@ -13,7 +13,7 @@ wwm.lobby = (function (){
 		});
 		getListPromise.fail(function (err) {
 			console.log(err);
-			jqMap.$list.text(err);
+			jqMap.$list.text(err.responseText);
 		});
 	}
 	function onSearchRoom (query) {
@@ -25,7 +25,7 @@ wwm.lobby = (function (){
 		});
 		searchPromise.fail(function (err) {
 			console.log(err);
-			jqMap.$list.text(err);
+			jqMap.$list.text(err.responseText);
 		});
 	}
 	function logout() {
@@ -52,10 +52,8 @@ wwm.lobby = (function (){
 	}
 	function initModule($con) {
 		var src = document.getElementById('wwm-lobby').textContent;
-		console.log(document.getElementById('wwm-lobby'));
 		userInfo = JSON.parse(localStorage.login);
 		console.log('lobby', localStorage.login);
-		console.log('src', src);
 		var username = userInfo.properties.nickname || userInfo.name;
 		console.log('username', username);
 		dust.render(dust.loadSource(dust.compile(src)), {
@@ -65,9 +63,10 @@ wwm.lobby = (function (){
 				console.log(err);
 				alert('error! 콘솔 확인');
 			} else {
-				console.log('out', out);
 				$con.html(out);
 				setJqMap($con);
+				var spinner = new Spinner().spin();
+				jqMap.$list.append(spinner.el);
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);

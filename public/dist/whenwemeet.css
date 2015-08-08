@@ -100,6 +100,8 @@ label {
 	position: absolute;
 	right: 0;
 	top: 0;
+	margin-right: 5px;
+	margin-top: 5px;
 }
 #lobby-main {
 	text-align: center;
@@ -118,11 +120,14 @@ label {
 	left: 10px;
 }
 #refresh-list {
+	position: absolute;
 	bottom: 0;
 	right: 0;
+	margin-right: 5px;
 }
 #show-createroom-modal {
 	float: right;
+	margin-right: 10px;
 }
 #lobby-footer {
 	position: absolute;
