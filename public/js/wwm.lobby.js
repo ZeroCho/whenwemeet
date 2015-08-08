@@ -19,9 +19,11 @@ wwm.lobby = (function (){
 		var searchPromise = wwm.model.getRoomList(query);
 		searchPromise.done(function (res) {
 			console.log(res);
+			jqMap.$list.text(res);
 		});
 		searchPromise.fail(function (err) {
 			console.log(err);
+			jqMap.$list.text(err);
 		});
 	}
 	function logout() {
@@ -40,7 +42,7 @@ wwm.lobby = (function (){
 			$con: $con,
 			$showCreateroom: $con.find('#show-createroom-modal'),
 			$searchroomBtn: $con.find('#searchroom-btn'),
-			$list: $con.find('#room-list'),
+			$list: $con.find('#rooms'),
 			$logout: $con.find('#logout-btn'),
 			$room: $con.find('.room'),
 			$refresh: $con.find('#refresh-list')

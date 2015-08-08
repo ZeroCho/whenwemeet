@@ -31,7 +31,7 @@
 	</script>
 	<script type="text/html" id="wwm-lobby">
 		<header id="lobby-header">
-			<p>&#123;name&#125;님 안녕하세요!</p>
+			<p>{~lb}name{~rb}님 안녕하세요!</p>
 			<button id="logout-btn">로그아웃</button>
 		</header>
 		<main id="lobby-main">
@@ -80,7 +80,7 @@
 	</script>
 	<script type="text/html" id="wwm-room">
 		<header>
-			<b id="title">{title}</b>
+			<b id="title">{~lb}title{~rb}</b>
 			<span>현재원: <b id="current-number">0</b>명</span>
 		</header>
 		<main>
@@ -319,7 +319,7 @@
 		</main>
 		<footer>
 			<div id="my-menu">
-				{@eq key="admin" value=true}
+				{~lb}@eq key="admin" value=true{~rb}
 				<div id="admin-menu">
 					<button>관리자 메뉴</button>
 					<ul>
@@ -329,14 +329,14 @@
 							</select>
 							<button id="ban-people-btn">강퇴</button>
 						</li>
-						<li><b id="current-room-title">{title}</b><button id="change-room-title">변경</button></li>
+						<li><b id="current-room-title">{~lb}title{~rb}</b><button id="change-room-title">변경</button></li>
 						<li>
-							인원수 조정 <b id="current-people-number">{number}</b><button id="change-number-btn">변경</button>
+							인원수 조정 <b id="current-people-number">{~lb}number{~rb}</b><button id="change-number-btn">변경</button>
 						</li>
 						<li id="explode-room">방 폭파</li>
 					</ul>
 				</div>
-				{/eq}
+				{~lb}/eq{~rb}
 				<div id="day-exception">
 					<button>요일 예외</button>
 					<ul>
@@ -364,7 +364,7 @@
 				</div>
 			</div>
 			<div id="my-info">
-				{name}
+				{~lb}name{~rb}
 			</div>
 			<div id="chat">
 				<label for="chatbox" class="sr-only">채팅창</label>

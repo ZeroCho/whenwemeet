@@ -65,14 +65,21 @@ button {
 }
 #lobby-main {
 	text-align: center;
+	position: absolute;
+	top: 30px;
+	bottom: 30px;
+	width: 100%;
 }
 #show-createroom-modal {
 	float: right;
 }
 #rooms {
+	position: absolute;
 	border: 1px solid gray;
 	margin: 0 auto;
 	width: 90%;
+	top: 20px;
+	bottom: 20px;
 }
 #lobby-footer {
 	position: absolute;
