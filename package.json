@@ -26,10 +26,10 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.2.0",
     "gulp-watch": "^4.3.3",
+    "pg-bluebird": "^1.0.8",
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "socket.io": "^1.3.6",
-    "pg-bluebird": "^1.0.8"
+    "socket.io": "^1.3.6"
   }
 }
