@@ -31,7 +31,7 @@
 	</script>
 	<script type="text/html" id="wwm-lobby">
 		<header id="lobby-header">
-			<p>{name}님 안녕하세요!</p>
+			<p>&#123;name&#125;님 안녕하세요!</p>
 			<button id="logout-btn">로그아웃</button>
 		</header>
 		<main id="lobby-main">
@@ -324,6 +324,7 @@
 					<button>관리자 메뉴</button>
 					<ul>
 						<li id="ban-people">
+							<label for="ban-member-list" class="sr-only">현재 참여자</label>
 							<select id="ban-member-list">
 							</select>
 							<button id="ban-people-btn">강퇴</button>
@@ -351,8 +352,14 @@
 				<div id="time-exception">
 					<button>시간 예외</button>
 					<ul>
-						<li id="not-before"><input id="time-before"/>시 이전은 안돼요</li>
-						<li id="not-after"><input id="time-after"/>시 이후는 안돼요</li>
+						<li id="not-before">
+							<label for="time-before" class="sr-only">몇 시 이전은 불가능</label>
+							<input id="time-before"/>시 이전은 안돼요
+						</li>
+						<li id="not-after">
+							<label for="time-after" class="sr-only">몇 시 이전은 불가능</label>
+							<input id="time-after"/>시 이후는 안돼요
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -360,6 +367,7 @@
 				{name}
 			</div>
 			<div id="chat">
+				<label for="chatbox" class="sr-only">채팅창</label>
 				<input id="chatbox"/>
 				<button id="send-chat">전송</button>
 			</div>

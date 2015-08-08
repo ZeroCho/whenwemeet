@@ -33,6 +33,8 @@ module.exports = function () {
 			);
 		}).then(function (result) {
 			res.send(result);
+		}).catch(function (err) {
+			console.log('room ' + err);
 		});
 	});
 	router.get('/rooms', function (req, res) {
@@ -43,6 +45,8 @@ module.exports = function () {
 			);
 		}).then(function (result) {
 			res.send(result);
+		}).catch(function (err) {
+			console.log('rooms ' + err);
 		});
 	});
 	router.get('/rooms/:query', function (req, res) {
@@ -54,6 +58,8 @@ module.exports = function () {
 			);
 		}).then(function (result) {
 			res.send(result);
+		}).catch(function (err) {
+			console.log('roomsq ' + err);
 		});
 	});
 	return router;

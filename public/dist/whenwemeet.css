@@ -69,6 +69,11 @@ button {
 #show-createroom-modal {
 	float: right;
 }
+#rooms {
+	border: 1px solid gray;
+	margin: 0 auto;
+	width: 90%;
+}
 #lobby-footer {
 	position: absolute;
 	width: 100%;
@@ -85,4 +90,8 @@ button {
 	text-align: center;
 	width: 100%;
 	bottom: 0;
+}
+.sr-only {
+	display: none;
+	visibility: hidden;
 }
