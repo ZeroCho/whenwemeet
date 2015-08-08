@@ -30,14 +30,18 @@
 		</div>
 	</script>
 	<script type="text/dust" id="wwm-lobby">
-		<header>
-			<p> {name} 님 안녕하세요!</p>
-		</header>
-		<main>
+		<header id="lobby-header">
+			<p>{name}님 안녕하세요!</p>
 			<button id="logout-btn">로그아웃</button>
-			<div id="room-list">리스트</div>
+		</header>
+		<main id="lobby-main">
+			<div id="room-list">
+				<div class="title">리스트</div>
+				<div id="rooms"></div>
+				<button id="refresh-rooms">새로고침</button>
+			</div>
 		</main>
-		<footer>
+		<footer id="lobby-footer">
 			<button id="show-createroom-modal">방 만들기</button>
 			<div id="search">
 				<input type="text" placeholder="방 제목"/>

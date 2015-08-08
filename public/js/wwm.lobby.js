@@ -2,13 +2,13 @@ wwm.lobby = (function (){
 	var jqMap;
 	var userInfo;
 	function showCreateroom() {
-		wwm.modal.initModule($('#wwm-createroom-modal'));
+		wwm.modal.initModule($('#wwm-createroom-modal').html());
 	}
 	function getList() {
 		var $frag = $(document.createDocumentFragment());
 		var getListPromise = wwm.model.getRoomList();
 		getListPromise.done(function (res) {
-
+			console.log(res);
 		});
 		getListPromise.fail(function (err) {
 			console.log(err);
@@ -18,7 +18,7 @@ wwm.lobby = (function (){
 		var $frag = $(document.createDocumentFragment());
 		var searchPromise = wwm.model.getRoomList(query);
 		searchPromise.done(function (res) {
-
+			console.log(res);
 		});
 		searchPromise.fail(function (err) {
 			console.log(err);
@@ -44,6 +44,7 @@ wwm.lobby = (function (){
 	}
 	function initModule($con) {
 		var src = document.getElementById('wwm-lobby').textContent;
+		console.log(document.getElementById('wwm-lobby'));
 		userInfo = JSON.parse(localStorage.login);
 		console.log('lobby', localStorage.login);
 		console.log('src', src);

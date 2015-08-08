@@ -37,9 +37,15 @@ button {
 	top: 0;
 }
 #logo {
+	position: absolute;
+	top: 20px;
+	width: 100%;
 	text-align: center;
 }
 #login {
+	position: absolute;
+	bottom: 30px;
+	width: 100%;
 	text-align: center;
 }
 #modal {
@@ -49,4 +55,20 @@ button {
 	display: none;
 	height: 100%;
 	z-index: 10;
+}
+#logout-btn {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+#lobby-main {
+	text-align: center;
+}
+#show-createroom-modal {
+	float: right;
+}
+#lobby-footer {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
 }
