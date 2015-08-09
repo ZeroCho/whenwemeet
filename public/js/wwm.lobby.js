@@ -45,7 +45,7 @@ wwm.lobby = (function (){
 		});
 	}
 	function onSearchRoom () {
-		var query = $(this).prev().text();
+		var query = $(this).prev().val();
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
 		var $frag = $(document.createDocumentFragment());
