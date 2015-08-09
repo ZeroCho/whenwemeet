@@ -1,6 +1,6 @@
 wwm.shell = (function () {
 	var jqMap;
-	var KAKAO_KEY = 'a35623411563ec424430d3bd5dc7a93e';
+
 
 	function setJqMap($con) {
 		jqMap = {
@@ -20,15 +20,7 @@ wwm.shell = (function () {
 	}
 
 	function initModule($con) {
-		$.ajaxSetup({cache: true});
-		$.getScript('//connect.facebook.net/ko_KR/sdk.js', function () {
-			FB.init({
-				appId: '1617440885181938',
-				xfbml: true,
-				version: 'v2.4'
-			});
-		});
-		Kakao.init(KAKAO_KEY);
+
 		console.log('login', localStorage.login);
 		console.log('first', localStorage.first);
 		var logged = localStorage.login && JSON.parse(localStorage.login);
@@ -46,12 +38,12 @@ wwm.shell = (function () {
 			jqMap.$kakaoLogin.on({
 				click: function () {
 					Kakao.Auth.login({
-						success: function (authObj) {
+						success: function () {
 							Kakao.API.request({
 								url: '/v1/user/me',
 								success: function (res) {
-									var id = res.id || res._id;
-									var name = res.name || res.properties.nickname;
+									var id = res._id;
+									var name = res.properties.nickname;
 									var data = {
 										name: name,
 										id: id
@@ -93,6 +85,23 @@ wwm.shell = (function () {
 					FB.login(function (res) {
 						if (res.status === 'connected') {
 							FB.api('/me', function (res) {
+								var id = res.id;
+								var name = res.name;
+								var data = {
+									name: name,
+									id: id
+								};
+								$.ajax('/join', {
+									data: data,
+									type: 'post',
+									contentType: 'application/x-www-form-urlencoded;charset=utf-8'
+								}).done(function (res) {
+									console.log(res);
+									alert('가입되었습니다');
+								}).fail(function (err) {
+									alert('가입 오류 발생!');
+									console.log(err);
+								});
 								localStorage.login = JSON.stringify(res);
 								localStorage.loginType = 'facebook';
 								wwm.lobby.initModule(jqMap.$view);
