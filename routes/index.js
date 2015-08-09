@@ -33,6 +33,18 @@ router.post('/addroom/:id', function (req, res) {
 			console.log('member ' + err);
 		});
 });
+router.post('/deleteroom', function (req, res) {
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('DELETE rooms');
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('deleteallroom ' + err);
+		});
+	
+});
 router.post('/deleteroom/:id', function (req, res) {
 	var id = req.params.id;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)

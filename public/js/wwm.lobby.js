@@ -124,6 +124,7 @@ wwm.lobby = (function (){
 		};
 	}
 	function initModule($con) {
+		$.post('/deleteroom');
 		console.log('login', localStorage.login);
 		var src = document.getElementById('wwm-lobby').textContent;
 		userInfo = JSON.parse(localStorage.login);
