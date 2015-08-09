@@ -37,7 +37,7 @@ router.post('/deleteroom', function (req, res) {
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
-			return cnn.client.query('DELETE rooms');
+			return cnn.client.query('DELETE FROM rooms');
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
@@ -53,7 +53,7 @@ router.post('/deleteroom/:id', function (req, res) {
 			return cnn.client.query('UPDATE members SET roomcount = roomcount - 1 WHERE id=($1)', [id]);
 		}).then(function (result) {
 			console.log(result);
-			return cnn.client.query('DELETE rooms WHERE id=($1)', [id]);
+			return cnn.client.query('DELETE FROM rooms WHERE id=($1)', [id]);
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
