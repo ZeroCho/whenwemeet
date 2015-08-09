@@ -98,6 +98,7 @@
 			</div>
 			<table border="1">
 				<tr>
+					<th></th>
 					<th>일</th>
 					<th>월</th>
 					<th>화</th>
@@ -107,109 +108,121 @@
 					<th>토</th>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>12</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>1</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>2</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>3</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>4</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>5</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>6</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>7</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>8</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>9</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>10</td>
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
 					<td>11</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -262,6 +275,7 @@
 						</li>
 					</ul>
 				</div>
+				<button id="room-back">뒤로가기</button>
 			</div>
 			<div id="my-info">
 				{~lb}name{~rb}

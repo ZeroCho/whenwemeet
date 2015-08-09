@@ -3,6 +3,9 @@ wwm.room = (function(){
   var stMap = {
     $con: $('#view')
   };
+  var cfMap = {
+    current: 'day'
+  };
   var userInfo;
   var socket = io();
   function setJqMap($con) {
@@ -12,7 +15,10 @@ wwm.room = (function(){
       $ban: $con.find('#ban-people-btn'),
       $changeNumber: $con.find('#change-number-btn'),
       $changeTitle: $con.find('#change-room-title'),
-      $calendar: $con.find('table')
+      $calendar: $con.find('table'),
+      $day: $con.find('#day'),
+      $night: $con.find('#night'),
+      $back: $con.find('#room-back')
     };
   }
   function tableToArr(cell) {
@@ -23,6 +29,9 @@ wwm.room = (function(){
   function deleteRoom() {
     wwm.model.deleteRoom();
   }
+  function goBack() {
+    wwm.lobby.initModule(jqMap.$con);
+  }
   function onClickCell() {
     if ($(this).hasClass('busy')) {
       socket.emit('not-busy', tableToArr(this));
@@ -31,6 +40,12 @@ wwm.room = (function(){
       socket.emit('busy', tableToArr(this));
       $(this).addClass('busy');
     }
+  }
+  function toDay() {
+    cfMap.current = 'day';
+  }
+  function toNight() {
+    cfMap.current = 'night';
   }
   function initModule(data) {
     userInfo = JSON.parse(localStorage.login);
@@ -47,6 +62,9 @@ wwm.room = (function(){
     setJqMap(stMap.$con);
     jqMap.$calendar.find('td').click(onClickCell);
     jqMap.$explode.click(deleteRoom);
+    jqMap.$back.click(goBack);
+    jqMap.$day.click(toDay);
+    jqMap.$night.click(toNight);
   }
 
   return {

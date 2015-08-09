@@ -168,6 +168,10 @@ label {
 	top: 0;
 	width: 100%;
 }
+#room-main {
+	position: absolute;
+	top: 30px;
+}
 #calendar-confirm {
 	float: right;
 }
@@ -176,6 +180,7 @@ label {
 	display: inline-block;
 	text-align: center;
 	border: 1px solid silver;
+	box-sizing: border-box;
 }
 #room-main table {
 	width: 100%;
@@ -187,4 +192,7 @@ label {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
+}
+#chat {
+	float: right;
 }
