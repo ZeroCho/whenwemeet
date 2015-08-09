@@ -21,9 +21,9 @@ router.get('/member/:id', function (req, res) {
 			console.log('member' + err);
 		});
 });
-router.post('/join/', function (req, res) {
-	var id = req.body.id || req.body._id;
-	var name = req.body.properties.nickname || req.body.name;
+router.post('/join', function (req, res) {
+	var id = req.body.id;
+	var name = req.body.name;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;

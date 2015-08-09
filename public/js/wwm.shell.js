@@ -50,7 +50,17 @@ wwm.shell = (function () {
 							Kakao.API.request({
 								url: '/v1/user/me',
 								success: function (res) {
-									$.post('/join', res).done(function (res) {
+									var id = res.id || res._id;
+									var name = res.name || res.properties.nickname;
+									var data = {
+										name: name,
+										id: id
+									};
+									$.ajax('/join', {
+										data: data,
+										type: 'post',
+										contentType: 'application/x-www-form-urlencoded;charset=utf-8'
+									}).done(function (res) {
 										console.log(res);
 										alert('가입되었습니다');
 									}).fail(function (err) {
