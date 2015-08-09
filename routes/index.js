@@ -32,6 +32,7 @@ router.post('/addroom/:id', function (req, res) {
 		}).catch(function (err) {
 			console.log('member ' + err);
 		});
+		// todo: merge addroom and room
 });
 router.post('/deleteroom', function (req, res) {
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)

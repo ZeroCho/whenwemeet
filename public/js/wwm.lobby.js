@@ -101,7 +101,7 @@ wwm.lobby = (function (){
 		};
 		if ($(this).has('.password').length) {
 			var pw = prompt('비밀번호');
-			$.post('/enterroom/' + id, {pw: pw}).done(function() {
+			$.post('/enterroom/' + data.id, {pw: pw}).done(function() {
 				wwm.room.initModule(data);	
 			}).fail(function(err) {
 				alert('비밀번호가 틀렸습니다.');

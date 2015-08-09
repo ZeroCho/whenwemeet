@@ -253,7 +253,6 @@
 				</div>
 				{~lb}/eq{~rb}
 				<div id="day-exception">
-					<button>요일 예외</button>
 					<ul>
 						<li id="not-mon">월요일은 안 돼요</li>
 						<li id="not-tue">화요일은 안 돼요</li>
@@ -263,9 +262,9 @@
 						<li id="not-sat">토요일은 안 돼요</li>
 						<li id="not-sun">일요일은 안 돼요</li>
 					</ul>
+					<button>요일 예외</button>
 				</div>
-				<div id="time-exception">
-					<button>시간 예외</button>
+				<div id="time-exception">					
 					<ul>
 						<li id="not-before">
 							<label for="time-before" class="sr-only">몇 시 이전은 불가능</label>
@@ -276,6 +275,7 @@
 							<input id="time-after"/>시 이후는 안돼요
 						</li>
 					</ul>
+					<button>시간 예외</button>
 				</div>
 				<button id="room-back">뒤로가기</button>
 			</div>
