@@ -38,9 +38,6 @@ wwm.login = (function () {
 									data: data,
 									type: 'post',
 									contentType: 'application/x-www-form-urlencoded;charset=utf-8'
-								}).done(function (res) {
-									console.log(res);
-									alert('가입되었습니다');
 								}).fail(function (err) {
 									alert('가입 오류 발생!');
 									console.log(err.responseText);
@@ -81,9 +78,6 @@ wwm.login = (function () {
 								data: data,
 								type: 'post',
 								contentType: 'application/x-www-form-urlencoded;charset=utf-8'
-							}).done(function (res) {
-								console.log(res);
-								alert('가입되었습니다');
 							}).fail(function (err) {
 								alert('가입 오류 발생!');
 								console.log(err.responseText);

@@ -38,8 +38,9 @@ wwm.modal = (function (){
 			password: password
 		};
 		var createRoomPromise = wwm.model.createRoom(data);
-		createRoomPromise.done(function (data) {
-			wwm.room.initModule(data);
+		createRoomPromise.done(function (result) {
+			console.log(result);
+			wwm.room.initModule(result);
 		});
 		createRoomPromise.fail(function (err) {
 			alert(err);

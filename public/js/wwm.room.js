@@ -1,5 +1,8 @@
 wwm.room = (function(){
   var jqMap;
+  var stMap = {
+    $con: $('#view')
+  };
   var userInfo;
   var socket = io();
   function setJqMap($con) {
@@ -17,6 +20,9 @@ wwm.room = (function(){
     console.log('tableToArr', arr);
     return arr;
   }
+  function deleteRoom() {
+    wwm.model.deleteRoom();
+  }
   function onClickCell() {
     if ($(this).hasClass('busy')) {
       socket.emit('not-busy', tableToArr(this));
@@ -26,21 +32,23 @@ wwm.room = (function(){
       $(this).addClass('busy');
     }
   }
-  function initModule($con) {
+  function initModule(data) {
     userInfo = JSON.parse(localStorage.login);
     var src = $('#wwm-room').text();
     dust.render(dust.loadSource(dust.compile(src)), {
       name: userInfo.username
     }, function(err, out) {
-      $con.html(out);
+      if (err) {
+        console.log(err);
+        return;
+      }
+      stMap.$con.html(out);
     });
-    setJqMap($con);
+    setJqMap(stMap.$con);
     jqMap.$calendar.find('td').click(onClickCell);
     jqMap.$explode.click(deleteRoom);
   }
-  function deleteRoom() {
-    wwm.model.deleteRoom();
-  }
+
   return {
     initModule: initModule
   };
