@@ -24,7 +24,9 @@ wwm.room = (function(){
       $night: $con.find('#night'),
       $back: $con.find('#room-back'),
       $dayExp: $con.find('#day-exception'),
+      $notDay: $con.find('#day-exception').find('li'),
       $timeExp: $con.find('#time-exception'),
+      $notTime: $con.find('#time-exception').find('li'),
       $title: $con.find('#title'),
       $total: $con.find('#total-number'),
       $sendChat: $con.find('#send-chat')
@@ -96,6 +98,21 @@ wwm.room = (function(){
     		alert('오류발생');
     });
   }
+  function excludeDay() {
+  		alert($(this).index());
+  		var idx = $(this).index();
+  		// remove date that matches index
+  }
+  function excludeTime() {
+  		alert($(this).index());
+  		var idx = $(this).index();
+  		var time = $(this).find('input').val();
+  		if (idx === 0) {
+  		// not before
+  		} else {
+  		// not after
+  		}
+  }
   function goBack() {
     wwm.lobby.initModule(jqMap.$con);
   }
@@ -164,6 +181,8 @@ wwm.room = (function(){
     jqMap.$changeLimit.click({id: data.id}, changeLimit);
     jqMap.$changeTitle.click({id: data.id}, changeTitle);
     jqMap.$sendChat.click(sendChat);
+    jqMap.$notDay.click(excludeDay);
+    jqMap.$notTime.click(excludeTime);
   }
 
   return {

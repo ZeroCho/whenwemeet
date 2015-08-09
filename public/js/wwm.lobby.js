@@ -44,7 +44,8 @@ wwm.lobby = (function (){
 			$(spinner.el).remove();
 		});
 	}
-	function onSearchRoom (query) {
+	function onSearchRoom () {
+		var query = $(this).prev().text();
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
 		var $frag = $(document.createDocumentFragment());
@@ -104,7 +105,7 @@ wwm.lobby = (function (){
 				wwm.room.initModule(data);	
 			}).fail(function(err) {
 				alert('비밀번호가 틀렸습니다.');
-			};
+			});
 		} else {
 			wwm.room.initModule(data);
 		}
