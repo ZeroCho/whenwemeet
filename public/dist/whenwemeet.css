@@ -59,6 +59,9 @@ button:active {
 label {
 	display: inline-block;
 }
+li {
+	list-style-type: none;
+}
 #whenwemeet {
 	position: absolute;
 	height: 100%;

@@ -135,7 +135,7 @@ router.get('/rooms/:query', function (req, res) {
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
-			return cnn.client.query('SELECT * FROM rooms where title=($1)', [query]);
+			return cnn.client.query('SELECT * FROM rooms WHERE title LIKE ($1)', ['%' + query + '%']);
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
