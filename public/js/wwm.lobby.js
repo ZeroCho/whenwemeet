@@ -95,7 +95,7 @@ wwm.lobby = (function (){
 			title: $(this).find('.title').text(),
 			current: $(this).find('.current').text(),
 			number: $(this).find('.total').text(),
-			maker: $(this).data('maker')
+			maker: $(this).data('maker'),
 			member: JSON.parse($(this).data('member'))
 		};
 		if ($(this).has('.password').length) {

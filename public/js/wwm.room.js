@@ -17,14 +17,16 @@ wwm.room = (function(){
       $con: $con,
       $explode: $con.find('#explode-room'),
       $ban: $con.find('#ban-people-btn'),
-      $changeNumber: $con.find('#change-number-btn'),
+      $changeLimit: $con.find('#change-number-btn'),
       $changeTitle: $con.find('#change-room-title'),
       $calendar: $con.find('table'),
       $day: $con.find('#day'),
       $night: $con.find('#night'),
       $back: $con.find('#room-back'),
       $dayExp: $con.find('#day-exception'),
-      $timeExp: $con.find('#time-exception')
+      $timeExp: $con.find('#time-exception'),
+      $title: $con.find('#title'),
+      #total: $con.find('#total-number')
     };
   }
   function tableToArray(cell) {
@@ -39,20 +41,26 @@ wwm.room = (function(){
   		
   		}
   }
-  function ban(id) {
-  		var banPromise = wwm.model.ban(id);
+  function ban(e) {
+  		var banPromise = wwm.model.ban(e.data.id);
   		banPromise.done(function(res) {
   		});
   		banPromise.fail(function(err) {});
   }
-  function changeTitle(title) {
-  		var titlePromise = wwm.model.changeTitle(title);
-  		titlePromise.done(function(res) {});
+  function changeTitle(e) {
+  		var title = $(this).prev().val();
+  		var titlePromise = wwm.model.changeTitle(e.data.id, title);
+  		titlePromise.done(function(res) {
+  			jqMap.$title.text(title);
+  		});
   		titlePromise.fail(function(err) {});
   }
-  function changeLimit(number) {
-  		var limitPromise = wwm.model.changeLimit(number);
-  		limitPromise.done(function(res) {});
+  function changeLimit(e) {
+  		var number = $(this).prev().val();
+  		var limitPromise = wwm.model.changeLimit(e.data.id, number);
+  		limitPromise.done(function(res) {
+  			jqMap.$total.text(number);
+  		});
   		limitPromise.fail(function(err) {});
   }
   function showDayException() {
@@ -130,12 +138,15 @@ wwm.room = (function(){
     });
     setJqMap(stMap.$con);
     jqMap.$calendar.find('td').click(onClickCell);
-    jqMap.$explode.click(data.id, deleteRoom);
+    jqMap.$explode.click({id: data.id}, deleteRoom);
     jqMap.$back.click(goBack);
     jqMap.$day.click(toDay);
     jqMap.$night.click(toNight);
     jqMap.$dayExp.click(showDayException);
     jqMap.$timeExp.click(showTimeException);
+    jqMap.$ban.click({id: data.id}, ban);
+    jqMap.$changeLimit.click({id: data.id}, changeLimit);
+    jqMap.$changeTitle.click({id: data.id}, changeTitle);
   }
 
   return {
