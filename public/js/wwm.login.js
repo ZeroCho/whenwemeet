@@ -4,12 +4,16 @@ wwm.login = (function () {
 		jqMap = {
 			$con: $con,
 			$kakaoLogin: $con.find('#kakao-login-btn'),
-			$fbLogin: $con.find('#fb-login-btn')
+			$fbLogin: $con.find('#fb-login-btn'),
+			$canvas: $con.find('#canvas-logo')
 		};
 	}
 	function initModule($con) {
 		$con.html($('#wwm-login').html());
 		setJqMap($con);
+		var ctx = jqMap.$canvas.get().getContext('2d');
+		ctx.fillStyle = '#FF0000';
+		ctx.fillRect(0,0,150,75);
 		jqMap.$kakaoLogin.on({
 			click: function () {
 				Kakao.Auth.login({

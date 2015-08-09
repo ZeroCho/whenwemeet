@@ -22,7 +22,7 @@
 	<script type="text/html" id="wwm-login">
 		<div id="logo">
 			우리언제만나
-			<canvas></canvas>
+			<canvas id="canvas-logo"></canvas>
 		</div>
 		<div id="login">
 			<div>
@@ -273,5 +273,6 @@
 			</div>
 		</footer>
 	</script>
+	<div id="fb-root"></div>
 </body>
 </html>
