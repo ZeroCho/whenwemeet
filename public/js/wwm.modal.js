@@ -31,7 +31,7 @@ wwm.modal = (function (){
 			return;
 		}
 		data = {
-			id: String(new Date().getTime()) + Math.random() * 1000,
+			id: String(new Date().getTime()) + Math.floor(Math.random() * 1000),
 			title: title,
 			maker: maker,
 			number: number,

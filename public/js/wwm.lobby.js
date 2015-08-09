@@ -41,7 +41,7 @@ wwm.lobby = (function (){
 	function logout() {
 		localStorage.removeItem('login');
 		localStorage.removeItem('loginType');
-		wwm.shell.initModule(jqMap.$con.parent());
+		wwm.login.initModule(jqMap.$con);
 	}
 	function enterRoom() {
 		wwm.room.initModule(jqMap.$con, $(this));
@@ -63,11 +63,9 @@ wwm.lobby = (function (){
 	function initModule($con) {
 		var src = document.getElementById('wwm-lobby').textContent;
 		userInfo = JSON.parse(localStorage.login);
-		console.log('lobby', localStorage.login);
-		var username = userInfo.properties.nickname || userInfo.name;
-		console.log('username', username);
+		var name =  userInfo.name || userInfo.properties.nickname;
 		dust.render(dust.loadSource(dust.compile(src)), {
-			name: username
+			name: name
 		}, function(err, out) {
 			if (err) {
 				console.log(err);
