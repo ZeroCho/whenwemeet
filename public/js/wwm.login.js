@@ -28,7 +28,7 @@ wwm.login = (function () {
 						Kakao.API.request({
 							url: '/v1/user/me',
 							success: function (res) {
-								var id = res._id;
+								var id = res.id;
 								var name = res.properties.nickname;
 								var data = {
 									name: name,
@@ -47,7 +47,7 @@ wwm.login = (function () {
 								});
 								localStorage.login = JSON.stringify(res);
 								localStorage.loginType = 'kakao';
-								wwm.lobby.initModule(jqMap.$view);
+								wwm.lobby.initModule(jqMap.$con);
 							},
 							fail: function (error) {
 								alert(JSON.stringify(error));
@@ -90,7 +90,7 @@ wwm.login = (function () {
 							});
 							localStorage.login = JSON.stringify(res);
 							localStorage.loginType = 'facebook';
-							wwm.lobby.initModule(jqMap.$view);
+							wwm.lobby.initModule(jqMap.$con);
 						});
 					} else if (res.status === 'not_authorized') {
 						// The person is logged into Facebook, but not your app.

@@ -1,7 +1,5 @@
 wwm.shell = (function () {
 	var jqMap;
-
-
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
