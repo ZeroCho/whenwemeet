@@ -62,9 +62,9 @@ wwm.shell = (function () {
 										contentType: 'application/x-www-form-urlencoded;charset=utf-8'
 									}).done(function (res) {
 										console.log(res);
-										alert('╟║ют╣г╬З╫ю╢о╢ы');
+										alert('Й╟─Л·┘К░≤Л≈┬Л┼╣К▀┬К▀╓');
 									}).fail(function (err) {
-										alert('╟║ют ©ю╥Ы ╧ъ╩Щ!');
+										alert('Й╟─Л·┘ Л≤╓К╔≤ К╟°Л┐²!');
 										console.log(err);
 									});
 									localStorage.login = JSON.stringify(res);

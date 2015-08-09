@@ -15,7 +15,7 @@ wwm.lobby = (function (){
 		});
 		getListPromise.fail(function (err) {
 			if (err === 'no_room') {
-				jqMap.$list.html('¹æÀÌ ¾ø½À´Ï´Ù. ¹æÀ» ¸¸µé¾îº¸¼¼¿ä.');
+				jqMap.$list.html('ë°©ì´ ì—†ìŠµë‹ˆë‹¤. ë°©ì„ ë§Œë“¤ì–´ë³´ì„¸ìš”.');
 				return;
 			}
 			console.log(err);
@@ -31,7 +31,7 @@ wwm.lobby = (function (){
 		});
 		searchPromise.fail(function (err) {
 			if (err === 'no_room') {
-				jqMap.$list.html('°Ë»ö °á°ú°¡ ¾ø½À´Ï´Ù.');
+				jqMap.$list.html('ê²€ìƒ‰ ê²°ê³¼ê°€ ì—†ìŠµë‹ˆë‹¤.');
 				return;
 			}
 			console.log(err);
@@ -41,7 +41,7 @@ wwm.lobby = (function (){
 	function logout() {
 		localStorage.removeItem('login');
 		localStorage.removeItem('loginType');
-		wwm.lobby.initModule(jqMap.$con);
+		wwm.shell.initModule(jqMap.$con.parent());
 	}
 	function enterRoom() {
 		wwm.room.initModule(jqMap.$con, $(this));
@@ -71,7 +71,7 @@ wwm.lobby = (function (){
 		}, function(err, out) {
 			if (err) {
 				console.log(err);
-				alert('error! ÄÜ¼Ö È®ÀÎ');
+				alert('error! ì½˜ì†” í™•ì¸');
 			} else {
 				$con.html(out);
 				setJqMap($con);
