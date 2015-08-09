@@ -12,9 +12,14 @@ wwm.lobby = (function (){
 		getListPromise.done(function (res) {
 			console.log(res);
 			for (var i = 0; i < res.length; i++) {
-				var $title = $('<div/>').text(res[i].title);
-				var $number = $('<div/>').text(res[i].number);
-				var $room = $('<div/>').attr('class', 'room').append($title).append($number);
+				var $title = $('<div/>').addClass('title').text(res[i].title);
+				var $number = $('<div/>').addClass('number').text(res[i].number);
+				var $room = $('<div/>').addClass('room').attr('data-id', res[i].id).attr('data-maker', res[i].maker).attr('data-member
+				, res[i].member).append($title).append($number);
+				if (res[i].password) {
+					var $password = $('<div/>').addClass('password').html('비번');
+					$room.prepend($password);
+				}
 				$frag.append($room);
 			}
 			jqMap.$list.html($frag);
@@ -32,8 +37,18 @@ wwm.lobby = (function (){
 		var $frag = $(document.createDocumentFragment());
 		var searchPromise = wwm.model.getRoomList(query);
 		searchPromise.done(function (res) {
-			console.log(res);
-			jqMap.$list.text(res);
+			for (var i = 0; i < res.length; i++) {
+				var $title = $('<div/>').addClass('title').text(res[i].title);
+				var $number = $('<div/>').addClass('number').text(res[i].number);
+				var $room = $('<div/>').addClass('room').attr('data-id', res[i].id).attr('data-maker', res[i].maker).attr('data-member
+				, res[i].member).append($title).append($number);
+				if (res[i].password) {
+					var $password = $('<div/>').addClass('password').html('비번');
+					$room.prepend($password);
+				}
+				$frag.append($room);
+			}
+			jqMap.$list.html($frag);
 		});
 		searchPromise.fail(function (err) {
 			if (err === 'no_room') {
@@ -50,7 +65,24 @@ wwm.lobby = (function (){
 		wwm.login.initModule(jqMap.$con);
 	}
 	function enterRoom() {
-		wwm.room.initModule($(this));
+		var data = {
+			id: $(this).data('id')
+			maker: $(this).data('maker')
+			member: JSON.parse($(this).data('member'))
+		};
+		if ($(this).has('.password').length) {
+			var pw = prompt('비밀번호');
+			$.post('/room/' + id, {pw: pw}).done(function() {
+				wwm.room.initModule(data);	
+			}).fail(function(err) {
+				alert('비밀번호가 틀렸습니다.);
+			};
+		} else {
+			wwm.room.initModule(data);
+		}
+	}
+	function enterPassword() {
+	
 	}
 	function refreshList() {
 		getList();

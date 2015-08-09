@@ -170,6 +170,7 @@ label {
 }
 #room-main {
 	position: absolute;
+	width: 100%;
 	top: 30px;
 }
 #calendar-confirm {

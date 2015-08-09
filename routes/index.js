@@ -73,14 +73,15 @@ router.post('/room/:name', function (req, res) {
 	var id = req.params.name;
 	var maker = req.body.maker;
 	var title = req.body.title;
+	var member = JSON.stringify([maker]);
 	var number = req.body.number || 2;
 	var password = req.body.password || null;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 		cnn = connection;
 			return cnn.client.query(
-				'INSERT INTO rooms (id, maker, title, number, password) VALUES (($1),($2),($3),($4),($5))',
-				[id, maker, title, number, password]
+				'INSERT INTO rooms (id, maker, title, number, member, password) VALUES (($1),($2),($3),($4),($5),($6))',
+				[id, maker, title, number, member, password]
 			);
 		}).then(function (result) {
 			res.send(result);

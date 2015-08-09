@@ -85,7 +85,8 @@
 	<script type="text/html" id="wwm-room">
 		<header id="room-header">
 			<b id="title">{~lb}title{~rb}</b>
-			<span>현재원: <b id="current-number">0</b>명</span>
+			<span><b id="current-number">{~lb}current{~rb}</b>명</span>
+			<span>/<b id="total-number">{~lb}total{~rb}</b>명</span>
 		</header>
 		<main id="room-main">
 			<div id="member-list">

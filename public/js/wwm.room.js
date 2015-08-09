@@ -4,7 +4,11 @@ wwm.room = (function(){
     $con: $('#view')
   };
   var cfMap = {
-    current: 'day'
+    current: 'day',
+    dayArray: [],
+    nightArray: [],
+    memberList: [],
+    onlineList: []
   };
   var userInfo;
   var socket = io();
@@ -18,13 +22,45 @@ wwm.room = (function(){
       $calendar: $con.find('table'),
       $day: $con.find('#day'),
       $night: $con.find('#night'),
-      $back: $con.find('#room-back')
+      $back: $con.find('#room-back'),
+      $dayExp: $con.find('#day-exception'),
+      $timeExp: $con.find('#time-exception')
     };
   }
-  function tableToArr(cell) {
+  function tableToArray(cell) {
     var arr = [cell.cellIndex, cell.parentNode.rowIndex];
     console.log('tableToArr', arr);
     return arr;
+  }
+  function arrayToTable(current) {
+  		if (current === 'day') {
+  		
+  		} else {
+  		
+  		}
+  }
+  function ban() {}
+  function changeTitle() {}
+  function changeLimit() {}
+  function showDayException() {
+  		var $this = $(this);
+			if ($this.hasClass('opened')) {
+				$this.removeClass('opened');
+				$this.find('ul').hide();
+			} else {
+				$this.addClass('opened');
+				$this.find('ul').show();
+			}
+  }
+  function showTimeException() {
+  		var $this = $(this);
+  		if ($this.hasClass('opened')) {
+				$this.removeClass('opened');
+				$this.find('ul').hide();
+			} else {
+				$this.addClass('opened');
+				$this.find('ul').show();
+			}
   }
   function deleteRoom() {
     wwm.model.deleteRoom();
@@ -34,25 +70,35 @@ wwm.room = (function(){
   }
   function onClickCell() {
     if ($(this).hasClass('busy')) {
-      socket.emit('not-busy', tableToArr(this));
+      socket.emit('not-busy', tableToArray(this));
       $(this).removeClass('busy');
     } else {
-      socket.emit('busy', tableToArr(this));
+      socket.emit('busy', tableToArray(this));
       $(this).addClass('busy');
     }
   }
   function toDay() {
     cfMap.current = 'day';
+    arrayToTable(cfMap.current);
   }
   function toNight() {
     cfMap.current = 'night';
+    arrayToTable(cfMap.current);
   }
   function initModule(data) {
     userInfo = JSON.parse(localStorage.login);
+    cfMap.memberList = data.member;
+    var parser = {
+    		name: userInfo.name || userInfo.properties.nickname,
+    		title: data.title,
+    		current: data.member.length,
+    		total: data.number
+    	};
+    if (userInfo.id === data.maker) {
+    		parser.admin = true;
+    }
     var src = $('#wwm-room').text();
-    dust.render(dust.loadSource(dust.compile(src)), {
-      name: userInfo.username
-    }, function(err, out) {
+    dust.render(dust.loadSource(dust.compile(src)), parser, function(err, out) {
       if (err) {
         console.log(err);
         return;
@@ -65,6 +111,8 @@ wwm.room = (function(){
     jqMap.$back.click(goBack);
     jqMap.$day.click(toDay);
     jqMap.$night.click(toNight);
+    jqMap.$dayExp.click(showDayException);
+    jqMap.$timeExp.click(showTimeException);
   }
 
   return {
