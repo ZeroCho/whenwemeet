@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Pgb = require('pg-bluebird');
 console.log('DATAURL: ' + process.env.DATABASE_URL);
-var pgb = new Pgb().connect(process.env.DATABASE_URL);
+var pgb = new Pgb();
 pgb.catch(function(err) {
 	console.log('app.js::pgb ' + err);
 });
@@ -16,7 +16,7 @@ module.exports = function () {
 	});
 	router.get('/member/:id', function (req, res) {
 		var id = req.params.id;
-		pgb.then(function (connection) {
+		pgb.connect(process.env.DATABASE_URL).then(function (connection) {
 			cnn = connection;
 			return cnn.client.query(
 				'SELECT * FROM members WHERE id = ' + id
@@ -33,7 +33,7 @@ module.exports = function () {
 		var title = req.body.title;
 		var number = req.body.number || 2;
 		var password = req.body.password || null;
-		pgb.then(function (connection) {
+		pgb.connect(process.env.DATABASE_URL).then(function (connection) {
 			cnn = connection;
 			return cnn.client.query(
 				'INSERT INTO rooms (id, maker, title, number, password) ' +
@@ -46,7 +46,8 @@ module.exports = function () {
 		});
 	});
 	router.get('/rooms', function (req, res) {
-		pgb.then(function (connection) {
+		console.log('rooms' + JSON.stringify(req));
+		pgb.connect(process.env.DATABASE_URL).then(function (connection) {
 			cnn = connection;
 			return cnn.client.query(
 				'SELECT * FROM rooms'
@@ -59,7 +60,7 @@ module.exports = function () {
 	});
 	router.get('/rooms/:query', function (req, res) {
 		var query = req.params.query;
-		pgb.then(function (connection) {
+		pgb.connect(process.env.DATABASE_URL).then(function (connection) {
 			cnn = connection;
 			return cnn.client.query(
 				'SELECT * FROM rooms where title = ' + query

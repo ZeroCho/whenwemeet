@@ -323,6 +323,11 @@ wwm.room = (function(){
       $calendar: $con.find('table')
     };
   }
+  function tableToArr(cell) {
+    var arr = [cell.cellIndex, cell.parentNode.rowIndex];
+    console.log('tableToArr', arr);
+    return arr;
+  }
   function onClickCell() {
     if ($(this).hasClass('busy')) {
       socket.emit('not-busy', tableToArr(this));
@@ -331,11 +336,6 @@ wwm.room = (function(){
       socket.emit('busy', tableToArr(this));
       $(this).addClass('busy');
     }
-  }
-  function tableToArr(cell) {
-    var arr = [cell.cellIndex, cell.parentNode.rowIndex];
-    console.log('tableToArr', arr);
-    return arr;
   }
   function initModule($con) {
     userInfo = JSON.parse(localStorage.login);
