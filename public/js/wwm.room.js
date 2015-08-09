@@ -148,7 +148,7 @@ wwm.room = (function(){
     var parser = {
     		name: cfMap.userInfo.name || cfMap.userInfo.properties.nickname,
     		title: data.title,
-    		current: data.member.length,
+    		current: data.current,
     		total: data.number
     	};
     if (cfMap.userInfo.id === data.maker) {
