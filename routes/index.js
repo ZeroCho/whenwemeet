@@ -1,11 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var Pgb = require('pg-bluebird');
-console.log('DATAURL: ' + process.env.DATABASE_URL);
 var pgb = new Pgb();
-pgb.catch(function(err) {
-	console.log('app.js::pgb ' + err);
-});
+
 var cnn;
 module.exports = function () {
 	router.get('/', function(req, res) {
