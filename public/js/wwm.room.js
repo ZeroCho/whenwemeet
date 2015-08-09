@@ -118,7 +118,7 @@ wwm.room = (function(){
     wwm.lobby.initModule(jqMap.$con);
   }
   function sendChat() {
-  		var text = $(this).prev('#chatbox').text();
+  		var text = $(this).prev('#chatbox').val();
   		socket.emit('chat', {
   			id: cfMap.userInfo.id,
   			text: text
