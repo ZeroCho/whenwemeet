@@ -8,7 +8,7 @@ wwm.login = (function () {
 		};
 	}
 	function initModule($con) {
-		$con.html($('wwm-login').html());
+		$con.html($('#wwm-login').html());
 		setJqMap($con);
 		jqMap.$kakaoLogin.on({
 			click: function () {
