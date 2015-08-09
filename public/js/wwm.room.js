@@ -36,6 +36,10 @@ wwm.room = (function(){
     });
     setJqMap($con);
     jqMap.$calendar.find('td').click(onClickCell);
+    jqMap.$explode.click(deleteRoom);
+  }
+  function deleteRoom() {
+    wwm.model.deleteRoom();
   }
   return {
     initModule: initModule

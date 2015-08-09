@@ -21,6 +21,30 @@ router.get('/member/:id', function (req, res) {
 			console.log('member ' + err);
 		});
 });
+router.post('/addroom/:id', function (req, res) {
+	var id = req.params.id;
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('UPDATE members SET roomcount = roomcount + 1 WHERE id=($1)', [id]);
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('member ' + err);
+		});
+});
+router.post('/deleteroom/:id', function (req, res) {
+	var id = req.params.id;
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('UPDATE members SET roomcount = roomcount - 1 WHERE id=($1)', [id]);
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('member ' + err);
+		});
+});
 router.post('/join', function (req, res) {
 	var id = req.body.id;
 	var name = req.body.name;
