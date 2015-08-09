@@ -13,7 +13,7 @@ module.exports = function () {
 	});
 	router.get('/member/:id', function (req, res) {
 		var id = req.params.id;
-		pgb.connect(process.env.DATABASE_URL).then(function (connection) {
+		pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
 			cnn = connection;
 			return cnn.client.query(
 				'SELECT * FROM members WHERE id = ' + id
@@ -30,7 +30,7 @@ module.exports = function () {
 		var title = req.body.title;
 		var number = req.body.number || 2;
 		var password = req.body.password || null;
-		pgb.connect(process.env.DATABASE_URL).then(function (connection) {
+		pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
 			cnn = connection;
 			return cnn.client.query(
 				'INSERT INTO rooms (id, maker, title, number, password) ' +
@@ -44,7 +44,7 @@ module.exports = function () {
 	});
 	router.get('/rooms', function (req, res) {
 		console.log('rooms' + JSON.stringify(req));
-		pgb.connect(process.env.DATABASE_URL).then(function (connection) {
+		pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
 			console.log('connected');
 			cnn = connection;
 			return cnn.client.query(
@@ -59,7 +59,7 @@ module.exports = function () {
 	});
 	router.get('/rooms/:query', function (req, res) {
 		var query = req.params.query;
-		pgb.connect(process.env.DATABASE_URL).then(function (connection) {
+		pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
 			cnn = connection;
 			return cnn.client.query(
 				'SELECT * FROM rooms where title = ' + query
