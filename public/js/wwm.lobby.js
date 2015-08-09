@@ -124,7 +124,7 @@ wwm.lobby = (function (){
 		};
 	}
 	function initModule($con) {
-		console.log($con);
+		console.log('login', localStorage.login);
 		var src = document.getElementById('wwm-lobby').textContent;
 		userInfo = JSON.parse(localStorage.login);
 		var name =  userInfo.name || userInfo.properties.nickname;
@@ -135,7 +135,6 @@ wwm.lobby = (function (){
 				console.log(err);
 				alert('error! 콘솔 확인');
 			} else {
-				console.log($con);
 				$con.html(out);
 				setJqMap($con);
 				getList();

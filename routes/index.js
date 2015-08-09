@@ -66,7 +66,6 @@ router.post('/join', function (req, res) {
 				);
 			}
 		}).then(function (result) {
-			console.log('joinresult ' + result);
 			res.send(result);
 		}).catch(function (err) {
 			console.log('join ' + err);
