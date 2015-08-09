@@ -50,7 +50,7 @@ wwm.lobby = (function (){
 		wwm.login.initModule(jqMap.$con);
 	}
 	function enterRoom() {
-		wwm.room.initModule(jqMap.$con, $(this));
+		wwm.room.initModule($(this));
 	}
 	function refreshList() {
 		getList();
@@ -62,7 +62,6 @@ wwm.lobby = (function (){
 			$searchroomBtn: $con.find('#searchroom-btn'),
 			$list: $con.find('#rooms'),
 			$logout: $con.find('#logout-btn'),
-			$room: $con.find('.room'),
 			$refresh: $con.find('#refresh-list')
 		};
 	}
@@ -85,8 +84,8 @@ wwm.lobby = (function (){
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);
 				jqMap.$logout.click(logout);
-				jqMap.$room.click(enterRoom);
 				jqMap.$refresh.click(refreshList);
+				$(document).on('click', '.room', enterRoom);
 			}
 		});
 	}

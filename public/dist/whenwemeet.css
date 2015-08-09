@@ -122,6 +122,10 @@ label {
 	bottom: 20px;
 	left: 10px;
 }
+.room {
+	border: 1px solid black;
+	margin: 10px;
+}
 #refresh-list {
 	position: absolute;
 	right: 0;
