@@ -46,6 +46,7 @@ wwm.lobby = (function (){
 	}
 	function onSearchRoom () {
 		var query = $(this).prev().val();
+		console.log('query', query);
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
 		var $frag = $(document.createDocumentFragment());

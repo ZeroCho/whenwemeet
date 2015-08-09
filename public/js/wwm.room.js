@@ -40,7 +40,7 @@ wwm.room = (function(){
   }
   function arrayToTable(current) {
   		if (current === 'day') {
-  			
+  
   		} else {
   		
   		}
@@ -136,10 +136,14 @@ wwm.room = (function(){
   function toDay() {
     cfMap.current = 'day';
     arrayToTable(cfMap.current);
+    jqMap.$night.css('background', 'white');
+    jqMap.$day.css('background', 'gray');
   }
   function toNight() {
     cfMap.current = 'night';
     arrayToTable(cfMap.current);
+    jqMap.$day.css('background', 'white');
+    jqMap.$night.css('background', 'gray');
   }
   function initModule(data) {
     cfMap.userInfo = JSON.parse(localStorage.login);
@@ -163,6 +167,9 @@ wwm.room = (function(){
       stMap.$con.html(out);
     });
     setJqMap(stMap.$con);
+    jqMap.$day.css({
+    		background: 'gray'
+    });
    	socket.on('chat', function(data) {
    		jqMap.$chatList.text(data.id + ' send ' + data.text);
    	});

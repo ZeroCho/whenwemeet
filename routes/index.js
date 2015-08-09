@@ -107,7 +107,8 @@ router.post('/room/:name', function (req, res) {
 router.post('/enterroom/:id', function(req, res) {
 	var pw = req.body.pw;
 	var id = req.params.id;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+	console.log(pw);
+	console.log(id);	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connetion) {
 			cnn = connection;
 			return cnn.client.query('SELECT * FROM rooms WHERE id=($1) AND password=($2)', [id, pw]);
