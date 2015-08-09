@@ -14,7 +14,7 @@ router.get('/main', function (req, res) {
 		title: '우리언제만나',
 		user: req.user
 	});
-})
+});
 router.get('/member/:id', function (req, res) {
 	var id = req.params.id;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
@@ -47,7 +47,6 @@ router.post('/room/:name', function (req, res) {
 	});
 });
 router.get('/rooms', function (req, res) {
-	console.log('rooms' + JSON.stringify(req));
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
 		console.log('connected');
 		cnn = connection;
