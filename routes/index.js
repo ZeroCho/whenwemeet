@@ -45,11 +45,13 @@ module.exports = function () {
 	router.get('/rooms', function (req, res) {
 		console.log('rooms' + JSON.stringify(req));
 		pgb.connect(process.env.DATABASE_URL).then(function (connection) {
+			console.log('connected');
 			cnn = connection;
 			return cnn.client.query(
 				'SELECT * FROM rooms'
 			);
 		}).then(function (result) {
+			console.log('result');
 			res.send(result);
 		}).catch(function (err) {
 			console.log('rooms ' + err);
