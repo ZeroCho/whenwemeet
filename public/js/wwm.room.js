@@ -41,12 +41,18 @@ wwm.room = (function(){
   }
   function ban(id) {
   		var banPromise = wwm.model.ban(id);
+  		banPromise.done(function(res) {});
+  		banPromise.fail(function(err) {});
   }
   function changeTitle(title) {
   		var titlePromise = wwm.model.changeTitle(title);
+  		titlePromise.done(function(res) {});
+  		titlePromise.fail(function(err) {});
   }
   function changeLimit(number) {
   		var limitPromise = wwm.model.changeLimit(number);
+  		limitPromise.done(function(res) {});
+  		limitPromise.fail(function(err) {});
   }
   function showDayException() {
   		var $this = $(this);

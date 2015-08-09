@@ -25,6 +25,12 @@ wwm.model = (function () {
 		}
 		return deferred.promise();
 	}
+	function ban(id) {
+	}
+	function changeTitle(roomid, title) {
+
+	}
+	function changeLimit(roomid, number) {}
 	function createRoom(data) {
 		var deferred = $.Deferred();
 		$.get('/member/' + data.maker).done(function(res) {
@@ -64,6 +70,9 @@ wwm.model = (function () {
 		initModule: initModule,
 		createRoom: createRoom,
 		getRoomList: getRoomList,
-		deleteRoom: deleteRoom
+		deleteRoom: deleteRoom,
+		ban: ban,
+		changeTitle: changeTitle,
+		changeLimit: changeLimit
 	};
 }());

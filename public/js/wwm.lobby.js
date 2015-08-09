@@ -42,7 +42,15 @@ wwm.lobby = (function (){
 				var $current = $('<span/>').addClass('current').text(JSON.parse(res[i].member).length);
 				var $total = $('<span/>').addClass('total').text(res[i].number);
 				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
-				var $room = $('<div/>').addClass('room').attr('data-id', res[i].id).attr('data-maker', res[i].maker).attr('data-member', res[i].member).append($title).append($number);
+				var $room = $('<div/>')
+					.addClass('room')
+					.attr({
+						'data-id': res[i].id,
+						'data-maker': res[i].maker,
+						'data-member': res[i].member
+					})
+					.append($title)
+					.append($number);
 				if (res[i].password) {
 					var $password = $('<div/>').addClass('password').html('비번');
 					$room.prepend($password);
