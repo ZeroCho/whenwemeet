@@ -9,24 +9,39 @@ router.get('/', function(req, res) {
 		user: req.user
 	});
 });
-router.get('/main', function (req, res) {
-	res.render('index', {
-		title: '우리언제만나',
-		user: req.user
-	});
-});
 router.get('/member/:id', function (req, res) {
 	var id = req.params.id;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
-		cnn = connection;
-		return cnn.client.query(
-			'SELECT * FROM members WHERE id = ' + id
-		);
-	}).then(function (result) {
-		res.send(result);
-	}).catch(function (err) {
-		console.log('member' + err);
-	});
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('SELECT * FROM members WHERE id = ' + id);
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('member' + err);
+		});
+});
+router.post('/join/', function (req, res) {
+	var id = req.body.id || req.body._id;
+	var name = req.body.properties.nickname || req.body.name;
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('SELECT * FROM members WHERE id =' + id);
+		})
+		.then(function (result) {
+			console.log('is user? ' + result.rows.length);
+			if (result.rows.length !== 0) {
+				return cnn.client.query(
+					'INSERT INTO members (id, name) ' +
+					'VALUES (' + id + ',' + name + ')');
+			}
+		}).then(function (result) {
+			console.log('joinresult' + result);
+			res.send(result);
+		}).catch(function (err) {
+			console.log('join' + err);
+		});
 });
 router.post('/room/:name', function (req, res) {
 	var id = req.params.name;
@@ -34,44 +49,43 @@ router.post('/room/:name', function (req, res) {
 	var title = req.body.title;
 	var number = req.body.number || 2;
 	var password = req.body.password || null;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connection) {
 		cnn = connection;
-		return cnn.client.query(
-			'INSERT INTO rooms (id, maker, title, number, password) ' +
-			'VALUES (' + id + ', ' + maker + ',' + title + ',' + number + ',' + password + ')'
-		);
-	}).then(function (result) {
-		res.send(result);
-	}).catch(function (err) {
-		console.log('room ' + err);
-	});
+			return cnn.client.query(
+				'INSERT INTO rooms (id, maker, title, number, password) ' +
+				'VALUES (' + id + ', ' + maker + ',' + title + ',' + number + ',' + password + ')'
+			);
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('room ' + err);
+		});
 });
 router.get('/rooms', function (req, res) {
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
-		console.log('connected');
-		cnn = connection;
-		return cnn.client.query(
-			'SELECT * FROM rooms'
-		);
-	}).then(function (result) {
-		console.log('result');
-		res.send(result);
-	}).catch(function (err) {
-		console.log('rooms ' + err);
-	});
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connection) {
+			console.log('connected');
+			cnn = connection;
+			return cnn.client.query('SELECT * FROM rooms');
+		}).then(function (result) {
+			console.log('result');
+			res.send(result);
+		}).catch(function (err) {
+			console.log('rooms ' + err);
+		});
 });
 router.get('/rooms/:query', function (req, res) {
 	var query = req.params.query;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL).then(function (connection) {
-		cnn = connection;
-		return cnn.client.query(
-			'SELECT * FROM rooms where title = ' + query
-		);
-	}).then(function (result) {
-		res.send(result);
-	}).catch(function (err) {
-		console.log('roomsq ' + err);
-	});
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('SELECT * FROM rooms where title = ' + query);
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('roomsq ' + err);
+		});
 });
 
 module.exports = router;

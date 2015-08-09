@@ -6,13 +6,19 @@ wwm.model = (function () {
 		var deferred = $.Deferred();
 		if (query) {
 			$.get('/rooms/' + query).done(function (res) {
-				deferred.resolve(res);
+				if (res.rows.length === 0) {
+					deferred.reject('no_room');
+				}
+				deferred.resolve(res.rows);
 			}).fail(function (err) {
 				deferred.reject(err);
 			});
 		} else {
 			$.get('/rooms').done(function (res) {
-				deferred.resolve(res);
+				if (res.rows.length === 0) {
+					deferred.reject('no_room');
+				}
+				deferred.resolve(res.rows);
 			}).fail(function (err) {
 				deferred.reject(err);
 			});
@@ -22,7 +28,7 @@ wwm.model = (function () {
 	function createRoom(data) {
 		var deferred = $.Deferred();
 		$.get('/member/' + data.maker).done(function(res) {
-			if (res > 3) {
+			if (res.rows[0].roomcount >= 3) {
 				var msg = '방은 최대 세 개까지 만들 수 있습니다.';
 				deferred.reject(msg);
 			}

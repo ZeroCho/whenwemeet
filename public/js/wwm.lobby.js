@@ -14,6 +14,10 @@ wwm.lobby = (function (){
 			jqMap.$list.text(res);
 		});
 		getListPromise.fail(function (err) {
+			if (err === 'no_room') {
+				jqMap.$list.html('방이 없습니다. 방을 만들어보세요.');
+				return;
+			}
 			console.log(err);
 			jqMap.$list.html(err.responseText);
 		});
@@ -26,6 +30,10 @@ wwm.lobby = (function (){
 			jqMap.$list.text(res);
 		});
 		searchPromise.fail(function (err) {
+			if (err === 'no_room') {
+				jqMap.$list.html('검색 결과가 없습니다.');
+				return;
+			}
 			console.log(err);
 			jqMap.$list.html(err.responseText);
 		});
