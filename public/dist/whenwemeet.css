@@ -83,6 +83,9 @@ label {
 	width: 100%;
 	text-align: center;
 }
+#fb-login-btn, #kakao-login-btn {
+	cursor: pointer;
+}
 #modal {
 	position: absolute;
 	top: 0;

@@ -31,17 +31,17 @@ router.post('/join', function (req, res) {
 		})
 		.then(function (result) {
 			console.log('is user? ' + result.rows.length);
-			if (result.rows.length !== 0) {
+			if (result.rows.length === 0) {
 				return cnn.client.query(
 					'INSERT INTO members (id, name) VALUES (($1),($2))',
 					[id , name]
 				);
 			}
 		}).then(function (result) {
-			console.log('joinresult' + result);
+			console.log('joinresult ' + result);
 			res.send(result);
 		}).catch(function (err) {
-			console.log('join' + err);
+			console.log('join ' + err);
 		});
 });
 router.post('/room/:name', function (req, res) {
