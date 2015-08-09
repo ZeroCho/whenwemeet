@@ -39,9 +39,15 @@ wwm.room = (function(){
   		
   		}
   }
-  function ban() {}
-  function changeTitle() {}
-  function changeLimit() {}
+  function ban(id) {
+  		var banPromise = wwm.model.ban(id);
+  }
+  function changeTitle(title) {
+  		var titlePromise = wwm.model.changeTitle(title);
+  }
+  function changeLimit(number) {
+  		var limitPromise = wwm.model.changeLimit(number);
+  }
   function showDayException() {
   		var $this = $(this);
 			if ($this.hasClass('opened')) {
@@ -62,8 +68,17 @@ wwm.room = (function(){
 				$this.find('ul').show();
 			}
   }
-  function deleteRoom() {
-    wwm.model.deleteRoom();
+  function deleteRoom(e) {
+  		var id = e.data.id;
+    var deletePromise = wwm.model.deleteRoom(id);
+    deletePromise.done(function(res) {
+    		alert('삭제되었습니다.');
+    		wwm.lobby.initModule(jqMap.$con);
+    });
+    deletePromise.fail(function(err) {
+    		console.log(err);
+    		alert('오류발생');
+    });
   }
   function goBack() {
     wwm.lobby.initModule(jqMap.$con);
@@ -88,6 +103,7 @@ wwm.room = (function(){
   function initModule(data) {
     userInfo = JSON.parse(localStorage.login);
     cfMap.memberList = data.member;
+			cfMap.onlineList.push(userInfo.id);
     var parser = {
     		name: userInfo.name || userInfo.properties.nickname,
     		title: data.title,
@@ -107,7 +123,7 @@ wwm.room = (function(){
     });
     setJqMap(stMap.$con);
     jqMap.$calendar.find('td').click(onClickCell);
-    jqMap.$explode.click(deleteRoom);
+    jqMap.$explode.click(data.id, deleteRoom);
     jqMap.$back.click(goBack);
     jqMap.$day.click(toDay);
     jqMap.$night.click(toNight);

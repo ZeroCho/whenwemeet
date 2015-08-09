@@ -40,9 +40,12 @@ router.post('/deleteroom/:id', function (req, res) {
 			cnn = connection;
 			return cnn.client.query('UPDATE members SET roomcount = roomcount - 1 WHERE id=($1)', [id]);
 		}).then(function (result) {
+			console.log(result);
+			return cnn.client.query('DELETE rooms WHERE id=($1)', [id]);
+		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('member ' + err);
+			console.log('deleteroom ' + err);
 		});
 });
 router.post('/join', function (req, res) {
@@ -87,6 +90,19 @@ router.post('/room/:name', function (req, res) {
 			res.send(result);
 		}).catch(function (err) {
 			console.log('room ' + err);
+		});
+});
+router.post('/enterroom/:id', function(req, res) {
+	var pw = req.body.pw;
+	var id = req.params.id;
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connetion) {
+			cnn = connection;
+			return cnn.client.query('SELECT * FROM rooms WHERE id=($1) AND password=($2)', [id, pw]);
+		}).then(function(result) {
+			res.send(result);
+		}).catch(function(err) {
+			console.log('enterroom ' + err);
 		});
 });
 router.get('/rooms', function (req, res) {

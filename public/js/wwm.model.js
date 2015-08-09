@@ -47,7 +47,13 @@ wwm.model = (function () {
 		return deferred.promise();
 	}
 	function deleteRoom() {
-
+		var deferred = $.Deferred();
+		$.post('/deleteroom/' + id).done(function (res) {
+			deferred.resolve(res);
+		}).fail(function(err){
+			deferred.reject(err);
+		});
+		return deferred.promise();
 	}
 	function initModule() {
 		if (localStorage.login) {

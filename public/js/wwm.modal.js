@@ -40,7 +40,9 @@ wwm.modal = (function (){
 		var createRoomPromise = wwm.model.createRoom(data);
 		createRoomPromise.done(function (result) {
 			console.log(result);
-			wwm.room.initModule(result);
+			data.current = 1;
+			data.member = [data.id]
+			wwm.room.initModule(data);
 		});
 		createRoomPromise.fail(function (err) {
 			alert(err);

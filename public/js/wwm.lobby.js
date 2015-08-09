@@ -39,9 +39,10 @@ wwm.lobby = (function (){
 		searchPromise.done(function (res) {
 			for (var i = 0; i < res.length; i++) {
 				var $title = $('<div/>').addClass('title').text(res[i].title);
-				var $number = $('<div/>').addClass('number').text(res[i].number);
-				var $room = $('<div/>').addClass('room').attr('data-id', res[i].id).attr('data-maker', res[i].maker).attr('data-member
-				, res[i].member).append($title).append($number);
+				var $current = $('<span/>').addClass('current').text(JSON.parse(res[i].member).length);
+				var $total = $('<span/>').addClass('total').text(res[i].number);
+				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
+				var $room = $('<div/>').addClass('room').attr('data-id', res[i].id).attr('data-maker', res[i].maker).attr('data-member', res[i].member).append($title).append($number);
 				if (res[i].password) {
 					var $password = $('<div/>').addClass('password').html('비번');
 					$room.prepend($password);
@@ -66,13 +67,16 @@ wwm.lobby = (function (){
 	}
 	function enterRoom() {
 		var data = {
-			id: $(this).data('id')
+			id: $(this).data('id'),
+			title: $(this).find('.title').text(),
+			current: $(this).find('.current').text(),
+			number: $(this).find('.total').text(),
 			maker: $(this).data('maker')
 			member: JSON.parse($(this).data('member'))
 		};
 		if ($(this).has('.password').length) {
 			var pw = prompt('비밀번호');
-			$.post('/room/' + id, {pw: pw}).done(function() {
+			$.post('/enterroom/' + id, {pw: pw}).done(function() {
 				wwm.room.initModule(data);	
 			}).fail(function(err) {
 				alert('비밀번호가 틀렸습니다.);
@@ -80,9 +84,6 @@ wwm.lobby = (function (){
 		} else {
 			wwm.room.initModule(data);
 		}
-	}
-	function enterPassword() {
-	
 	}
 	function refreshList() {
 		getList();
