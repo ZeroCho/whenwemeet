@@ -10,12 +10,20 @@ wwm.lobby = (function (){
 		var $frag = $(document.createDocumentFragment());
 		var getListPromise = wwm.model.getRoomList();
 		getListPromise.done(function (res) {
-			console.log(res);
 			for (var i = 0; i < res.length; i++) {
 				var $title = $('<div/>').addClass('title').text(res[i].title);
-				var $number = $('<div/>').addClass('number').text(res[i].number);
-				var $room = $('<div/>').addClass('room').attr('data-id', res[i].id).attr('data-maker', res[i].maker).attr('data-member
-				, res[i].member).append($title).append($number);
+				var $current = $('<span/>').addClass('current').text(JSON.parse(res[i].member).length);
+				var $total = $('<span/>').addClass('total').text(res[i].number);
+				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
+				var $room = $('<div/>')
+					.addClass('room')
+					.attr({
+						'data-id': res[i].id,
+						'data-maker': res[i].maker,
+						'data-member': res[i].member
+					})
+					.append($title)
+					.append($number);
 				if (res[i].password) {
 					var $password = $('<div/>').addClass('password').html('비번');
 					$room.prepend($password);
@@ -32,8 +40,13 @@ wwm.lobby = (function (){
 			console.log(err);
 			jqMap.$list.html(err.responseText);
 		});
+		getListPromise.always(function() {
+			$(spinner.el).remove();
+		});
 	}
 	function onSearchRoom (query) {
+		var spinner = new Spinner().spin();
+		jqMap.$list.append(spinner.el);
 		var $frag = $(document.createDocumentFragment());
 		var searchPromise = wwm.model.getRoomList(query);
 		searchPromise.done(function (res) {
@@ -66,6 +79,9 @@ wwm.lobby = (function (){
 			}
 			console.log(err);
 			jqMap.$list.html(err.responseText);
+		});
+		searchPromise.always(function() {
+			$(spinner.el).remove();
 		});
 	}
 	function logout() {
