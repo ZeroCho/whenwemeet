@@ -11,7 +11,13 @@ wwm.lobby = (function (){
 		var getListPromise = wwm.model.getRoomList();
 		getListPromise.done(function (res) {
 			console.log(res);
-			jqMap.$list.text(res);
+			for (var i = 0; i < res.length; i++) {
+				var $title = $('<div/>').text(res[i].title);
+				var $number = $('<div/>').text(res[i].number);
+				var $room = $('<div/>').attr('class', 'room').append($title).append($number);
+				$frag.append($room);
+			}
+			jqMap.$list.html($frag);
 		});
 		getListPromise.fail(function (err) {
 			if (err === 'no_room') {
