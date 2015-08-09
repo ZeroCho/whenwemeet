@@ -18,12 +18,13 @@ router.get('/member/:id', function (req, res) {
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('member' + err);
+			console.log('member ' + err);
 		});
 });
 router.post('/join', function (req, res) {
 	var id = req.body.id;
 	var name = req.body.name;
+	console.log('name ' + name + ' id '+ id);
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
