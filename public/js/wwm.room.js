@@ -29,7 +29,8 @@ wwm.room = (function(){
       $notTime: $con.find('#time-exception').find('li'),
       $title: $con.find('#title'),
       $total: $con.find('#total-number'),
-      $sendChat: $con.find('#send-chat')
+      $sendChat: $con.find('#send-chat'),
+      $chatList: $con.find('#chat-list')
     };
   }
   function tableToArray(cell) {
@@ -117,7 +118,7 @@ wwm.room = (function(){
     wwm.lobby.initModule(jqMap.$con);
   }
   function sendChat() {
-  		var text = $(this).prev().text();
+  		var text = $(this).prev('#chatbox').text();
   		socket.emit('chat', {
   			id: cfMap.userInfo.id,
   			text: text
@@ -163,7 +164,7 @@ wwm.room = (function(){
     });
     setJqMap(stMap.$con);
    	socket.on('chat', function(data) {
-   		alert(data.id + ' send ' + data.text);
+   		jqMap.$chatList.text(data.id + ' send ' + data.text);
    	});
    	socket.on('busy', function(msg) {
    		alert(msg);

@@ -230,6 +230,7 @@
 				</tr>
 			</table>
 			<button id="calendar-confirm">확정!</button>
+			<div id="chat-list"></div>
 		</main>
 		<footer id="room-footer">
 			<div id="my-menu">

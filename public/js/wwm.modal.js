@@ -43,6 +43,7 @@ wwm.modal = (function (){
 			data.current = 1;
 			data.member = [data.id]
 			wwm.room.initModule(data);
+			stMap.$modal.hide();
 		});
 		createRoomPromise.fail(function (err) {
 			alert(err);
