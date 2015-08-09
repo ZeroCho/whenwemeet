@@ -8,9 +8,9 @@ wwm.room = (function(){
     dayArray: [],
     nightArray: [],
     memberList: [],
-    onlineList: []
+    onlineList: [],
+    userInfo: null
   };
-  var userInfo;
   var socket = io();
   function setJqMap($con) {
     jqMap = {
@@ -26,7 +26,8 @@ wwm.room = (function(){
       $dayExp: $con.find('#day-exception'),
       $timeExp: $con.find('#time-exception'),
       $title: $con.find('#title'),
-      #total: $con.find('#total-number')
+      $total: $con.find('#total-number'),
+      $sendChat: $con.find('#send-chat')
     };
   }
   function tableToArray(cell) {
@@ -36,7 +37,7 @@ wwm.room = (function(){
   }
   function arrayToTable(current) {
   		if (current === 'day') {
-  		
+  			
   		} else {
   		
   		}
@@ -98,6 +99,13 @@ wwm.room = (function(){
   function goBack() {
     wwm.lobby.initModule(jqMap.$con);
   }
+  function sendChat() {
+  		var text = $(this).prev().text();
+  		socket.emit('chat', {
+  			id: cfMap.userInfo.id,
+  			text: text
+  		});
+  }
   function onClickCell() {
     if ($(this).hasClass('busy')) {
       socket.emit('not-busy', tableToArray(this));
@@ -116,16 +124,16 @@ wwm.room = (function(){
     arrayToTable(cfMap.current);
   }
   function initModule(data) {
-    userInfo = JSON.parse(localStorage.login);
+    cfMap.userInfo = JSON.parse(localStorage.login);
     cfMap.memberList = data.member;
-			cfMap.onlineList.push(userInfo.id);
+			cfMap.onlineList.push(cfMap.userInfo.id);
     var parser = {
-    		name: userInfo.name || userInfo.properties.nickname,
+    		name: cfMap.userInfo.name || cfMap.userInfo.properties.nickname,
     		title: data.title,
     		current: data.member.length,
     		total: data.number
     	};
-    if (userInfo.id === data.maker) {
+    if (cfMap.userInfo.id === data.maker) {
     		parser.admin = true;
     }
     var src = $('#wwm-room').text();
@@ -137,7 +145,15 @@ wwm.room = (function(){
       stMap.$con.html(out);
     });
     setJqMap(stMap.$con);
-    jqMap.$calendar.find('td').click(onClickCell);
+   	socket.on('chat', function(data) {
+   		alert(data.id + ' send ' + data.text);
+   	});
+   	socket.on('busy', function(msg) {
+   		alert(msg);
+   	});
+   	socket.on('not-busy', function(msg) {
+   		alert(msg);
+   	}); jqMap.$calendar.find('td').click(onClickCell);
     jqMap.$explode.click({id: data.id}, deleteRoom);
     jqMap.$back.click(goBack);
     jqMap.$day.click(toDay);
@@ -147,6 +163,7 @@ wwm.room = (function(){
     jqMap.$ban.click({id: data.id}, ban);
     jqMap.$changeLimit.click({id: data.id}, changeLimit);
     jqMap.$changeTitle.click({id: data.id}, changeTitle);
+    jqMap.$sendChat.click(sendChat);
   }
 
   return {

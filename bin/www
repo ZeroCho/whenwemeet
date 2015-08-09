@@ -28,6 +28,9 @@ io.on('connection', function (socket) {
 	socket.on('not-busy', function(msg) {
 		io.emit('not-busy', msg);
 	});
+	socket.on('chat', function(data) {
+		io.emit('chat', data);
+	});
 });
 
 httpServer.listen(port);

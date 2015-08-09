@@ -103,7 +103,7 @@ wwm.lobby = (function (){
 			$.post('/enterroom/' + id, {pw: pw}).done(function() {
 				wwm.room.initModule(data);	
 			}).fail(function(err) {
-				alert('비밀번호가 틀렸습니다.);
+				alert('비밀번호가 틀렸습니다.');
 			};
 		} else {
 			wwm.room.initModule(data);
