@@ -90,7 +90,7 @@ wwm.lobby = (function (){
 		localStorage.removeItem('loginType');
 		wwm.login.initModule(jqMap.$con);
 	}
-	function enterRoom() {
+	function enterRoom() {		
 		var data = {
 			id: $(this).data('id'),
 			title: $(this).find('.title').text(),
@@ -101,7 +101,11 @@ wwm.lobby = (function (){
 		};
 		if ($(this).has('.password').length) {
 			var pw = prompt('비밀번호');
+			var spinner = new Spinner().spin();
+			jqMap.$list.append(spinner.el);
+
 			$.post('/enterroom/' + data.id, {pw: pw}).done(function() {
+				$(spinner.el).remove();
 				wwm.room.initModule(data);	
 			}).fail(function(err) {
 				alert('비밀번호가 틀렸습니다.');
