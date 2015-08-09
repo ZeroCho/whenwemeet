@@ -11,7 +11,7 @@ wwm.login = (function () {
 	function initModule($con) {
 		$con.html($('#wwm-login').html());
 		setJqMap($con);
-		var ctx = jqMap.$canvas.get().getContext('2d');
+		var ctx = jqMap.$canvas[0].getContext('2d');
 		ctx.fillStyle = '#FF0000';
 		ctx.fillRect(0,0,150,75);
 		jqMap.$kakaoLogin.on({
