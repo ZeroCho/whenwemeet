@@ -61,6 +61,7 @@ wwm.lobby = (function (){
 		};
 	}
 	function initModule($con) {
+		console.log($con);
 		var src = document.getElementById('wwm-lobby').textContent;
 		userInfo = JSON.parse(localStorage.login);
 		var name =  userInfo.name || userInfo.properties.nickname;

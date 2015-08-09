@@ -14,7 +14,7 @@ router.get('/member/:id', function (req, res) {
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
-			return cnn.client.query('SELECT * FROM members WHERE id = "' + id + '"');
+			return cnn.client.query('SELECT * FROM members WHERE id=($1)', [id]);
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
@@ -27,14 +27,15 @@ router.post('/join', function (req, res) {
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
-			return cnn.client.query('SELECT * FROM members WHERE id = "' + id + '"');
+			return cnn.client.query('SELECT * FROM members WHERE id=($1)', [id]);
 		})
 		.then(function (result) {
 			console.log('is user? ' + result.rows.length);
 			if (result.rows.length !== 0) {
 				return cnn.client.query(
-					'INSERT INTO members (id, name) ' +
-					'VALUES ("' + id + '","' + name + '")');
+					'INSERT INTO members (id, name) VALUES (($1),($2))',
+					[id , name]
+				);
 			}
 		}).then(function (result) {
 			console.log('joinresult' + result);
@@ -53,8 +54,8 @@ router.post('/room/:name', function (req, res) {
 		.then(function (connection) {
 		cnn = connection;
 			return cnn.client.query(
-				'INSERT INTO rooms (id, maker, title, number, password) ' +
-				'VALUES ("' + id + '", "' + maker + '","' + title + '","' + number + '","' + password + '")'
+				'INSERT INTO rooms (id, maker, title, number, password) VALUES (($1),($2),($3),($4),($5))',
+				[id, maker, title, number, password]
 			);
 		}).then(function (result) {
 			res.send(result);
@@ -80,7 +81,7 @@ router.get('/rooms/:query', function (req, res) {
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
-			return cnn.client.query('SELECT * FROM rooms where title = "' + query + '"');
+			return cnn.client.query('SELECT * FROM rooms where title=($1)', [query]);
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {

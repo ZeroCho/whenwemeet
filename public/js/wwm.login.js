@@ -97,5 +97,7 @@ wwm.login = (function () {
 			}
 		});
 	}
-	return {initModule: initModule};
+	return {
+		initModule: initModule
+	};
 }());
