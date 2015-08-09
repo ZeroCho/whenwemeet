@@ -163,3 +163,28 @@ label {
 	display: none;
 	visibility: hidden;
 }
+#room-header {
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+#calendar-confirm {
+	float: right;
+}
+#day, #night {
+	width: 50%;
+	display: inline-block;
+	text-align: center;
+	border: 1px solid silver;
+}
+#room-main table {
+	width: 100%;
+}
+#day-exception ul, #time-exception ul {
+	display: none;
+}
+#room-footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}

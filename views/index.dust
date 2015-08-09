@@ -83,11 +83,11 @@
 		</footer>
 	</script>
 	<script type="text/html" id="wwm-room">
-		<header>
+		<header id="room-header">
 			<b id="title">{~lb}title{~rb}</b>
 			<span>현재원: <b id="current-number">0</b>명</span>
 		</header>
-		<main>
+		<main id="room-main">
 			<div id="member-list">
 				<ul>
 				</ul>
@@ -96,7 +96,7 @@
 				<div id="day">오전</div>
 				<div id="night">오후</div>
 			</div>
-			<table>
+			<table border="1">
 				<tr>
 					<th>일</th>
 					<th>월</th>
@@ -215,9 +215,9 @@
 					<td></td>
 				</tr>
 			</table>
-			<button>확정!</button>
+			<button id="calendar-confirm">확정!</button>
 		</main>
-		<footer>
+		<footer id="room-footer">
 			<div id="my-menu">
 				{~lb}@eq key="admin" value=true{~rb}
 				<div id="admin-menu">
@@ -267,8 +267,7 @@
 				{~lb}name{~rb}
 			</div>
 			<div id="chat">
-				<label for="chatbox" class="sr-only">채팅창</label>
-				<input id="chatbox"/>
+				<input id="chatbox" placeholder="채팅창"/>
 				<button id="send-chat">전송</button>
 			</div>
 		</footer>
