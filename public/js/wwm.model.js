@@ -2,35 +2,39 @@
  * Created by Zero on 2015-07-25.
  */
 wwm.model = (function () {
-	function getRoomList(query) {
+	function getRoomList(id) {
 		var deferred = $.Deferred();
-		if (query) {
-			$.get('/rooms/' + query).done(function (res) {
-				if (res.rows.length === 0) {
-					deferred.reject('no_room');
-				}
-				deferred.resolve(res.rows);
-			}).fail(function (err) {
-				deferred.reject(err);
-			});
-		} else {
-			$.get('/rooms').done(function (res) {
-				if (res.rows.length === 0) {
-					deferred.reject('no_room');
-				}
-				deferred.resolve(res.rows);
-			}).fail(function (err) {
-				deferred.reject(err);
-			});
-		}
+		$.get('/rooms/' + id).done(function (res) {
+			if (res.rows.length === 0) {
+				deferred.reject('no_room');
+			}
+			deferred.resolve(res.rows);
+		}).fail(function (err) {
+			deferred.reject(err);
+		});
 		return deferred.promise();
 	}
-	function ban(id) {
+	function searchList(query) {
+		var deferred = $.Deferred();
+		$.get('/search/' + query).done(function (res) {
+			if (res.rows.length === 0) {
+				deferred.reject('no_room');
+			}
+			deferred.resolve(res.rows);
+		}).fail(function (err) {
+			deferred.reject(err);
+		});
+		return deferred.promise();
 	}
-	function changeTitle(roomid, title) {
-
+	function ban(id, rid) {
+		$.post('/ban/' + id, {rid: rid});
 	}
-	function changeLimit(roomid, number) {}
+	function changeTitle(rid, title) {
+		$.post('/changeroom/' + rid, {title: title});
+	}
+	function changeLimit(rid, number) {
+		$.post('/changeroom/' + rid, {number: number});
+	}
 	function createRoom(data) {
 		var deferred = $.Deferred();
 		$.get('/member/' + data.maker).done(function(res) {
@@ -71,6 +75,7 @@ wwm.model = (function () {
 		deleteRoom: deleteRoom,
 		ban: ban,
 		changeTitle: changeTitle,
-		changeLimit: changeLimit
+		changeLimit: changeLimit,
+		searchList: searchList
 	};
 }());
