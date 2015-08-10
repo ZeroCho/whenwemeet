@@ -132,7 +132,7 @@ wwm.lobby = (function (){
 		};
 	}
 	function initModule($con) {
-		console.log('window.userInfo', JSON.stringify(userInfo));
+		if (!window.userInfo) window.userInfo = JSON.parse(localStorage.login);
 		var src = $('#wwm-lobby').text();
 		var name =  userInfo.name || userInfo.properties.nickname;
 		dust.render(dust.loadSource(dust.compile(src)), {
