@@ -2,8 +2,8 @@ wwm.room = (function(){
 	var jqMap;
 	var stMap = {
 		current: 'day',
-		dayArray: [[],[],[],[],[],[],[],[],[],[],[],[]],
-		nightArray: [[],[],[],[],[],[],[],[],[],[],[],[]],
+		dayArray: null,
+		nightArray: null,
 		memberList: [],
 		onlineList: [],
 		userInfo: null,
@@ -34,6 +34,14 @@ wwm.room = (function(){
 			$sendChat: $con.find('#send-chat'),
 			$chatList: $con.find('#chat-list')
 		};
+	}
+	function createArray(length) {
+		var arr = new Array(length || 0), i = length;
+		if (arguments.length > 1) {
+			var args = Array.prototype.slice.call(arguments, 1);
+			while(i--) arr[length-1 - i] = createArray.apply(this, args);
+		}
+		return arr;
 	}
 	function tableToArray(cellList, busy) {
 		var arrList = [];
@@ -157,7 +165,7 @@ wwm.room = (function(){
 	}
 	function deleteRoom(e) {
 		var id = e.data.id;
-		var deletePromise = wwm.model.deleteRoom(id, stMap.userInfo.id);
+		var deletePromise = wwm.model.deleteRoom(id, userInfo.id);
 		deletePromise.done(function(res) {
 			alert('삭제되었습니다.');
 			wwm.lobby.initModule(jqMap.$con);
@@ -232,13 +240,14 @@ wwm.room = (function(){
 			}
 		} // not after
 	}
-	function goBack() {
+	function goBack(e) {
+		socket.emit('out', {id: userInfo.id, rid: e.data.rid});
 		wwm.lobby.initModule(jqMap.$con);
 	}
 	function sendChat() {
 		var text = $(this).prev('#chatbox').val();
 		socket.emit('chat', {
-			id: cfMap.userInfo.id,
+			id: userInfo.id,
 			text: text
 		});
 	}
@@ -255,26 +264,25 @@ wwm.room = (function(){
 		jqMap.$night.css('background', 'gray');
 	}
 	function initModule(data) {
-		$.post('/deletemembers');
-		$.post('/deleterooms');
 		// data를 방 모듈에 입력.
-		stMap.userInfo = JSON.parse(localStorage.login);
-		socket.emit('enter', {id: stMap.userInfo, rid: data.id}); // 방에 참가했음을 알림.
+		if (!stMap.dayArray) {createArray(12,7);}
+		if (!stMap.nightArray) {createArray(12,7);}
+		socket.emit('enter', {id: userInfo.id, rid: data.id}); // 방에 참가했음을 알림.
 		socket.on('onlineList', function(list) {
 			console.log('onlinelist', list);
 		stMap.onlineList = list;
 		});
-		stMap.onlineList.push(stMap.userInfo.id);
+		stMap.onlineList.push(userInfo.id);
 		stMap.memberList = data.member;
-		console.log(data.member);
-		stMap.personColor = data.member.indexOf(stMap.userInfo.id) + 1;
+		console.log('data.member', data.member);
+		stMap.personColor = data.member.indexOf(userInfo.id) + 1;
 		var parser = {
-			name: stMap.userInfo.name || stMap.userInfo.properties.nickname, //유저네임
+			name: userInfo.name || userInfo.properties.nickname, //유저네임
 			title: data.title, //타이틀
 			current: data.current, //현재원
 			total: data.number //총원
 		};
-		if (stMap.userInfo.id === data.maker) { // 아이디가 방장 아이디와 같으면
+		if (userInfo.id == data.maker) { // 아이디가 방장 아이디와 같으면
 			parser.admin = true;
 		}
 		var src = $('#wwm-room').text();
@@ -299,7 +307,7 @@ wwm.room = (function(){
 			});
 			jqMap.$calendar.find('td').click(onClickCell);
 			jqMap.$explode.click({id: data.id}, deleteRoom);
-			jqMap.$back.click(goBack);
+			jqMap.$back.click({rid: data.id}, goBack);
 			jqMap.$day.click(toDay);
 			jqMap.$night.click(toNight);
 			jqMap.$dayExp.click(showDayException);

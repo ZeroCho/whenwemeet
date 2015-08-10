@@ -10,11 +10,11 @@ router.get('/', function(req, res) {
 	});
 });
 router.get('/member/:pid', function (req, res) {
-	var id = req.params.pid;
+	var pid = req.params.pid;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
-			return cnn.client.query('SELECT * FROM members WHERE id=($1)', [id]);
+			return cnn.client.query('SELECT * FROM members WHERE id=($1)', [pid]);
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
@@ -48,7 +48,7 @@ router.post('/addroom/:rid', function (req, res) {
 	var rid = req.params.rid;
 	var maker = req.body.maker;
 	var title = req.body.title;
-	var member = JSON.stringify([maker]);
+	var members = JSON.stringify([maker]);
 	var number = req.body.number || 2;
 	var password = req.body.password || null;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
@@ -60,7 +60,7 @@ router.post('/addroom/:rid', function (req, res) {
 			console.log(result);
 			return cnn.client.query(
 				'INSERT INTO rooms (rid, maker, title, number, members, password) VALUES (($1),($2),($3),($4),($5),($6))',
-				[rid, maker, title, number, member, password]
+				[rid, maker, title, number, members, password]
 			);
 		})
 		.then(function (result) {
@@ -151,11 +151,11 @@ router.get('/rooms/:pid', function (req, res) {
 	var pid = req.params.pid;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
-			console.log('connected');
+			console.log('getroomlist connected');
 			cnn = connection;
-			return cnn.client.query('SELECT * FROM rooms WHERE maker=($1) OR members like ($2)', [pid, '%' + pid + '%']);
+			return cnn.client.query('SELECT * FROM rooms WHERE (maker=($1)) OR (members LIKE ($2))', [pid, '%' + pid + '%']);
 		}).then(function (result) {
-			console.log('result');
+			console.log('result:' + result.rows);
 			res.send(result);
 		}).catch(function (err) {
 			console.log('rooms ' + err);

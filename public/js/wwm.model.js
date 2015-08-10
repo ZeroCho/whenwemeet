@@ -43,8 +43,7 @@ wwm.model = (function () {
 				deferred.reject(msg);
 			} else {
 				$.post('/addroom/' + data.maker, data).done(function () {
-					deferred.resolve(res);
-					
+					deferred.resolve(res);				
 				}).fail(function (err) {
 					console.log(err);
 				});

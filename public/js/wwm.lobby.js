@@ -87,6 +87,7 @@ wwm.lobby = (function (){
 		});
 	}
 	function logout() {
+		delete window.userInfo;
 		localStorage.removeItem('login');
 		localStorage.removeItem('loginType');
 		wwm.login.initModule(jqMap.$con);
@@ -105,12 +106,14 @@ wwm.lobby = (function (){
 			var spinner = new Spinner().spin();
 			jqMap.$list.append(spinner.el);
 
-			$.post('/enterroom/' + data.id, {pw: pw}).done(function() {
-				$(spinner.el).remove();
-				wwm.room.initModule(data);	
-			}).fail(function(err) {
-				alert('비밀번호가 틀렸습니다.');
-			});
+			$.post('/enterroom/' + data.id, {pw: pw})
+				.done(function() {
+					$(spinner.el).remove();
+					wwm.room.initModule(data);	
+				})
+				.fail(function(err) {
+					alert('비밀번호가 틀렸습니다.');
+				});
 		} else {
 			wwm.room.initModule(data);
 		}
@@ -129,16 +132,15 @@ wwm.lobby = (function (){
 		};
 	}
 	function initModule($con) {
-		console.log('login', localStorage.login);
-		var src = document.getElementById('wwm-lobby').textContent;
-		userInfo = JSON.parse(localStorage.login);
+		console.log('window.userInfo', JSON.stringify(userInfo));
+		var src = $('#wwm-lobby').text();
 		var name =  userInfo.name || userInfo.properties.nickname;
 		dust.render(dust.loadSource(dust.compile(src)), {
 			name: name
 		}, function(err, out) {
 			if (err) {
 				console.log(err);
-				alert('error! 콘솔 확인');
+				alert('rendering error! 콘솔 확인');
 			} else {
 				$con.html(out);
 				setJqMap($con);

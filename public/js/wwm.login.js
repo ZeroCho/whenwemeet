@@ -42,6 +42,7 @@ wwm.login = (function () {
 									alert('가입 오류 발생!');
 									console.log(err.responseText);
 								});
+								window.userInfo = res;
 								localStorage.login = JSON.stringify(res);
 								localStorage.loginType = 'kakao';
 								wwm.lobby.initModule(jqMap.$con);
@@ -82,6 +83,7 @@ wwm.login = (function () {
 								alert('가입 오류 발생!');
 								console.log(err.responseText);
 							});
+							window.userInfo = res;
 							localStorage.login = JSON.stringify(res);
 							localStorage.loginType = 'facebook';
 							wwm.lobby.initModule(jqMap.$con);
