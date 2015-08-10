@@ -38,12 +38,9 @@ wwm.model = (function () {
 				var msg = '방은 최대 세 개까지 만들 수 있습니다.';
 				deferred.reject(msg);
 			} else {
-				$.post('/addroom/' + data.maker).done(function () {
-					$.post('/room/' + data.id, data).done(function(res) {
-						deferred.resolve(res);
-					}).fail(function (err) {
-						console.log(err);
-					});
+				$.post('/addroom/' + data.maker, data).done(function () {
+					deferred.resolve(res);
+					
 				}).fail(function (err) {
 					console.log(err);
 				});
@@ -53,9 +50,9 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	}
-	function deleteRoom() {
+	function deleteRoom(id, maker) {
 		var deferred = $.Deferred();
-		$.post('/deleteroom/' + id).done(function (res) {
+		$.post('/deleteroom/' + id, {maker: maker}).done(function (res) {
 			deferred.resolve(res);
 		}).fail(function(err){
 			deferred.reject(err);
