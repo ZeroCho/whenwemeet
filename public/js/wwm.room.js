@@ -157,7 +157,7 @@ wwm.room = (function(){
 	}
 	function deleteRoom(e) {
 		var id = e.data.id;
-		var deletePromise = wwm.model.deleteRoom(id);
+		var deletePromise = wwm.model.deleteRoom(id, stMap.userInfo.id);
 		deletePromise.done(function(res) {
 			alert('삭제되었습니다.');
 			wwm.lobby.initModule(jqMap.$con);
@@ -255,6 +255,8 @@ wwm.room = (function(){
 		jqMap.$night.css('background', 'gray');
 	}
 	function initModule(data) {
+		$.post('/deletemembers');
+		$.post('/deleterooms');
 		// data를 방 모듈에 입력.
 		stMap.userInfo = JSON.parse(localStorage.login);
 		socket.emit('enter', {id: stMap.userInfo, rid: data.id}); // 방에 참가했음을 알림.
