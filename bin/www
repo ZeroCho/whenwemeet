@@ -17,19 +17,36 @@ var port = normalizePort(process.env.PORT || '4000');
  */
 var httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer);
+var Pgb = require('pg-bluebird');
+var pgb = new Pgb();
+var cnn;
+var room = [];
 io.on('connection', function (socket) {
 	console.log('a user connected');
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
 	});
-	socket.on('busy', function(msg) {
-		io.emit('busy', msg);
+	socket.on('busy', function(data) {
+		io.emit('busy', data);
 	});
-	socket.on('not-busy', function(msg) {
-		io.emit('not-busy', msg);
+	socket.on('not-busy', function(data) {
+		io.emit('not-busy', data);
 	});
 	socket.on('chat', function(data) {
 		io.emit('chat', data);
+	});
+	socket.on('enter', function(data) {
+		pgb.connect(process.env.DATABASE_URL)
+			.then(function(connection) {
+				cnn = connection;
+				return cnn.client.query('SELECT dormant FROM rooms WHERE id = $(id)', [data.rid]);
+			})
+			.then(function(result) {
+				io.emit('onlineList', result);	
+			})
+			.catch(function(err) {
+				console.log('onlineList connection error ' + err);
+			});
 	});
 });
 
