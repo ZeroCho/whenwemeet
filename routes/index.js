@@ -36,7 +36,7 @@ router.post('/addroom/:rid', function (req, res) {
 		.then(function (result) {
 			console.log(result);
 			return cnn.client.query(
-				'INSERT INTO rooms (rid, maker, title, number, member, password) VALUES (($1),($2),($3),($4),($5),($6))',
+				'INSERT INTO rooms (rid, maker, title, number, members, password) VALUES (($1),($2),($3),($4),($5),($6))',
 				[rid, maker, title, number, member, password]
 			);
 		})
