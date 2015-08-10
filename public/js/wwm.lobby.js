@@ -8,7 +8,7 @@ wwm.lobby = (function (){
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
 		var $frag = $(document.createDocumentFragment());
-		var getListPromise = wwm.model.getRoomList();
+		var getListPromise = wwm.model.getRoomList(userInfo.id);
 		getListPromise.done(function (res) {
 			for (var i = 0; i < res.length; i++) {
 				var $title = $('<div/>').addClass('title').text(res[i].title);
@@ -50,7 +50,7 @@ wwm.lobby = (function (){
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
 		var $frag = $(document.createDocumentFragment());
-		var searchPromise = wwm.model.getRoomList(query);
+		var searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
 			for (var i = 0; i < res.length; i++) {
 				var $title = $('<div/>').addClass('title').text(res[i].title);
