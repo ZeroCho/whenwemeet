@@ -191,7 +191,7 @@ wwm.room = (function(){
     var arr = [];
     if (idx === 0) { // not before
 	    for (var i = 0; i < time; i++) {
-	    	for (Var j = 0; j < 7) {
+	    	for (var j = 0; j < 7; j++) {
 	    		console.log(arr);
 	    		arr.push([j, time]);
 	    	}
@@ -205,7 +205,7 @@ wwm.room = (function(){
 	    } // not before
     } else { // not after
     	for (var i = time - 1; i < 12; i++) {
-	    	for (Var j = 0; j < 7) {
+	    	for (var j = 0; j < 7; j++) {
 	    		console.log(arr);
 	    		arr.push([j, time]);
 	    	}
