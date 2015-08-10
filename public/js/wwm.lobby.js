@@ -1,6 +1,5 @@
 wwm.lobby = (function (){
 	var jqMap;
-	var userInfo;
 	function showCreateroom() {
 		wwm.modal.initModule($('#wwm-createroom-modal').html());
 	}
