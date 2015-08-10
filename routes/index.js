@@ -9,8 +9,8 @@ router.get('/', function(req, res) {
 		user: req.user
 	});
 });
-router.get('/member/:id', function (req, res) {
-	var id = req.params.id;
+router.get('/member/:pid', function (req, res) {
+	var id = req.params.pid;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
@@ -23,18 +23,43 @@ router.get('/member/:id', function (req, res) {
 });
 router.post('/addroom/:id', function (req, res) {
 	var id = req.params.id;
+	var maker = req.body.maker;
+	var title = req.body.title;
+	var member = JSON.stringify([maker]);
+	var number = req.body.number || 2;
+	var password = req.body.password || null;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
-			return cnn.client.query('UPDATE members SET roomcount = roomcount + 1 WHERE id=($1)', [id]);
+			return cnn.client.query('UPDATE members SET roomcount = roomcount + 1 WHERE id=($1)', [maker]);
+		})
+		.then(function (result) {
+			console.log(result);
+			return cnn.client.query(
+				'INSERT INTO rooms (rid, maker, title, number, member, password) VALUES (($1),($2),($3),($4),($5),($6))',
+				[id, maker, title, number, member, password]
+			);
+		})
+		.then(function (result) {
+			console.log(result);
+			res.send(result);
+		})
+		.catch(function (err) {
+			console.log('member ' + err);
+		});
+});
+router.post('/deletemembers', function (req, res) {
+	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('DELETE FROM members');
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('member ' + err);
-		});
-		// todo: merge addroom and room
+			console.log('deleteallmembers ' + err);
+		});	
 });
-router.post('/deleteroom', function (req, res) {
+router.post('/deleterooms', function (req, res) {
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
@@ -42,16 +67,16 @@ router.post('/deleteroom', function (req, res) {
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('deleteallroom ' + err);
+			console.log('deleteallrooms ' + err);
 		});
-	
 });
 router.post('/deleteroom/:id', function (req, res) {
 	var id = req.params.id;
+	var maker = req.body.maker;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
 			cnn = connection;
-			return cnn.client.query('UPDATE members SET roomcount = roomcount - 1 WHERE id=($1)', [id]);
+			return cnn.client.query('UPDATE members SET roomcount = roomcount - 1 WHERE id=($1)', [maker]);
 		}).then(function (result) {
 			console.log(result);
 			return cnn.client.query('DELETE FROM rooms WHERE id=($1)', [id]);
@@ -82,26 +107,6 @@ router.post('/join', function (req, res) {
 			res.send(result);
 		}).catch(function (err) {
 			console.log('join ' + err);
-		});
-});
-router.post('/room/:name', function (req, res) {
-	var id = req.params.name;
-	var maker = req.body.maker;
-	var title = req.body.title;
-	var member = JSON.stringify([maker]);
-	var number = req.body.number || 2;
-	var password = req.body.password || null;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
-		.then(function (connection) {
-		cnn = connection;
-			return cnn.client.query(
-				'INSERT INTO rooms (id, maker, title, number, member, password) VALUES (($1),($2),($3),($4),($5),($6))',
-				[id, maker, title, number, member, password]
-			);
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('room ' + err);
 		});
 });
 router.post('/enterroom/:id', function(req, res) {
