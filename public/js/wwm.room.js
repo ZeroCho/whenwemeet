@@ -49,8 +49,10 @@ wwm.room = (function(){
 		for (var i = 0; i < cellList.length; i++) {
 			var cell = cellList[i];
 			var arr = [cell.parentNode.rowIndex - 1, cell.cellIndex - 1];
+			console.log(arr);
 			if (stMap.current === 'day') {
 				if (busy) {
+					console.log(arr[0], arr[1], stMap.dayArray[arr[0]);
 					console.log('busy:stMap.dayArray[arr[0]][arr[1]]', stMap.dayArray[arr[0]][arr[1]]);
 					stMap.dayArray[arr[0]][arr[1]].push(stMap.personColor);
 					$(cell).addClass('busy');
@@ -282,6 +284,7 @@ wwm.room = (function(){
 		// data를 방 모듈에 입력.
 		if (!stMap.dayArray) {stMap.dayArray = createArray(12,7);}
 		if (!stMap.nightArray) {stMap.nightArray = createArray(12,7);}
+		console.log(stMap.dayArray, stMap.nightArray);
 		socket.emit('enter', {id: userInfo.id, rid: data.id}); // 방에 참가했음을 알림.
 		socket.on('onlineList', function(list) {
 			console.log('onlinelist', list);
