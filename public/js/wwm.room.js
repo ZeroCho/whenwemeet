@@ -290,7 +290,8 @@ wwm.room = (function(){
 		stMap.onlineList.push(userInfo.id);
 		stMap.memberList = data.member;
 		console.log('data.member', data.member);
-		stMap.personColor = data.member.indexOf(userInfo.id) + 1;
+		stMap.personColor = Array.isArray(data.member) ?  data.member.indexOf(userInfo.id) + 1 : 1;
+		
 		var parser = {
 			name: userInfo.name || userInfo.properties.nickname, //유저네임
 			title: data.title, //타이틀
