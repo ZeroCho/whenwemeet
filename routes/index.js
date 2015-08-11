@@ -41,7 +41,7 @@ router.post('/changeroom/:rid', function(req, res) {
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('member ' + err);
+			console.log('member error:' + err);
 		});
 });
 router.post('/addroom/:rid', function (req, res) {
@@ -68,7 +68,7 @@ router.post('/addroom/:rid', function (req, res) {
 			res.send(result);
 		})
 		.catch(function (err) {
-			console.log('member ' + err);
+			console.log('addroom error:' + err);
 		});
 });
 router.post('/deletemembers', function (req, res) {
@@ -79,7 +79,7 @@ router.post('/deletemembers', function (req, res) {
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('deleteallmembers ' + err);
+			console.log('deleteallmembers error:' + err);
 		});	
 });
 router.post('/deleterooms', function (req, res) {
@@ -90,7 +90,7 @@ router.post('/deleterooms', function (req, res) {
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('deleteallrooms ' + err);
+			console.log('deleteallrooms error:' + err);
 		});
 });
 router.post('/deleteroom/:rid', function (req, res) {
@@ -106,7 +106,7 @@ router.post('/deleteroom/:rid', function (req, res) {
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('deleteroom ' + err);
+			console.log('deleteroom error:' + err);
 		});
 });
 router.post('/join', function (req, res) {
@@ -129,7 +129,7 @@ router.post('/join', function (req, res) {
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('join ' + err);
+			console.log('join error:' + err);
 		});
 });
 router.post('/enterroom/:rid', function(req, res) {
@@ -144,21 +144,21 @@ router.post('/enterroom/:rid', function(req, res) {
 		}).then(function(result) {
 			res.send(result);
 		}).catch(function(err) {
-			console.log('enterroom ' + err);
+			console.log('enterroom error:' + err);
 		});
 });
 router.get('/rooms/:pid', function (req, res) {
 	var pid = req.params.pid;
 	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
 		.then(function (connection) {
-			console.log('getroomlist connected');
+			console.log('getroomlist connected:' + pid);
 			cnn = connection;
-			return cnn.client.query('SELECT * FROM rooms WHERE (maker=($1)) OR (members LIKE ($2))', [pid, '%' + pid + '%']);
+			return cnn.client.query('SELECT * FROM rooms WHERE (maker=$1) OR (members LIKE $2)', [pid, '%' + pid + '%']);
 		}).then(function (result) {
-			console.log('result:' + result.rows);
+			console.log('rooms result:' + result.rows.length);
 			res.send(result);
 		}).catch(function (err) {
-			console.log('rooms ' + err);
+			console.log('rooms error:' + err);
 		});
 });
 router.get('/search/:query', function (req, res) {
@@ -170,7 +170,7 @@ router.get('/search/:query', function (req, res) {
 		}).then(function (result) {
 			res.send(result);
 		}).catch(function (err) {
-			console.log('roomsq ' + err);
+			console.log('search error:' + err);
 		});
 });
 
