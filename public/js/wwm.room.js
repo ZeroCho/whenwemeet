@@ -32,7 +32,8 @@ wwm.room = (function(){
 			$title: $con.find('#title'),
 			$total: $con.find('#total-number'),
 			$sendChat: $con.find('#send-chat'),
-			$chatList: $con.find('#chat-list')
+			$chatList: $con.find('#chat-list'),
+			$confirm: $con.find('#confirm-calendar')
 		};
 	}
 	function createArray(length) {
@@ -50,9 +51,11 @@ wwm.room = (function(){
 			var arr = [cell.parentNode.rowIndex - 1, cell.cellIndex - 1];
 			if (stMap.current === 'day') {
 				if (busy) {
+					console.log('busy:stMap.dayArray[arr[0]][arr[1]]', stMap.dayArray[arr[0]][arr[1]]);
 					stMap.dayArray[arr[0]][arr[1]].push(stMap.personColor);
 					$(cell).addClass('busy');
 				} else {
+					console.log('not-busy:stMap.dayArray[arr[0]][arr[1]]', stMap.dayArray[arr[0]][arr[1]]);
 					var index = stMap.dayArray[arr[0]][arr[1]].indexOf(stMap.personColor);
 					if (index > -1) {
 						stMap.dayArray[arr[0]][arr[1]].splice(index, 1);
@@ -61,9 +64,11 @@ wwm.room = (function(){
 				}
 			} else { // current === 'night'
 				if (busy) {
+					console.log('busy:stMap.nightArray[arr[0]][arr[1]]', stMap.nightArray[arr[0]][arr[1]]);
 					stMap.nightArray[arr[0]][arr[1]].push(stMap.personColor);
 					$(cell).addClass('busy');
 				} else {
+					console.log('not-busy:stMap.nightArray[arr[0]][arr[1]]', stMap.nightArray[arr[0]][arr[1]]);
 					var index = stMap.nightArray[arr[0]][arr[1]].indexOf(stMap.personColor);
 					if (index > -1) {
 						stMap.nightArray[arr[0]][arr[1]].splice(index, 1);
@@ -75,11 +80,12 @@ wwm.room = (function(){
 		}
 		return arrList;
 	}
-	function arrayToTable(msgList) {
-		for (var i = 0; i < msgList.length; i++) {
-			var msg = msgList[i];
-			var $cell = jqMap.$calendar.find('tr').eq(msg[0] + 1).find('td').eq(msg[1] + 1);
+	function arrayToTable(cellList) {
+		for (var i = 0; i < cellList.length; i++) {
+			var cell = cellList[i];
+			var $cell = jqMap.$calendar.find('tr').eq(cell[0] + 1).find('td').eq(cell[1]);
 			var number = $cell.data('number') || 0;
+			console.log('arrToTb:number', number);
 			$cell.attr('data-number', number + 1);
 		}
 		renderTable(stMap.current);
@@ -92,6 +98,8 @@ wwm.room = (function(){
 					var $cell = jqMap.$calendar.find('tr').eq(i).find('td').eq(j);
 					var number = $cell.data('number') || 0;
 					if (stMap.dayArray[i][j].length > 0) {
+						console.log('stMap.dayArray[i][j]', stMap.dayArray[i][j]);
+						console.log('number', number);
 						var $box = $('<div/>').addClass('box-' + number);
 						for (k = 0; k < number; k++) {
 							$box.append($('<div/>', {class: cfMap.colorList[stMap.dayArray[i][j][k] - 1]}));
@@ -106,6 +114,8 @@ wwm.room = (function(){
 					var $cell = jqMap.$calendar.find('tr').eq(i).find('td').eq(j);
 					var number = $cell.data('number') || 0;
 					if (stMap.nightArray[i][j].length > 0) {
+						console.log('stMap.nightArray[i][j]', stMap.nightArray[i][j]);
+						console.log('number', number);
 						var $box = $('<div/>').addClass('box-' + number);
 						for (k = 0; k < number; k++) {
 							$box.append($('<div/>', {class: cfMap.colorList[stMap.nightArray[i][j][k] - 1]}));
@@ -213,10 +223,10 @@ wwm.room = (function(){
 		if (idx === 0) { // not before
 			for (var i = 0; i < time; i++) {
 				for (var j = 0; j < 7; j++) {
-					console.log(arr);
 					arr.push([time, j]);
 				}
 			}
+			console.log('arr', arr);
 			if ($(this).hasClass('selected')) {
 				socket.emit('not-busy', arr);
 				$(this).removeClass('selected');
@@ -231,6 +241,7 @@ wwm.room = (function(){
 					arr.push([time, j]);
 				}
 			}
+			console.log('arr', arr);
 			if ($(this).hasClass('selected')) {
 				socket.emit('not-busy', arr);
 				$(this).removeClass('selected');
@@ -250,6 +261,10 @@ wwm.room = (function(){
 			id: userInfo.id,
 			text: text
 		});
+	}
+	function confirm(e) {
+		var data = e.data;
+		wwm.model.confirm(data);
 	}
 	function toDay() {
 		stMap.current = 'day';
@@ -282,6 +297,8 @@ wwm.room = (function(){
 			current: data.current, //현재원
 			total: data.number //총원
 		};
+		console.log('userinfo.id', userInfo.id);
+		console.log('data.maker', data.maker);
 		if (userInfo.id == data.maker) { // 아이디가 방장 아이디와 같으면
 			parser.admin = true;
 		}
@@ -299,11 +316,11 @@ wwm.room = (function(){
 			socket.on('chat', function(data) {
 				jqMap.$chatList.text(data.id + ' send ' + data.text);
 			});
-			socket.on('busy', function(msg) {
-				arrayToTable(msg);
+			socket.on('busy', function(list) {
+				arrayToTable(list);
 			});
-			socket.on('not-busy', function(msg) {
-				arrayToTable(msg);
+			socket.on('not-busy', function(list) {
+				arrayToTable(list);
 			});
 			jqMap.$calendar.find('td').click(onClickCell);
 			jqMap.$explode.click({id: data.id}, deleteRoom);
@@ -318,6 +335,7 @@ wwm.room = (function(){
 			jqMap.$sendChat.click(sendChat);
 			jqMap.$notDay.click(excludeDay);
 			jqMap.$notTime.click(excludeTime);
+			jqMap.$confirm.click({rid: data.id, day: stMap.dayArray, night: stMap.nightArray}, confirm);
 		});
 	}
 	
