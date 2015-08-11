@@ -11,7 +11,7 @@ wwm.lobby = (function (){
 		getListPromise.done(function (res) {
 			for (var i = 0; i < res.length; i++) {
 				var $title = $('<div/>').addClass('title').text(res[i].title);
-				var $current = $('<span/>').addClass('current').text(JSON.parse(res[i].member).length);
+				var $current = $('<span/>').addClass('current').text(JSON.parse(res[i].members).length);
 				var $total = $('<span/>').addClass('total').text(res[i].number);
 				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
 				var $room = $('<div/>')
@@ -19,7 +19,7 @@ wwm.lobby = (function (){
 					.attr({
 						'data-id': res[i].id,
 						'data-maker': res[i].maker,
-						'data-member': res[i].member
+						'data-member': res[i].members
 					})
 					.append($title)
 					.append($number);
@@ -53,7 +53,7 @@ wwm.lobby = (function (){
 		searchPromise.done(function (res) {
 			for (var i = 0; i < res.length; i++) {
 				var $title = $('<div/>').addClass('title').text(res[i].title);
-				var $current = $('<span/>').addClass('current').text(JSON.parse(res[i].member).length);
+				var $current = $('<span/>').addClass('current').text(JSON.parse(res[i].members).length);
 				var $total = $('<span/>').addClass('total').text(res[i].number);
 				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
 				var $room = $('<div/>')
@@ -61,7 +61,7 @@ wwm.lobby = (function (){
 					.attr({
 						'data-id': res[i].id,
 						'data-maker': res[i].maker,
-						'data-member': res[i].member
+						'data-member': res[i].members
 					})
 					.append($title)
 					.append($number);
