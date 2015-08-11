@@ -280,8 +280,8 @@ wwm.room = (function(){
 	}
 	function initModule(data) {
 		// data를 방 모듈에 입력.
-		if (!stMap.dayArray) {createArray(12,7);}
-		if (!stMap.nightArray) {createArray(12,7);}
+		if (!stMap.dayArray) {stMap.dayArray = createArray(12,7);}
+		if (!stMap.nightArray) {stMap.nightArray = createArray(12,7);}
 		socket.emit('enter', {id: userInfo.id, rid: data.id}); // 방에 참가했음을 알림.
 		socket.on('onlineList', function(list) {
 			console.log('onlinelist', list);
