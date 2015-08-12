@@ -70,14 +70,14 @@ wwm.room = (function(){
 			} else { // current === 'night'
 				cellArray = stMap.nightArray[arr[0]][arr[1]];
 				if (busy) {
-					console.log('busy:stMap.nightArray[arr[0]][arr[1]]', stMap.nightArray[arr[0]][arr[1]].join(','));
-					stMap.nightArray[arr[0]][arr[1]].push(stMap.personColor);
+					console.log('busy:stMap.nightArray[arr[0]][arr[1]]', cellArray.join(','));
+					cellArray ? cellArray.push(stMap.personColor) : cellArray = [stMap.personColor];
 					$(cell).addClass('busy');
 				} else {
-					console.log('not-busy:stMap.nightArray[arr[0]][arr[1]]', stMap.nightArray[arr[0]][arr[1]].join(','));
-					var index = stMap.nightArray[arr[0]][arr[1]].indexOf(stMap.personColor);
+					console.log('not-busy:stMap.nightArray[arr[0]][arr[1]]', cellArray.join(','));
+					var index = cellArray.indexOf(stMap.personColor);
 					if (index > -1) {
-						stMap.nightArray[arr[0]][arr[1]].splice(index, 1);
+						cellArray.splice(index, 1);
 					}
 					$(cell).removeClass('busy');
 				}
@@ -298,7 +298,7 @@ wwm.room = (function(){
 		stMap.memberList = data.member;
 		console.log('data.member', data.member);
 		stMap.personColor = Array.isArray(data.member) ?  data.member.indexOf(userInfo.id) + 1 : 1;
-		
+		console.log('stMap.personColor', stMap.personColor);
 		var parser = {
 			name: userInfo.name || userInfo.properties.nickname, //유저네임
 			title: data.title, //타이틀
