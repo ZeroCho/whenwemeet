@@ -50,27 +50,31 @@ wwm.room = (function(){
 			var cell = cellList[i];
 			var arr = [cell.parentNode.rowIndex - 1, cell.cellIndex - 1];
 			console.log(arr);
+			var cellArray;
 			if (stMap.current === 'day') {
+				cellArray = stMap.dayArray[arr[0]][arr[1]];
 				if (busy) {
-					console.log(arr[0], arr[1], stMap.dayArray[arr[0]]);
-					console.log('busy:stMap.dayArray[arr[0]][arr[1]]', stMap.dayArray[arr[0]][arr[1]]);
-					stMap.dayArray[arr[0]][arr[1]].push(stMap.personColor);
+					console.log(arr[0], arr[1], stMap.dayArray[arr[0]].join(','));
+					console.log('busy:stMap.dayArray[arr[0]][arr[1]]', cellArray.join(','));
+					cellArray ? cellArray.push(stMap.personColor) : cellArray = [stMap.personColor];
+					console.log('cellresult', cellArray);
 					$(cell).addClass('busy');
-				} else {
-					console.log('not-busy:stMap.dayArray[arr[0]][arr[1]]', stMap.dayArray[arr[0]][arr[1]]);
-					var index = stMap.dayArray[arr[0]][arr[1]].indexOf(stMap.personColor);
+				} else {				
+					console.log('not-busy:stMap.dayArray[arr[0]][arr[1]]', cellArray.join(','));
+					var index = cellArray.indexOf(stMap.personColor);
 					if (index > -1) {
-						stMap.dayArray[arr[0]][arr[1]].splice(index, 1);
+						cellArray.splice(index, 1);
 					}
 					$(cell).removeClass('busy');
 				}
 			} else { // current === 'night'
+				cellArray = stMap.nightArray[arr[0]][arr[1]];
 				if (busy) {
-					console.log('busy:stMap.nightArray[arr[0]][arr[1]]', stMap.nightArray[arr[0]][arr[1]]);
+					console.log('busy:stMap.nightArray[arr[0]][arr[1]]', stMap.nightArray[arr[0]][arr[1]].join(','));
 					stMap.nightArray[arr[0]][arr[1]].push(stMap.personColor);
 					$(cell).addClass('busy');
 				} else {
-					console.log('not-busy:stMap.nightArray[arr[0]][arr[1]]', stMap.nightArray[arr[0]][arr[1]]);
+					console.log('not-busy:stMap.nightArray[arr[0]][arr[1]]', stMap.nightArray[arr[0]][arr[1]].join(','));
 					var index = stMap.nightArray[arr[0]][arr[1]].indexOf(stMap.personColor);
 					if (index > -1) {
 						stMap.nightArray[arr[0]][arr[1]].splice(index, 1);
