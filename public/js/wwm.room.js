@@ -52,7 +52,7 @@ wwm.room = (function(){
 			console.log(arr);
 			if (stMap.current === 'day') {
 				if (busy) {
-					console.log(arr[0], arr[1], stMap.dayArray[arr[0]);
+					console.log(arr[0], arr[1], stMap.dayArray[arr[0]]);
 					console.log('busy:stMap.dayArray[arr[0]][arr[1]]', stMap.dayArray[arr[0]][arr[1]]);
 					stMap.dayArray[arr[0]][arr[1]].push(stMap.personColor);
 					$(cell).addClass('busy');
