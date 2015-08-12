@@ -56,7 +56,7 @@ wwm.room = (function(){
 				if (busy) {
 					console.log(arr[0], arr[1], stMap.dayArray[arr[0]].join(','));
 					console.log('busy:stMap.dayArray[arr[0]][arr[1]]', cellArray.join(','));
-					cellArray ? cellArray.push(stMap.personColor) : cellArray = [stMap.personColor];
+					cellArray != null ? cellArray.push(stMap.personColor) : (cellArray = [stMap.personColor]);
 					console.log('cellresult', cellArray);
 					$(cell).addClass('busy');
 				} else {				
@@ -71,7 +71,7 @@ wwm.room = (function(){
 				cellArray = stMap.nightArray[arr[0]][arr[1]] || null;
 				if (busy) {
 					console.log('busy:stMap.nightArray[arr[0]][arr[1]]', cellArray.join(','));
-					cellArray ? cellArray.push(stMap.personColor) : cellArray = [stMap.personColor];
+					cellArray != null ? cellArray.push(stMap.personColor) : (cellArray = [stMap.personColor]);
 					$(cell).addClass('busy');
 				} else {
 					console.log('not-busy:stMap.nightArray[arr[0]][arr[1]]', cellArray.join(','));
