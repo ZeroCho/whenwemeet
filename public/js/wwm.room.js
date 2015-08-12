@@ -52,7 +52,7 @@ wwm.room = (function(){
 			console.log(arr);
 			var cellArray;
 			if (stMap.current === 'day') {
-				cellArray = stMap.dayArray[arr[0]][arr[1]];
+				cellArray = stMap.dayArray[arr[0]][arr[1]] || null;
 				if (busy) {
 					console.log(arr[0], arr[1], stMap.dayArray[arr[0]].join(','));
 					console.log('busy:stMap.dayArray[arr[0]][arr[1]]', cellArray.join(','));
@@ -68,7 +68,7 @@ wwm.room = (function(){
 					$(cell).removeClass('busy');
 				}
 			} else { // current === 'night'
-				cellArray = stMap.nightArray[arr[0]][arr[1]];
+				cellArray = stMap.nightArray[arr[0]][arr[1]] || null;
 				if (busy) {
 					console.log('busy:stMap.nightArray[arr[0]][arr[1]]', cellArray.join(','));
 					cellArray ? cellArray.push(stMap.personColor) : cellArray = [stMap.personColor];
