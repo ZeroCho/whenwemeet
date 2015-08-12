@@ -204,3 +204,27 @@ li {
 #chat {
 	float: right;
 }
+.red {
+	background: red;
+}
+.orange {
+	background: orange;
+}
+.yellow {
+	background: yellow;
+}
+.yellowgreen {
+	background: yellowgreen;
+}
+.skyblue {
+	background: skyblue;
+}
+.purple {
+	background: purple;
+}
+.violet {
+	background: violet;
+}
+.pink {
+	background: pink;
+}

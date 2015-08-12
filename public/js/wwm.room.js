@@ -60,7 +60,7 @@ wwm.room = (function(){
 					console.log('cellresult', cellArray);
 					$(cell).addClass('busy');
 				} else {				
-					console.log('not-busy:stMap.dayArray[arr[0]][arr[1]]', cellArray.join(','));
+					console.log('not-busy:stMap.dayArray[arr[0]][arr[1]]', cellArray);
 					var index = cellArray.indexOf(stMap.personColor);
 					if (index > -1) {
 						cellArray.splice(index, 1);
@@ -74,7 +74,7 @@ wwm.room = (function(){
 					cellArray ? cellArray.push(stMap.personColor) : (cellArray = [stMap.personColor]);
 					$(cell).addClass('busy');
 				} else {
-					console.log('not-busy:stMap.nightArray[arr[0]][arr[1]]', cellArray.join(','));
+					console.log('not-busy:stMap.nightArray[arr[0]][arr[1]]', cellArray);
 					var index = cellArray.indexOf(stMap.personColor);
 					if (index > -1) {
 						cellArray.splice(index, 1);
@@ -101,14 +101,15 @@ wwm.room = (function(){
 		if (current === 'day') {
 			for (i = 0; i < 12; i++) {
 				for (j = 0; j < 7; j++) {
-					var $cell = jqMap.$calendar.find('tr').eq(i).find('td').eq(j);
+					var $cell = jqMap.$calendar.find('tr').eq(i + 1).find('td').eq(j);
 					var number = $cell.data('number') || 0;
-					if (stMap.dayArray[i][j].length > 0) {
-						console.log('stMap.dayArray[i][j]', stMap.dayArray[i][j]);
+					var cellArray = stMap.dayArray[i][j];
+					if (cellArray && cellArray.length > 0) {
+						console.log('stMap.dayArray[i][j]', cellArray);
 						console.log('number', number);
 						var $box = $('<div/>').addClass('box-' + number);
 						for (k = 0; k < number; k++) {
-							$box.append($('<div/>', {class: cfMap.colorList[stMap.dayArray[i][j][k] - 1]}));
+							$box.append($('<div/>', {class: cfMap.colorList[cellArray[k] - 1]}));
 						}
 						$box.appendTo($cell);
 					}
