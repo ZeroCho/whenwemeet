@@ -79,7 +79,7 @@ wwm.model = (function () {
 				var msg = '방은 최대 세 개까지 만들 수 있습니다.';
 				deferred.reject(msg);
 			} else {
-				$.post('/addroom/' + data.maker, data).done(function () {
+				$.post('/addroom/' + data.id, data).done(function () {
 					deferred.resolve(res);				
 				}).fail(function (err) {
 					console.log(err);
