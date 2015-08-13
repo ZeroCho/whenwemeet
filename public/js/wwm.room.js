@@ -262,6 +262,10 @@ wwm.room = (function(){
 		socket.emit('out', {id: userInfo.id, rid: e.data.rid});
 		wwm.lobby.initModule(jqMap.$con);
 	}
+	function quit() {
+		socket.emit('quit', {id: userInfo.id, rid: e.data.rid});
+		wwm.lobby.initModule(jqMap.$con);
+	}
 	function sendChat() {
 		var text = $(this).prev('#chatbox').val();
 		socket.emit('chat', {
@@ -289,13 +293,19 @@ wwm.room = (function(){
 		// data를 방 모듈에 입력.
 		if (!stMap.dayArray) {stMap.dayArray = createArray(12,7);}
 		if (!stMap.nightArray) {stMap.nightArray = createArray(12,7);}
-		console.log(stMap.dayArray, stMap.nightArray);
 		socket.emit('enter', {id: userInfo.id, rid: data.id}); // 방에 참가했음을 알림.
-		socket.on('onlineList', function(list) {
-			console.log('onlinelist', list);
-		stMap.onlineList = list;
+		socket.on('out', function(id) {
+			var target = stMap.onlineList.indexOf(id);
+			stMap.onlineList.splice(target, 1);
+			console.log('quit', stMap.onlineList, stMap.memberList);
 		});
-		stMap.onlineList.push(userInfo.id);
+		socket.on('quit', function(id) {
+			var target = stMap.onlineList.indexOf(id);
+			stMap.onlineList.splice(target, 1);
+			var target = stMap.memberList.indexOf(id);
+			stMap.memberList.splice(target, 1);
+			console.log('quit', stMap.onlineList, stMap.memberList);
+		});
 		stMap.memberList = data.member;
 		console.log('data.member', data.member);
 		stMap.personColor = Array.isArray(data.member) ?  data.member.indexOf(userInfo.id) + 1 : 1;
@@ -321,6 +331,12 @@ wwm.room = (function(){
 			setJqMap(cfMap.$con);
 			jqMap.$day.css({
 				background: 'gray'
+			});
+			socket.on('enter', function(data) {
+				stMap.onlineList = data.online;
+				stMap.dayArray = data.day;
+				stMap.nightArray = data.night;
+				console.log(stMap.dayArray, stMap.nightArray);
 			});
 			socket.on('chat', function(data) {
 				jqMap.$chatList.text(data.id + ' send ' + data.text);
