@@ -1,8 +1,18 @@
 var express = require('express');
 var router = express.Router();
-var Pgb = require('pg-bluebird');
-var pgb = new Pgb();
-var cnn;
+var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://zerocho:Wpfhsms0!@ds031873.mongolab.com:31873/heroku_lhdjlrwx';
+var db, memberCollection, roomCollection;
+MongoClient.connect(url, function(err, database) {
+	if (err) {
+		console.error(err);
+	} else {
+		console.log("Connected correctly to server");
+		db = database;
+		members = db.collection('members');
+		rooms = db.collection('rooms');
+	}
+});
 router.get('/', function(req, res) {
 	res.render('index', {
 		title: '우리언제만나',
@@ -11,180 +21,191 @@ router.get('/', function(req, res) {
 });
 router.get('/member/:pid', function (req, res) {
 	var pid = req.params.pid;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('SELECT * FROM members WHERE id=($1)', [pid]);
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('member ' + err);
-		});
+	memberCollection.find({id: pid}).toArray(function(err, docs) {
+		if (err) {
+			console.log('membererror:' + err);
+		} else {
+			console.log(docs);
+			res.send(docs);
+		}	
+	});
 });
 router.post('/ban/:id', function(req, res) {
 	var id = req.params.id;
 	var rid = req.body.rid;
+	roomCollection.find({rid: rid}).toArray(function(err, docs) {
+		if (err) {
+			console.log('findroomerror:' + err);
+		} else {
+			var members = docs[0].member.indexOf(id);
+			docs[0].member.splice(members, 1);
+			roomCollection.update({rid: rid}, {members: docs[0].member}).toArray(function(err, res) {
+				if (err) {
+					console.log('findroomerror:' + err);
+				} else {
+					res.send(res);
+				}	
+			});
+		}	
+	});
 });
 router.post('/confirm/:rid', function(req, res) {
 	var rid = req.params.rid;
 	var day = JSON.stringify(req.body.day);
 	var night = JSON.stringify(req.body.night);
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('UPDATE rooms SET day=($1), night = ($2) WHERE id=($3)', [day, night, rid]);
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('member error:' + err);
-		});
+	roomCollection.update({rid: rid}, {day: day, night: night}).toArray(function(err, res) {
+		if (err) {
+			console.log('confirmerror:' + err);
+		} else {
+			res.send(res);
+		}
+	});
 });
 router.post('/changeroom/:rid', function(req, res) {
 	var rid = req.params.rid;
 	if (req.body.title) {
-		var key = 'title';
-		var value = req.body.title;
-	} else if (req.body.number) {
-		var key = 'number';
-		var value = req.body.number;
-	}
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('UPDATE rooms SET ($1)=($2) WHERE id=($3)', [key, value, rid]);
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('member error:' + err);
+		var title = req.body.title;
+		roomCollection.update({id: rid}, {title: title}).toArray(function(err, res) {
+			if (err) {
+				console.log('changeroomerror:' + err);
+			} else {
+				console.log(res);
+				res.send(res);
+			}
 		});
+	} else if (req.body.number) {
+		var number = req.body.number;
+		roomCollection.update({id: rid}, {number: number}).toArray(function(err, res) {
+			if (err) {
+				console.log('changeroomerror:' + err);
+			} else {
+				console.log(res);
+				res.send(res);
+			}
+		});
+	}
 });
 router.post('/addroom/:rid', function (req, res) {
 	var rid = req.params.rid;
 	var maker = req.body.maker;
 	var title = req.body.title;
-	var members = JSON.stringify([maker]);
+	var members = [maker];
 	var number = req.body.number || 2;
 	var password = req.body.password || null;
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('UPDATE members SET roomcount = roomcount + 1 WHERE id=($1)', [maker]);
-		})
-		.then(function (result) {
-			console.log(result);
-			return cnn.client.query(
-				'INSERT INTO rooms (rid, maker, title, number, members, password) VALUES (($1),($2),($3),($4),($5),($6))',
-				[rid, maker, title, number, members, password]
-			);
-		})
-		.then(function (result) {
-			console.log(result);
-			res.send(result);
-		})
-		.catch(function (err) {
-			console.log('addroom error:' + err);
-		});
+	memberCollection.update({id: maker}, {$inc: {roomcount: 1}).toArray(function(err, docs) {
+		if (err) {
+			console.log('roomcounterror:' + err);
+		} else {
+			roomCollection.insert({rid: rid, maker: maker, title: title, members: members, number: number}).toArray(function(err, docs){
+				if (err) {
+					console.log('addroomerror:' + err);
+				} else {
+					res.send(docs);
+				}
+			});
+		}
+	});
 });
 
 router.post('/deleteroom/:rid', function (req, res) {
 	var rid = req.params.id;
 	var maker = req.body.maker;
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('UPDATE members SET roomcount = roomcount - 1 WHERE id=($1)', [maker]);
-		}).then(function (result) {
-			console.log(result);
-			return cnn.client.query('DELETE FROM rooms WHERE rid=($1)', [rid]);
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('deleteroom error:' + err);
-		});
+	memberCollection.update({id: maker}, {$inc: {roomcount: -1}).toArray(function(err, docs) {
+		if (err) {
+			console.log('roomcounterror:' + err);
+		} else {
+			roomCollection.remove({rid: rid}).toArray(function(err, docs){
+				if (err) {
+					console.log('addroomerror:' + err);
+				} else {
+					res.send(docs);
+				}
+			});
+		}
+	});
 });
 router.post('/join', function (req, res) {
 	var id = req.body.id;
 	var name = req.body.name;
 	console.log('name ' + name + ' id '+ id);
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('SELECT * FROM members WHERE id=($1)', [id]);
-		})
-		.then(function (result) {
-			console.log('is user? ' + result.rows.length);
-			if (result.rows.length === 0) {
-				return cnn.client.query(
-					'INSERT INTO members (id, name) VALUES (($1),($2))',
-					[id , name]
-				);
+	memberCollection.find({id: id}).toArray(function(err, docs) {
+		if (err) {
+			console.log('findiderror:' + err);
+		} else {
+			console.log("Found the following records");
+			console.log(docs);
+			if (docs.length > 0) {
+				memberCollection.insert({
+					id: id,
+					name: name,
+					roomcount: 0
+				}).toArray(function(err, res) {
+					if (err) {
+						console.log('joinerror:' + err);
+					} else {
+						console.log(res);
+						res.send(res);
+					}
+				});
+			} else {
+				res.send('already joined');
 			}
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('join error:' + err);
-		});
+		}
+	});
 });
 router.post('/enterroom/:rid', function(req, res) {
 	var pw = req.body.pw || '';
 	var rid = req.params.rid;
 	console.log(rid ,pw);
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connetion) {
-			cnn = connection;
-			return cnn.client.query('SELECT * FROM rooms WHERE rid=($1) AND password=($2)', [rid, pw]);
-		}).then(function(result) {
-			res.send(result);
-		}).catch(function(err) {
-			console.log('enterroom error:' + err);
-		});
+	roomCollection.find({rid: rid, pw: pw}).toArray(function(err, docs) {
+		if (err) {
+			console.log('enterroomerror:' + err);
+		} else {
+			console.log(docs);
+			res.send(docs);
+		}
+	});
 });
 router.get('/rooms/:pid', function (req, res) {
 	var pid = req.params.pid;
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connection) {
-			console.log('getroomlist connected:' + pid);
-			cnn = connection;
-			return cnn.client.query('SELECT * FROM rooms WHERE (maker=$1) OR (members LIKE $2)', [pid, '%' + pid + '%']);
-		}).then(function (result) {
-			console.log('rooms result:' + result.rows.length);
-			res.send(result);
-		}).catch(function (err) {
-			console.log('rooms error:' + err);
-		});
+	roomCollection.find({ $or: [{maker: pid}],[{members: {$regex: pid}}]}).toArray(function(err, docs) {
+		if (err) {
+			console.log('roomlisterror:' + err);
+		} else {
+			console.log(docs);
+			res.send(docs);
+		}
+	});
 });
 router.get('/search/:query', function (req, res) {
 	var query = req.params.query;
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('SELECT * FROM rooms WHERE title LIKE ($1)', ['%' + query + '%']);
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('search error:' + err);
-		});
+	roomCollection.find({title: {$regex: query}}).toArray(function(err, docs) {
+		if (err) {
+			console.log('searcherror:' + err);
+		} else {
+			console.log(docs);
+			res.send(docs);
+		}
+	});
 });
 router.post('/deletemembers', function (req, res) {
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('DELETE FROM members');
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('deleteallmembers error:' + err);
-		});	
+	memberCollection.remove({}).toArray(function(err, docs) {
+		if (err) {
+			console.log('deleteallmembererror:' + err);
+		} else {
+			console.log(docs);
+			res.send(docs);
+		}
+	});
 });
 router.post('/deleterooms', function (req, res) {
-	pgb.connect(process.env.DATABASE_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('DELETE FROM rooms');
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('deleteallrooms error:' + err);
-		});
+	roomCollection.remove({}).toArray(function(err, docs) {
+		if (err) {
+			console.log('deleteallroomerror:' + err);
+		} else {
+			console.log(docs);
+			res.send(docs);
+		}
+	});
 });
 module.exports = router;
