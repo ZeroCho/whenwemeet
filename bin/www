@@ -42,11 +42,17 @@ io.on('connection', function (socket) {
 				return cnn.client.query('SELECT dormant FROM rooms WHERE id = $(id)', [data.rid]);
 			})
 			.then(function(result) {
-				io.emit('onlineList', result);	
+				io.emit('enter', result);	
 			})
 			.catch(function(err) {
 				console.log('onlineList connection error ' + err);
 			});
+	});
+	socket.on('quit', function(data) {
+		io.emit('quit', data.id);
+	});
+	socket.on('out', function(data) {
+		io.emit('out', data.id);
 	});
 });
 
