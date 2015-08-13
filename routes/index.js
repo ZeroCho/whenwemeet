@@ -15,8 +15,7 @@ MongoClient.connect(url, function(err, database) {
 });
 router.get('/', function(req, res) {
 	res.render('index', {
-		title: '우리언제만나',
-		user: req.user
+		title: '우리언제만나'
 	});
 });
 router.get('/member/:pid', function (req, res) {
