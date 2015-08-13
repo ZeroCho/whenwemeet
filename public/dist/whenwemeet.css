@@ -194,9 +194,12 @@ li {
 	display: inline-block;
 }
 #day-exception ul, #time-exception ul {
+	position: relative;
+	bottom: 0;
 	display: none;
 }
 #room-footer {
+	background: white;
 	position: absolute;
 	bottom: 0;
 	width: 100%;
