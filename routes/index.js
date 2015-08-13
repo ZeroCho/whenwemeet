@@ -9,8 +9,8 @@ MongoClient.connect(url, function(err, database) {
 	} else {
 		console.log("Connected correctly to server");
 		db = database;
-		members = db.collection('members');
-		rooms = db.collection('rooms');
+		memberCollection = db.collection('members');
+		roomCollection = db.collection('rooms');
 	}
 });
 router.get('/', function(req, res) {
