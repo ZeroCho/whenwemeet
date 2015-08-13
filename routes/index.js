@@ -36,9 +36,9 @@ router.post('/ban/:id', function(req, res) {
 		if (err) {
 			console.log('findroomerror:' + err);
 		} else {
-			var members = docs[0].member.indexOf(id);
-			docs[0].member.splice(members, 1);
-			roomCollection.update({rid: rid}, {members: docs[0].member}).toArray(function(err, res) {
+			var members = docs[0].members.indexOf(id);
+			docs[0].members.splice(members, 1);
+			roomCollection.update({rid: rid}, {members: docs[0].members}).toArray(function(err, res) {
 				if (err) {
 					console.log('findroomerror:' + err);
 				} else {
