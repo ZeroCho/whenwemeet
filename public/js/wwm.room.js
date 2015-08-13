@@ -37,10 +37,15 @@ wwm.room = (function(){
 		};
 	}
 	function createArray(length) {
-		var arr = new Array(length || 0), i = length;
+		var arr = new Array(length || 0), i = length, j = 0;
 		if (arguments.length > 1) {
 			var args = Array.prototype.slice.call(arguments, 1);
 			while(i--) arr[length-1 - i] = createArray.apply(this, args);
+		}
+		if (arguments.length == 0) {
+			for (j; j < arr.length; j++) {
+				arr[j] = 0;
+			}
 		}
 		return arr;
 	}
