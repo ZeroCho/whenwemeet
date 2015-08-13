@@ -25,6 +25,20 @@ router.post('/ban/:id', function(req, res) {
 	var id = req.params.id;
 	var rid = req.body.rid;
 });
+router.post('/confirm/:rid', function(req, res) {
+	var rid = req.params.rid;
+	var day = JSON.stringify(req.body.day);
+	var night = JSON.stringify(req.body.night);
+	pgb.connect(process.env.DATABASE_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('UPDATE rooms SET day=($1), night = ($2) WHERE id=($3)', [day, night, rid]);
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('member error:' + err);
+		});
+});
 router.post('/changeroom/:rid', function(req, res) {
 	var rid = req.params.rid;
 	if (req.body.title) {
@@ -34,7 +48,7 @@ router.post('/changeroom/:rid', function(req, res) {
 		var key = 'number';
 		var value = req.body.number;
 	}
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+	pgb.connect(process.env.DATABASE_URL)
 		.then(function (connection) {
 			cnn = connection;
 			return cnn.client.query('UPDATE rooms SET ($1)=($2) WHERE id=($3)', [key, value, rid]);
@@ -51,7 +65,7 @@ router.post('/addroom/:rid', function (req, res) {
 	var members = JSON.stringify([maker]);
 	var number = req.body.number || 2;
 	var password = req.body.password || null;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+	pgb.connect(process.env.DATABASE_URL)
 		.then(function (connection) {
 			cnn = connection;
 			return cnn.client.query('UPDATE members SET roomcount = roomcount + 1 WHERE id=($1)', [maker]);
@@ -71,32 +85,11 @@ router.post('/addroom/:rid', function (req, res) {
 			console.log('addroom error:' + err);
 		});
 });
-router.post('/deletemembers', function (req, res) {
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('DELETE FROM members');
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('deleteallmembers error:' + err);
-		});	
-});
-router.post('/deleterooms', function (req, res) {
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
-		.then(function (connection) {
-			cnn = connection;
-			return cnn.client.query('DELETE FROM rooms');
-		}).then(function (result) {
-			res.send(result);
-		}).catch(function (err) {
-			console.log('deleteallrooms error:' + err);
-		});
-});
+
 router.post('/deleteroom/:rid', function (req, res) {
 	var rid = req.params.id;
 	var maker = req.body.maker;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+	pgb.connect(process.env.DATABASE_URL)
 		.then(function (connection) {
 			cnn = connection;
 			return cnn.client.query('UPDATE members SET roomcount = roomcount - 1 WHERE id=($1)', [maker]);
@@ -113,7 +106,7 @@ router.post('/join', function (req, res) {
 	var id = req.body.id;
 	var name = req.body.name;
 	console.log('name ' + name + ' id '+ id);
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+	pgb.connect(process.env.DATABASE_URL)
 		.then(function (connection) {
 			cnn = connection;
 			return cnn.client.query('SELECT * FROM members WHERE id=($1)', [id]);
@@ -133,11 +126,10 @@ router.post('/join', function (req, res) {
 		});
 });
 router.post('/enterroom/:rid', function(req, res) {
-	var pw = req.body.pw;
+	var pw = req.body.pw || '';
 	var rid = req.params.rid;
-	console.log(pw);
-	console.log(id);
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+	console.log(rid ,pw);
+	pgb.connect(process.env.DATABASE_URL)
 		.then(function (connetion) {
 			cnn = connection;
 			return cnn.client.query('SELECT * FROM rooms WHERE rid=($1) AND password=($2)', [rid, pw]);
@@ -149,7 +141,7 @@ router.post('/enterroom/:rid', function(req, res) {
 });
 router.get('/rooms/:pid', function (req, res) {
 	var pid = req.params.pid;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+	pgb.connect(process.env.DATABASE_URL)
 		.then(function (connection) {
 			console.log('getroomlist connected:' + pid);
 			cnn = connection;
@@ -163,7 +155,7 @@ router.get('/rooms/:pid', function (req, res) {
 });
 router.get('/search/:query', function (req, res) {
 	var query = req.params.query;
-	pgb.connect(process.env.HEROKU_POSTGRESQL_AMBER_URL)
+	pgb.connect(process.env.DATABASE_URL)
 		.then(function (connection) {
 			cnn = connection;
 			return cnn.client.query('SELECT * FROM rooms WHERE title LIKE ($1)', ['%' + query + '%']);
@@ -173,5 +165,26 @@ router.get('/search/:query', function (req, res) {
 			console.log('search error:' + err);
 		});
 });
-
+router.post('/deletemembers', function (req, res) {
+	pgb.connect(process.env.DATABASE_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('DELETE FROM members');
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('deleteallmembers error:' + err);
+		});	
+});
+router.post('/deleterooms', function (req, res) {
+	pgb.connect(process.env.DATABASE_URL)
+		.then(function (connection) {
+			cnn = connection;
+			return cnn.client.query('DELETE FROM rooms');
+		}).then(function (result) {
+			res.send(result);
+		}).catch(function (err) {
+			console.log('deleteallrooms error:' + err);
+		});
+});
 module.exports = router;
