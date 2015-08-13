@@ -228,3 +228,6 @@ li {
 .pink {
 	background: pink;
 }
+.selected {
+	background: gray;
+}
