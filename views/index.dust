@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div id="whenwemeet">
-		<div id="view"></div>
+		<div id="view">자바스크립트가 로딩되지 않았습니다.</div>
 		<div id="modal"></div>
 	</div>
 	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
@@ -31,6 +31,7 @@
 			<div>
 				<img id="fb-login-btn" src="/facebook.png"/>
 			</div>
+			<div id="localhost-login>로컬호스트 로그인</div>
 		</div>
 	</script>
 	<script type="text/html" id="wwm-lobby">
