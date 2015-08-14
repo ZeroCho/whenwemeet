@@ -42,7 +42,7 @@ wwm.room = (function(){
 			var args = Array.prototype.slice.call(arguments, 1);
 			while(i--) arr[length-1 - i] = createArray.apply(this, args);
 		}
-		if (arguments.length == 1) {
+		if (arguments.length == 0) {
 			for (j; j < arr.length; j++) {
 				arr[j] = 0;
 			}
