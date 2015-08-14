@@ -91,7 +91,7 @@ router.post('/addroom/:rid', function (req, res) {
 	var members = [maker];
 	var number = req.body.number || 2;
 	var password = req.body.password || null;
-	memberCollection.update({id: maker}, {$inc: {roomcount: 1}).toArray(function(err, docs) {
+	memberCollection.update({id: maker}, {$inc: {roomcount: 1}}).toArray(function(err, docs) {
 		if (err) {
 			console.log('roomcounterror:' + err);
 		} else {
