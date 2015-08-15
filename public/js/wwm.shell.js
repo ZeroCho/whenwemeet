@@ -14,7 +14,7 @@ wwm.shell = (function () {
 		if (typeof errorMsg === 'string' && errorMsg.indexOf('Script error.') > -1) {
 			return;
 		}
-		console.log('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' + errorObj);
+		console.log('Error: ', errorMsg, ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' + errorObj);
 	}
 
 	function initModule($con) {

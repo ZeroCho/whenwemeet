@@ -171,13 +171,18 @@ li {
 	position: absolute;
 	top: 0;
 	width: 100%;
+	user-select: none;
 }
 #room-main {
 	position: absolute;
 	width: 100%;
 	top: 30px;
 }
-#calendar-confirm {
+#member-list {
+	position: absolute;
+	left: 0;
+}
+#confirm-calendar, #refresh-calendar {
 	float: right;
 }
 #day, #night {
@@ -189,13 +194,20 @@ li {
 }
 #room-main table {
 	width: 100%;
+	user-select: none;
+
+}
+#room-main table td {
+	height: 20px;
 }
 #day-exception, #time-exception, #room-back, #chat, #my-info {
 	display: inline-block;
+	position: relative;
 }
 #day-exception ul, #time-exception ul {
-	position: relative;
-	bottom: 0;
+	position: absolute;
+	bottom: 26px;
+	width: 300px;
 	display: none;
 }
 #room-footer {
@@ -207,29 +219,65 @@ li {
 #chat {
 	float: right;
 }
+.box-0 {
+	display: none;
+}
+.box-1 {
+	height: 100%;
+}
+.box-2 {
+	height: 100%;
+}
+.box-3 {
+	height: 100%;
+}
+.box-4 {
+	height: 100%;
+}
+.box-5 {
+	height: 100%;
+}
+.box-6 {
+	height: 100%;
+}
+.box-7 {
+	height: 100%;
+}
+.box-8 {
+	height: 100%;
+}
+
 .red {
 	background: red;
+	height: 100%;
 }
 .orange {
 	background: orange;
+	height: 100%;
 }
 .yellow {
 	background: yellow;
+	height: 100%;
 }
 .yellowgreen {
 	background: yellowgreen;
+	height: 100%;
 }
 .skyblue {
 	background: skyblue;
+	height: 100%;
 }
 .purple {
 	background: purple;
+	height: 100%;
 }
 .violet {
 	background: violet;
+	height: 100%;
 }
 .pink {
 	background: pink;
+	height: 100%;
 }
 .selected {
 	background: gray;

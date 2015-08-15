@@ -31,18 +31,18 @@ wwm.modal = (function (){
 			return;
 		}
 		data = {
-			id: new Date().getTime(),
+			id: new Date().getTime().toString(),
 			title: title,
 			maker: maker,
 			number: number,
-			password: password
+			password: password || null
 		};
 		var createRoomPromise = wwm.model.createRoom(data);
 		createRoomPromise.done(function (result) {
 			console.log(result);
 			data.current = 1;
-			data.member = [data.id]
-			wwm.room.initModule(data);
+			data.member = [data.id];
+			wwm.room.initModule(data, 'create');
 			stMap.$modal.hide();
 		});
 		createRoomPromise.fail(function (err) {

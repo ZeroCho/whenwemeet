@@ -1,12 +1,21 @@
 wwm.login = (function () {
 	var jqMap;
 	function localhostLogin() {
-		var res = {id: 123456789, name: '관리자'};
-		$.ajax('/join', {
-			data: res,
-			type: 'post',
-			contentType: 'application/x-www-form-urlencoded;charset=utf-8'
-		}).fail(function (err) {
+		var res = {id: "123456789", name: '관리자'};
+		var joinPromise = wwm.model.join(res);
+		joinPromise.fail(function(err){
+			alert('가입 오류 발생!');
+			console.log(err.responseText);
+		});
+		window.userInfo = res;
+		localStorage.login = JSON.stringify(res);
+		localStorage.loginType = 'localhost';
+		wwm.lobby.initModule(jqMap.$con);
+	}
+	function localhost2Login() {
+		var res = {id: "987654321", name: '테스터'};
+		var joinPromise = wwm.model.join(res);
+		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');
 			console.log(err.responseText);
 		});
@@ -27,11 +36,8 @@ wwm.login = (function () {
 							name: name,
 							id: id
 						};
-						$.ajax('/join', {
-							data: data,
-							type: 'post',
-							contentType: 'application/x-www-form-urlencoded;charset=utf-8'
-						}).fail(function (err) {
+						var joinPromise = wwm.model.join(data);
+						joinPromise.fail(function(err){
 							alert('가입 오류 발생!');
 							console.log(err.responseText);
 						});
@@ -60,11 +66,8 @@ wwm.login = (function () {
 						name: name,
 						id: id
 					};
-					$.ajax('/join', {
-						data: data,
-						type: 'post',
-						contentType: 'application/x-www-form-urlencoded;charset=utf-8'
-					}).fail(function (err) {
+					var joinPromise = wwm.model.join(data);
+					joinPromise.fail(function(err){
 						alert('가입 오류 발생!');
 						console.log(err.responseText);
 					});
@@ -87,6 +90,7 @@ wwm.login = (function () {
 			$kakaoLogin: $con.find('#kakao-login-btn'),
 			$fbLogin: $con.find('#fb-login-btn'),
 			$localhost: $con.find('#localhost-login'),
+			$localhost2: $con.find('#localhost2-login'),
 			$canvas: $con.find('#canvas-logo')
 		};
 	}
@@ -122,6 +126,7 @@ wwm.login = (function () {
 			}
 		});
 		jqMap.$localhost.click(localhostLogin);
+		jqMap.$localhost2.click(localhost2Login);
 	}
 	return {
 		initModule: initModule

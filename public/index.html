@@ -5,24 +5,24 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<title>우리 언제 만나</title>
+	<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css"/>
 	<link rel="stylesheet" href="/dist/whenwemeet.min.css"/>
 </head>
 <body>
 	<div id="whenwemeet">
-		<div id="view"></div>
+		<div id="view">자바스크립트가 로딩되지 않았습니다.</div>
 		<div id="modal"></div>
 	</div>
 	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
-	<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+	<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 	<script src="/bower_components/spin.js/spin.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/dist/whenwemeet.js"></script>
-	
 	<script type="text/html" id="wwm-login">
 		<div id="logo">
 			우리언제만나
-			<canvas></canvas>
+			<canvas id="canvas-logo"></canvas>
 		</div>
 		<div id="login">
 			<div>
@@ -31,6 +31,8 @@
 			<div>
 				<img id="fb-login-btn" src="/facebook.png"/>
 			</div>
+			<div id="localhost-login">로컬호스트 로그인</div>
+			<div id="localhost2-login">로컬호스트2 로그인</div>
 		</div>
 	</script>
 	<script type="text/html" id="wwm-lobby">
@@ -42,14 +44,14 @@
 			<div id="room-list">
 				<div class="title">리스트</div>
 				<div id="rooms"></div>
-				<button id="refresh-list">새로고침</button>
+				<button id="refresh-list"><i class="fa fa-refresh"></i></button>
 			</div>
 		</main>
 		<footer id="lobby-footer">
 			<button id="show-createroom-modal">방 만들기</button>
 			<div id="search">
 				<input type="text" placeholder="방 제목"/>
-				<button id="searchroom-button">방 검색</button>
+				<button id="searchroom-btn"><i class="fa fa-search"></i></button>
 			</div>
 		</footer>
 	</script>
@@ -83,17 +85,19 @@
 		</footer>
 	</script>
 	<script type="text/html" id="wwm-room">
-		<header>
-			<b id="title">{title}</b>
-			<span>현재원: <b id="current-number">0</b>명</span>
+		<header id="room-header">
+			<b id="title">{title}</b>&nbsp;
+			<span><b id="current-number">{current}</b>명</span>
+			<span>/<b id="total-number">{total}</b>명</span>
 		</header>
-		<main>
-			<div id="member-list">
-				<ul>
-				</ul>
+		<main id="room-main">
+			<div>
+				<div id="day">오전</div>
+				<div id="night">오후</div>
 			</div>
-			<table>
+			<table border="1">
 				<tr>
+					<th></th>
 					<th>일</th>
 					<th>월</th>
 					<th>화</th>
@@ -103,225 +107,135 @@
 					<th>토</th>
 				</tr>
 				<tr>
+					<th>12</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>0</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>1</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>1</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>2</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>3</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>2</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>4</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>5</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>3</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>6</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>7</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>4</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>8</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>9</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>5</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>10</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>11</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>6</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>12</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>1</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>7</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>2</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>3</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>8</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>4</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>5</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>9</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>6</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>7</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>10</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>8</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>9</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 				<tr>
+					<th>11</th>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>10</td>
 					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>11</td>
 					<td></td>
 					<td></td>
 					<td></td>
 				</tr>
 			</table>
-			<button>확정!</button>
+			<div id="member-list">
+				<ul>
+				</ul>
+			</div>
+			<button id="refresh-calendar"><i class="fa fa-refresh"></i></button>
+			<button id="confirm-calendar">확정!</button>
+			<div id="chat-list"></div>
 		</main>
-		<footer>
+		<footer id="room-footer">
 			<div id="my-menu">
 				{@eq key="admin" value=true}
 				<div id="admin-menu">
@@ -342,7 +256,6 @@
 				</div>
 				{/eq}
 				<div id="day-exception">
-					<button>요일 예외</button>
 					<ul>
 						<li id="not-mon">월요일은 안 돼요</li>
 						<li id="not-tue">화요일은 안 돼요</li>
@@ -352,9 +265,9 @@
 						<li id="not-sat">토요일은 안 돼요</li>
 						<li id="not-sun">일요일은 안 돼요</li>
 					</ul>
+					<button>요일 예외</button>
 				</div>
-				<div id="time-exception">
-					<button>시간 예외</button>
+				<div id="time-exception">					
 					<ul>
 						<li id="not-before">
 							<label for="time-before" class="sr-only">몇 시 이전은 불가능</label>
@@ -365,17 +278,19 @@
 							<input id="time-after"/>시 이후는 안돼요
 						</li>
 					</ul>
+					<button>시간 예외</button>
 				</div>
+				<button id="room-back">뒤로가기</button>
 			</div>
 			<div id="my-info">
 				{name}
 			</div>
 			<div id="chat">
-				<label for="chatbox" class="sr-only">채팅창</label>
-				<input id="chatbox"/>
+				<input id="chatbox" placeholder="채팅창"/>
 				<button id="send-chat">전송</button>
 			</div>
 		</footer>
 	</script>
+	<div id="fb-root"></div>
 </body>
 </html>

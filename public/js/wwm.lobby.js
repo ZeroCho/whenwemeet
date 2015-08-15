@@ -9,22 +9,23 @@ wwm.lobby = (function (){
 		var $frag = $(document.createDocumentFragment());
 		var getListPromise = wwm.model.getRoomList(userInfo.id);
 		getListPromise.done(function (res) {
+			console.log(res, res.length);
 			for (var i = 0; i < res.length; i++) {
 				var $title = $('<div/>').addClass('title').text(res[i].title);
-				var $current = $('<span/>').addClass('current').text(JSON.parse(res[i].members).length);
+				var $current = $('<span/>').addClass('current').text(res[i].members.length);
 				var $total = $('<span/>').addClass('total').text(res[i].number);
 				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
 				var $room = $('<div/>')
 					.addClass('room')
 					.attr({
-						'data-id': res[i].id,
+						'data-rid': res[i].rid,
 						'data-maker': res[i].maker,
 						'data-member': res[i].members
 					})
 					.append($title)
 					.append($number);
 				if (res[i].password) {
-					var $password = $('<div/>').addClass('password').html('비번');
+					var $password = $('<div/>').addClass('passwordroom').html('비번');
 					$room.prepend($password);
 				}
 				$frag.append($room);
@@ -53,20 +54,20 @@ wwm.lobby = (function (){
 		searchPromise.done(function (res) {
 			for (var i = 0; i < res.length; i++) {
 				var $title = $('<div/>').addClass('title').text(res[i].title);
-				var $current = $('<span/>').addClass('current').text(JSON.parse(res[i].members).length);
+				var $current = $('<span/>').addClass('current').text(res[i].members.length);
 				var $total = $('<span/>').addClass('total').text(res[i].number);
 				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
 				var $room = $('<div/>')
 					.addClass('room')
 					.attr({
-						'data-id': res[i].id,
+						'data-rid': res[i].rid,
 						'data-maker': res[i].maker,
 						'data-member': res[i].members
 					})
 					.append($title)
 					.append($number);
 				if (res[i].password) {
-					var $password = $('<div/>').addClass('password').html('비번');
+					var $password = $('<div/>').addClass('passwordroom').html('비번');
 					$room.prepend($password);
 				}
 				$frag.append($room);
@@ -93,7 +94,7 @@ wwm.lobby = (function (){
 	}
 	function enterRoom() {		
 		var data = {
-			id: $(this).data('id'),
+			rid: $(this).data('rid'),
 			title: $(this).find('.title').text(),
 			current: $(this).find('.current').text(),
 			number: $(this).find('.total').text(),
@@ -103,12 +104,15 @@ wwm.lobby = (function (){
 		var pw = '';
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
-		if ($(this).has('.password').length) {
+		if ($(this).has('.passwordroom').length) {
 			pw = prompt('비밀번호');
 		}
-		$.post('/enterroom/' + data.id, {pw: pw})
-			.done(function() {
-				wwm.room.initModule(data);	
+		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id})
+			.done(function(res) {
+				console.log(res);
+				data.day = res[0].day;
+				data.night = res[0].night;
+				wwm.room.initModule(data, 'enter');	
 			})
 			.fail(function(err) {
 				alert('비밀번호가 틀렸습니다.');

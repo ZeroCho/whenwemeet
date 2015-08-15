@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<title>우리 언제 만나</title>
+	<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css"/>
 	<link rel="stylesheet" href="/dist/whenwemeet.min.css"/>
 </head>
 <body>
@@ -30,7 +31,8 @@
 			<div>
 				<img id="fb-login-btn" src="/facebook.png"/>
 			</div>
-			<div id="localhost-login>로컬호스트 로그인</div>
+			<div id="localhost-login">로컬호스트 로그인</div>
+			<div id="localhost2-login">로컬호스트2 로그인</div>
 		</div>
 	</script>
 	<script type="text/html" id="wwm-lobby">
@@ -42,14 +44,14 @@
 			<div id="room-list">
 				<div class="title">리스트</div>
 				<div id="rooms"></div>
-				<button id="refresh-list">새로고침</button>
+				<button id="refresh-list"><i class="fa fa-refresh"></i></button>
 			</div>
 		</main>
 		<footer id="lobby-footer">
 			<button id="show-createroom-modal">방 만들기</button>
 			<div id="search">
 				<input type="text" placeholder="방 제목"/>
-				<button id="searchroom-btn">방 검색</button>
+				<button id="searchroom-btn"><i class="fa fa-search"></i></button>
 			</div>
 		</footer>
 	</script>
@@ -84,15 +86,11 @@
 	</script>
 	<script type="text/html" id="wwm-room">
 		<header id="room-header">
-			<b id="title">{~lb}title{~rb}</b>
+			<b id="title">{~lb}title{~rb}</b>&nbsp;
 			<span><b id="current-number">{~lb}current{~rb}</b>명</span>
 			<span>/<b id="total-number">{~lb}total{~rb}</b>명</span>
 		</header>
 		<main id="room-main">
-			<div id="member-list">
-				<ul>
-				</ul>
-			</div>
 			<div>
 				<div id="day">오전</div>
 				<div id="night">오후</div>
@@ -109,7 +107,7 @@
 					<th>토</th>
 				</tr>
 				<tr>
-					<td>12</td>
+					<th>12</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -119,7 +117,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>1</td>
+					<th>1</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -129,7 +127,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>2</td>
+					<th>2</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -139,7 +137,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>3</td>
+					<th>3</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -149,7 +147,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>4</td>
+					<th>4</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -159,7 +157,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>5</td>
+					<th>5</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -169,7 +167,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>6</td>
+					<th>6</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -179,7 +177,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>7</td>
+					<th>7</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -189,7 +187,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>8</td>
+					<th>8</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -199,7 +197,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>9</td>
+					<th>9</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -209,7 +207,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>10</td>
+					<th>10</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -219,7 +217,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td>11</td>
+					<th>11</th>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -229,7 +227,12 @@
 					<td></td>
 				</tr>
 			</table>
-			<button id="calendar-confirm">확정!</button>
+			<div id="member-list">
+				<ul>
+				</ul>
+			</div>
+			<button id="refresh-calendar"><i class="fa fa-refresh"></i></button>
+			<button id="confirm-calendar">확정!</button>
 			<div id="chat-list"></div>
 		</main>
 		<footer id="room-footer">

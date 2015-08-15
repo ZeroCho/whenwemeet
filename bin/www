@@ -6,53 +6,71 @@ var app = require('../app');
 var debug = require('debug')('whenwemeet:server');
 var http = require('http');
 var fs = require('fs');
-
+var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://zero:Wpfhsms0!@ds031873.mongolab.com:31873/heroku_lhdjlrwx';
+var db, memberCollection, roomCollection;
+MongoClient.connect(url, function(err, database) {
+	if (err) {
+		console.error(err);
+	} else {
+		console.log("www:Connected correctly to server");
+		db = database;
+		memberCollection = db.collection('members');
+		roomCollection = db.collection('rooms');
+	}
+});
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '4000');
+var port = normalizePort(global.PORT || '4000');
 /**
  * Create HTTP server.
  */
 var httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer);
-var Pgb = require('pg-bluebird');
-var pgb = new Pgb();
-var cnn;
-var room = [];
 io.on('connection', function (socket) {
 	console.log('a user connected');
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
+		io.in(global.CURRENT_ROOM).emit('out', global.MY_ID);
+		socket.leave(global.CURRENT_ROOM);
 	});
 	socket.on('busy', function(data) {
-		io.emit('busy', data);
+		console.log(data);
+		io.in(global.CURRENT_ROOM).emit('busy', data);
 	});
 	socket.on('not-busy', function(data) {
-		io.emit('not-busy', data);
+		console.log(data);
+		io.in(global.CURRENT_ROOM).emit('not-busy', data);
 	});
 	socket.on('chat', function(data) {
-		io.emit('chat', data);
+		io.in(global.CURRENT_ROOM).emit('chat', data);
 	});
 	socket.on('enter', function(data) {
-		pgb.connect(process.env.DATABASE_URL)
-			.then(function(connection) {
-				cnn = connection;
-				return cnn.client.query('SELECT dormant FROM rooms WHERE id = $(id)', [data.rid]);
-			})
-			.then(function(result) {
-				io.emit('enter', result);	
-			})
-			.catch(function(err) {
-				console.log('onlineList connection error ' + err);
-			});
+		console.log(data);
+		console.log(global.MY_ID);
+		global.CURRENT_ROOM = data.rid;
+		socket.join(global.CURRENT_ROOM);
+		roomCollection.find({rid: data.rid.toString()}).toArray(function(err, docs) {
+			if (err) {
+				console.log('entererror:' + err);
+			} else {
+				console.log('enter result:');
+				docs[0].id = data.id;
+				docs[0].name = data.name;
+				console.log(docs);
+				io.in(global.CURRENT_ROOM).emit('newMember', docs[0]);
+			}
+		});
 	});
 	socket.on('quit', function(data) {
-		io.emit('quit', data.id);
+		io.in(global.CURRENT_ROOM).emit('quit', data.id);
+		socket.leave(global.CURRENT_ROOM);
 	});
 	socket.on('out', function(data) {
-		io.emit('out', data.id);
+		io.in(global.CURRENT_ROOM).emit('out', data.id);
+		socket.leave(global.CURRENT_ROOM);
 	});
 });
 

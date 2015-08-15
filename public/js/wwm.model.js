@@ -2,13 +2,26 @@
  * Created by Zero on 2015-07-25.
  */
 wwm.model = (function () {
+	function join(data) {
+		var deferred = $.Deferred();
+		$.ajax('/join', {
+			data: data,
+			type: 'post',
+			contentType: 'application/x-www-form-urlencoded;charset=utf-8'
+		}).done(function(res) {
+			deferred.resolve(res);
+		}).fail(function(err) {
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	}
 	function getRoomList(id) {
 		var deferred = $.Deferred();
 		$.get('/rooms/' + id).done(function (res) {
-			if (res.rows.length === 0) {
+			if (res.length === 0) {
 				deferred.reject('no_room');
 			}
-			deferred.resolve(res.rows);
+			deferred.resolve(res);
 		}).fail(function (err) {
 			deferred.reject(err);
 		});
@@ -17,10 +30,10 @@ wwm.model = (function () {
 	function searchList(query) {
 		var deferred = $.Deferred();
 		$.get('/search/' + query).done(function (res) {
-			if (res.rows.length === 0) {
+			if (res.length === 0) {
 				deferred.reject('no_room');
 			}
-			deferred.resolve(res.rows);
+			deferred.resolve(res);
 		}).fail(function (err) {
 			deferred.reject(err);
 		});
@@ -75,7 +88,7 @@ wwm.model = (function () {
 		var deferred = $.Deferred();
 		$.get('/member/' + data.maker).done(function(res) {
 			console.log(res);
-			if (res.rows[0].roomcount >= 3) {
+			if (res[0].roomcount >= 3) {
 				var msg = '방은 최대 세 개까지 만들 수 있습니다.';
 				deferred.reject(msg);
 			} else {
@@ -95,6 +108,11 @@ wwm.model = (function () {
 	function deleteRoom(id, maker) {
 		var deferred = $.Deferred();
 		$.post('/deleteroom/' + id, {maker: maker}).done(function (res) {
+			console.log(res);
+			if (res === 'no_room') {
+				var msg = '심각한 오류! 방장이 아닙니다.';
+				deferred.reject(msg);
+			}
 			deferred.resolve(res);
 		}).fail(function(err){
 			deferred.reject(err);
@@ -115,6 +133,7 @@ wwm.model = (function () {
 		changeTitle: changeTitle,
 		changeLimit: changeLimit,
 		searchList: searchList,
-		confirm: confirm
+		confirm: confirm,
+		join: join
 	};
 }());
