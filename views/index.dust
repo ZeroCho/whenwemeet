@@ -233,6 +233,7 @@
 			</div>
 			<button id="confirm-calendar">확정!</button>
 			<button id="refresh-calendar"><i class="fa fa-refresh"></i></button>
+			<button id="all-confirmed" hidden>결과보기</button>
 			<div id="chat-list"></div>
 		</main>
 		<footer id="room-footer">
@@ -254,10 +255,12 @@
 							인원수 조정 <input id="current-people-number" value="{~lb}number{~rb}"/><button id="change-number-btn">변경</button>
 						</li>
 						<li id="explode-room">방 폭파</li>
+						<li id="invite">초대장보내기</li>
 					</ul>
 					<button>관리자 메뉴</button>
 					{~lb}:else{~rb}
-					<button>방장X</button>
+					<ul><li id="invite">초대장보내기</li></ul>
+					<button>초대</button>
 					{~lb}/admin{~rb}
 				</div>
 				
@@ -296,6 +299,20 @@
 				<input id="chatbox" placeholder="채팅창"/>
 				<button id="send-chat">전송</button>
 			</div>
+		</footer>
+	</script>
+	<script type="text/html" id="wwm-confirm">
+		<header>결과</header>
+		<main>
+			<div id="result"></div>
+			<div id="result-to-sns">
+				<div id="result-to-kakao">카카오</div>
+				<div id="result-to-fb">페북</div>
+			</div>
+		</main>
+		<footer>
+			<button id="to-lobby">로비</button>
+			<button id="to-room">방으로</button>
 		</footer>
 	</script>
 	<div id="fb-root"></div>

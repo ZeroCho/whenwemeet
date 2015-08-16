@@ -10,21 +10,28 @@ wwm.lobby = (function (){
 		var getListPromise = wwm.model.getRoomList(userInfo.id);
 		getListPromise.done(function (res) {
 			for (var i = 0; i < res.length; i++) {
-				var $title = $('<div/>').addClass('title').text(res[i].title);
-				var $current = $('<span/>').addClass('current').text(res[i].members.length);
-				var $total = $('<span/>').addClass('total').text(res[i].number);
+				var room = res[i];
+				var $title = $('<div/>').addClass('title').text(room.title);
+				var $current = $('<span/>').addClass('current').text(room.members.length);
+				var $total = $('<span/>').addClass('total').text(room.number);
 				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
 				var $room = $('<div/>')
 					.addClass('room')
 					.attr({
-						'data-rid': res[i].rid,
-						'data-maker': res[i].maker,
-						'data-members': JSON.stringify(res[i].members)
+						'data-rid': room.rid,
+						'data-maker': room.maker,
+						'data-members': JSON.stringify(room.members)
 					})
 					.append($title)
 					.append($number);
-				if (res[i].password) {
-					var $password = $('<div/>').addClass('passwordroom').html('<i class="fa fa-lock"></i>');
+				if (room.password) {
+					var $password = $('<div/>').addClass('locked').html('<i class="fa fa-lock"></i>');
+					for (var j = 0; j < room.members.length; j++) {
+						if (room.members[j].id == userInfo.id) {
+							$password = $('<div/>').addClass('unlocked').html('<i class="fa fa-unlock"></i>');
+							break;
+						}
+					}
 					$room.prepend($password);
 				}
 				$frag.append($room);
@@ -52,21 +59,28 @@ wwm.lobby = (function (){
 		var searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
 			for (var i = 0; i < res.length; i++) {
-				var $title = $('<div/>').addClass('title').text(res[i].title);
-				var $current = $('<span/>').addClass('current').text(res[i].members.length);
-				var $total = $('<span/>').addClass('total').text(res[i].number);
+				var room = res[i];
+				var $title = $('<div/>').addClass('title').text(room.title);
+				var $current = $('<span/>').addClass('current').text(room.members.length);
+				var $total = $('<span/>').addClass('total').text(room.number);
 				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
 				var $room = $('<div/>')
 					.addClass('room')
 					.attr({
-						'data-rid': res[i].rid,
-						'data-maker': res[i].maker,
-						'data-members': JSON.stringify(res[i].members)
+						'data-rid': room.rid,
+						'data-maker': room.maker,
+						'data-members': JSON.stringify(room.members)
 					})
 					.append($title)
 					.append($number);
-				if (res[i].password) {
-					var $password = $('<div/>').addClass('passwordroom').html('<i class="fa fa-lock"></i>');
+				if (room.password) {
+					var $password = $('<div/>').addClass('locked').html('<i class="fa fa-lock"></i>');
+					for (var j = 0; j < room.members.length; j++) {
+						if (room.members[j].id == userInfo.id) {
+							$password = $('<div/>').addClass('unlocked').html('<i class="fa fa-unlock"></i>');
+							break;
+						}
+					}
 					$room.prepend($password);
 				}
 				$frag.append($room);
@@ -92,19 +106,20 @@ wwm.lobby = (function (){
 		wwm.login.initModule(jqMap.$con);
 	}
 	function enterRoom() {
-		console.log($(this).data('members'));
+		var $this = $(this);
+		console.log($this.data('members'));
 		var data = {
-			rid: $(this).data('rid'),
-			title: $(this).find('.title').text(),
-			current: $(this).find('.current').text(),
-			number: $(this).find('.total').text(),
-			maker: $(this).data('maker'),
-			members: $(this).data('members')
+			rid: $this.data('rid'),
+			title: $this.find('.title').text(),
+			current: $this.find('.current').text(),
+			number: $this.find('.total').text(),
+			maker: $this.data('maker'),
+			members: $this.data('members')
 		};
 		var pw = '';
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
-		if ($(this).has('.passwordroom').length) {
+		if ($this.has('.locked').length) {
 			pw = prompt('비밀번호');
 		}
 		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name})

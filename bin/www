@@ -47,6 +47,10 @@ io.on('connection', function (socket) {
 	socket.on('chat', function(data) {
 		io.in(process.env.CURRENT_ROOM).emit('chat', data);
 	});
+	socket.on('confirmed', function(data) {
+		console.log(data.id + ' confirmed');
+		io.in(process.env.CURRENT_ROOM).emit('confirmed', data);
+	});
 	socket.on('enter', function(data) {
 		console.log(data);
 		console.log(process.env.MY_ID);

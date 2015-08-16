@@ -102,11 +102,19 @@ router.post('/confirm/:rid', function(req, res) {
 	var rid = req.params.rid;
 	var day = JSON.stringify(req.body.day);
 	var night = JSON.stringify(req.body.night);
+	var id = req.body.id;
+	var bool = req.body.bool;
 	roomCollection.update({rid: rid}, {day: day, night: night}, function(err, res) {
 		if (err) {
-			console.log('confirmerror:' + err);
+			console.log('confirmupdatedayerror:' + err);
 		} else {
-			res.send(res);
+			roomCollection.update({rid: rid, members.id: id}, {$set: {members.$.confirm: bool}}, function(err, res) {
+				if (err) {
+					console.log('confirmerror:' + err);
+				} else {
+					res.send(res);
+				}
+			}
 		}
 	});
 });
@@ -165,7 +173,7 @@ router.post('/enterroom/:rid', function(req, res) {
 				console.log(docs);
 				res.send(docs);
 			} else {
-				roomCollection.update({rid: rid}, {$push: {members: {id: pid, name: name}}}, function(err, res) {
+				roomCollection.update({rid: rid}, {$push: {members: {id: pid, name: name, confirm: false}}}, function(err, res) {
 					if (err) {
 						console.log('enterroomaddmembererror:' + err);
 					} else {

@@ -20,7 +20,7 @@ table {
 input, select {
 	padding: 2px 4px;
 	color: #555;
-	height: 30px;
+	height: 28px;
 	background-color: #fff;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
@@ -80,6 +80,9 @@ li {
 	top: 20px;
 	width: 100%;
 	text-align: center;
+}
+#logo canvas {
+	margin: 0 auto;
 }
 #login {
 	position: absolute;
@@ -220,9 +223,10 @@ li {
 	position: absolute;
 	left: 10px;
 	bottom: 64px;
-	width: 300px;
 	background: white;
-	box-shadow: 3px 3px 5px black;
+	margin: 0 auto;
+	right: 10px;
+	box-shadow: 0 8px 6px -6px black;
 	display: none;
 }
 #room-footer {
@@ -237,7 +241,8 @@ li {
 	right: 70px;
 }
 #send-chat {
-	float: right;
+	position: absolute;
+	right: 0;
 }
 .box-0 {
 	display: none;

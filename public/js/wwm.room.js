@@ -5,6 +5,11 @@ wwm.room = (function(){
 		dayArray: null,
 		nightArray: null,
 		memberList: [],
+		myInfo: {
+			id: userInfo.id,
+			name: userInfo.name,
+			confirm: false
+		},
 		onlineList: [],
 		personColor: 0,
 		rid: null
@@ -38,7 +43,8 @@ wwm.room = (function(){
 			$sendChat: $con.find('#send-chat'),
 			$chatList: $con.find('#chat-list'),
 			$confirm: $con.find('#confirm-calendar'),
-			$refresh: $con.find('#refresh-calendar')
+			$refresh: $con.find('#refresh-calendar'),
+			$allConfirmed: $con.find('#all-confirmed')
 		};
 	}
 	function createArray(length) {
@@ -429,7 +435,25 @@ wwm.room = (function(){
 	}
 	function confirm(e) {
 		var data = e.data;
-		wwm.model.confirm(data);
+		if (stMap.myInfo.confirm) { //이미 confirm했으면.
+			data.bool = false;
+		} else {
+			data.bool = true;
+		}
+		var confirmPromise = wwm.model.confirm(data);
+		confirmPromise.done(function(res) {
+			stMap.myInfo.confirm = data.bool;
+			if (data.bool) {
+				jqMap.$confirm.addClass('confirmed');
+			} else {
+				jqMap.$confirm.removeClass('confirmed');
+			}
+			socket.emit('confirmed', {id: userInfo.id, bool: data.bool);
+		});
+		confirmPromise.fail(function(err) {
+			console.log(err);
+			alert('confrim error!');
+		});
 	}
 	function toDay() {
 		stMap.current = 'day';
@@ -442,6 +466,9 @@ wwm.room = (function(){
 		renderTable(stMap.current);
 		jqMap.$day.css('background', 'white');
 		jqMap.$night.css('background', 'gray');
+	}
+	function toConfirmPage() {
+		wwm.confirm.initModule(jqMap.$con, stMap);
 	}
 	function initModule(doc, status) {
 		// docs 정보를 방 모듈에 입력 및 다른 유저들에게 방에 입장했음을 알림.
@@ -458,9 +485,13 @@ wwm.room = (function(){
 		stMap.rid = doc.rid;
 		console.log('doc.members', doc.members);
 		stMap.memberList = Array.isArray(doc.members) ? doc.members : JSON.parse(doc.members);
-		for (var i = 0; i < doc.members.length; i++) {
-			if (doc.members[i].id == userInfo.id) {
+		for (var i = 0; i < stMap.memberList.length; i++) {
+			if (stMap.memberList[i].id == userInfo.id) {
 				stMap.personColor = i + 1;
+				stMap.myInfo.confirm = stMap.memberList[i].confirm;
+				if (stMap.myInfo.confirm) {
+					jqMap.$confirm.addClass('confirmed');
+				}
 			}
 		}
 		console.log('stMap.personColor', stMap.personColor);
@@ -528,6 +559,22 @@ wwm.room = (function(){
 				console.log('socketnotbusy:', data.arr, data.sid, data.cur);
 				arrayToTable(data.arr, data.sid, data.cur, false);
 			});
+			socket.on('confirmed', function(data) {
+				var confirmCount = 0;
+				for (var i = 0; i < stMap.memberList.length; i++) {
+					if (stMap.memberList[i].id == data.id) {
+						stMap.memberList[i].confirm == data.bool;
+					}
+					if (stMap.memberList[i].confirm == true) {
+						confirmCount++;
+					}
+				}
+				if (confirmCount == stMap.memberList.length) {
+					jqMap.$allConfirmed.show();
+				} else {
+					jqMap.$allConfirmed.hide();
+				}
+			});
 			jqMap.$calendar.find('td').click(onClickCell);
 			jqMap.$explode.click({id: doc.rid}, deleteRoom);
 			jqMap.$back.click({rid: doc.rid}, goBack);
@@ -542,8 +589,9 @@ wwm.room = (function(){
 			jqMap.$sendChat.click(sendChat);
 			jqMap.$notDay.click(excludeDay);
 			jqMap.$notTime.click(excludeTime);
-			jqMap.$confirm.click({rid: doc.rid, day: stMap.dayArray, night: stMap.nightArray}, confirm);
+			jqMap.$confirm.click({id: userInfo.id, rid: doc.rid, day: stMap.dayArray, night: stMap.nightArray}, confirm);
 			jqMap.$refresh.click(refresh);
+			jqMap.$allConfirmed.clck(toConfirmPage);
 		});
 	}
 	
