@@ -1,5 +1,8 @@
 wwm.confirm = (function() {
 	var jqMap;
+	var cfMap = {
+		$con: $('#modal')
+	};
 	var stMap = {};
 	function setJqMap($con) {
 		jqMap = {
@@ -30,16 +33,19 @@ wwm.confirm = (function() {
 		jqMap.$result.html(str);
 	}
 	function toLobby() {
+		jqMap.$con.hide();
 		wwm.lobby.initModule(jqMap.$con);
 	}
-	function toRoom() {}
+	function toRoom() {
+		jqMap.$con.hide();
 	}
 	function toKakao() {}
 	function toFacebook() {}
-	function initModule($con, data) {
+	function initModule(data) {
 		stMap = data;
 		var src = $('#wwm-confirm').html();
-		setJqMap($con);
+		cfMap.$con.html(src);
+		setJqMap(cfMap.$con);
 		var arr = gatherResult();
 		calculateResult(arr);
 		showResult();
@@ -47,6 +53,7 @@ wwm.confirm = (function() {
 		jqMap.$toRoom.click(toRoom);
 		jqMap.$toKakao.click(toKakao);
 		jqMap.$toFacebook.click(toFacebook);
+		jqMap.$con.show();
 	}
 	return {
 		initModule: initModule
