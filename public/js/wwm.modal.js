@@ -31,22 +31,24 @@ wwm.modal = (function (){
 			return;
 		}
 		data = {
-			id: new Date().getTime().toString(),
+			rid: new Date().getTime().toString(),
 			title: title,
-			maker: maker,
+			maker: maker.toString(),
 			number: number,
-			password: password || null
+			password: password || null,
+			members: JSON.stringify([{id: userInfo.id, name: userInfo.name}])
 		};
+		console.log('createroom data', data);
 		var createRoomPromise = wwm.model.createRoom(data);
 		createRoomPromise.done(function (result) {
 			console.log(result);
 			data.current = 1;
-			data.member = [data.id];
 			wwm.room.initModule(data, 'create');
 			stMap.$modal.hide();
 		});
 		createRoomPromise.fail(function (err) {
-			alert(err);
+			console.log(err);
+			alert('방 생성에러! 콘솔확인');
 		});
 		createRoomPromise.always(function () {
 			$(spinner.el).remove();

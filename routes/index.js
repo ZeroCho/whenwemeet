@@ -39,16 +39,16 @@ router.post('/join', function (req, res) {
 					if (err) {
 						console.log('joinerror:' + err);
 					} else {
-						global.MY_ID = id;
-						global.NAME = name;
+						process.env.MY_ID = id;
+						process.env.NAME = name;
 						console.log('join:' + res);
 						res.send(res);
 					}
 				});
 			} else {
-				global.MY_ID = id;
-				global.NAME = name;
-				console.log(global.MY_ID);
+				process.env.MY_ID = id;
+				process.env.NAME = name;
+				console.log(process.env.MY_ID);
 				res.send('already joined');
 			}
 		}
@@ -56,9 +56,9 @@ router.post('/join', function (req, res) {
 });
 router.get('/rooms/:pid', function (req, res) {
 	var pid = req.params.pid;
-	global.MY_ID = pid;
+	process.env.MY_ID = pid;
 	console.log('getroomlist of ' + pid);
-	roomCollection.find({$or: [{maker: pid},{members: {$regex: pid}}]}).toArray(function(err, docs) {
+	roomCollection.find({$or: [{maker: pid},{members: {$elemMatch: {id: pid}}}]}).toArray(function(err, docs) {
 		if (err) {
 			console.log('roomlisterror:' + err);
 		} else {
@@ -102,7 +102,7 @@ router.post('/confirm/:rid', function(req, res) {
 	var rid = req.params.rid;
 	var day = JSON.stringify(req.body.day);
 	var night = JSON.stringify(req.body.night);
-	roomCollection.update({rid: rid}, {day: day, night: night}).toArray(function(err, res) {
+	roomCollection.update({rid: rid}, {day: day, night: night}, function(err, res) {
 		if (err) {
 			console.log('confirmerror:' + err);
 		} else {
@@ -113,10 +113,14 @@ router.post('/confirm/:rid', function(req, res) {
 
 router.post('/addroom/:rid', function (req, res) {
 	var rid = req.params.rid;
-	global.MY_ID = maker;
 	var maker = req.body.maker;
 	var title = req.body.title;
-	var members = [maker];
+	var members = JSON.parse(req.body.members);
+	console.log('addroom');
+	console.log(maker);
+	console.log(members);
+	process.env.MY_ID = maker;
+	process.env.NAME = members[0].name;
 	var number = req.body.number || 2;
 	var password = req.body.password || null;
 	memberCollection.update({id: maker}, {$inc: {roomcount: 1}}, function(err, docs) {
@@ -124,7 +128,7 @@ router.post('/addroom/:rid', function (req, res) {
 			console.log('roomcounterror:' + err);
 		} else {
 			console.log(docs);
-			roomCollection.insert({rid: rid, maker: maker, title: title, members: members, number: number}, function(err, docs){
+			roomCollection.insert({rid: rid, maker: maker, password: password, title: title, members: members, number: number}, function(err, docs){
 				if (err) {
 					console.log('addroomerror:' + err);
 				} else {
@@ -139,17 +143,36 @@ router.post('/enterroom/:rid', function(req, res) {
 	var rid = req.params.rid;
 	var pw = req.body.pw || null;
 	var pid = req.body.pid;
-	global.MY_ID = pid;
-	global.CURRENT_ROOM = rid;
+	var name = req.body.name;
+	var alreadyMember = false;
+	process.env.MY_ID = pid;
+	process.env.CURRENT_ROOM = rid;
 	console.log('rid: ' + rid + ', pw: ' + pw);
-	roomCollection.find({rid: rid, pw: pw}).toArray(function(err, docs) {
+	
+	roomCollection.find({rid: rid, password: pw}).toArray(function(err, docs) {
 		if (err) {
 			console.log('enterroomerror:' + err);
 		} else {
-			global.CURRENT_ROOM = rid;
-			console.log('enterroom result');
-			console.log(docs);
-			res.send(docs);
+			for (var i = 0; i < docs[0].members.length; i++) {
+				if (docs[0].members[i].id == pid) {
+					alreadyMember = true;
+					break;
+				}
+			}
+			if (alreadyMember) {
+				process.env.CURRENT_ROOM = rid;
+				console.log('enterroom result');
+				console.log(docs);
+				res.send(docs);
+			} else {
+				roomCollection.update({rid: rid}, {$push: {members: {id: pid, name: name}}}, function(err, res) {
+					if (err) {
+						console.log('enterroomaddmembererror:' + err);
+					} else {
+
+					}
+				});
+			}			
 		}
 	});
 });
@@ -159,8 +182,7 @@ router.post('/roominfo/:rid', function(req, res) {
 		if (err) {
 			console.log('roominfoerror:' + err);
 		} else {
-			global.MY_ID = pid;
-			global.CURRENT_ROOM = rid;
+			process.env.CURRENT_ROOM = rid;
 			console.log('roominfo result');
 			console.log(docs);
 			res.send(docs);
@@ -171,7 +193,7 @@ router.post('/changeroom/:rid', function(req, res) {
 	var rid = req.params.rid;
 	if (req.body.title) {
 		var title = req.body.title;
-		roomCollection.update({id: rid}, {title: title}).toArray(function(err, res) {
+		roomCollection.update({id: rid}, {title: title}, function(err, res) {
 			if (err) {
 				console.log('changeroomerror:' + err);
 			} else {
@@ -181,7 +203,7 @@ router.post('/changeroom/:rid', function(req, res) {
 		});
 	} else if (req.body.number) {
 		var number = req.body.number;
-		roomCollection.update({id: rid}, {number: number}).toArray(function(err, res) {
+		roomCollection.update({id: rid}, {number: number}, function(err, res) {
 			if (err) {
 				console.log('changeroomerror:' + err);
 			} else {

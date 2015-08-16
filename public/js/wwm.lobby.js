@@ -9,7 +9,6 @@ wwm.lobby = (function (){
 		var $frag = $(document.createDocumentFragment());
 		var getListPromise = wwm.model.getRoomList(userInfo.id);
 		getListPromise.done(function (res) {
-			console.log(res, res.length);
 			for (var i = 0; i < res.length; i++) {
 				var $title = $('<div/>').addClass('title').text(res[i].title);
 				var $current = $('<span/>').addClass('current').text(res[i].members.length);
@@ -20,12 +19,12 @@ wwm.lobby = (function (){
 					.attr({
 						'data-rid': res[i].rid,
 						'data-maker': res[i].maker,
-						'data-member': res[i].members
+						'data-members': JSON.stringify(res[i].members)
 					})
 					.append($title)
 					.append($number);
 				if (res[i].password) {
-					var $password = $('<div/>').addClass('passwordroom').html('비번');
+					var $password = $('<div/>').addClass('passwordroom').html('<i class="fa fa-lock"></i>');
 					$room.prepend($password);
 				}
 				$frag.append($room);
@@ -62,12 +61,12 @@ wwm.lobby = (function (){
 					.attr({
 						'data-rid': res[i].rid,
 						'data-maker': res[i].maker,
-						'data-member': res[i].members
+						'data-members': JSON.stringify(res[i].members)
 					})
 					.append($title)
 					.append($number);
 				if (res[i].password) {
-					var $password = $('<div/>').addClass('passwordroom').html('비번');
+					var $password = $('<div/>').addClass('passwordroom').html('<i class="fa fa-lock"></i>');
 					$room.prepend($password);
 				}
 				$frag.append($room);
@@ -92,14 +91,15 @@ wwm.lobby = (function (){
 		localStorage.removeItem('loginType');
 		wwm.login.initModule(jqMap.$con);
 	}
-	function enterRoom() {		
+	function enterRoom() {
+		console.log($(this).data('members'));
 		var data = {
 			rid: $(this).data('rid'),
 			title: $(this).find('.title').text(),
 			current: $(this).find('.current').text(),
 			number: $(this).find('.total').text(),
 			maker: $(this).data('maker'),
-			member: JSON.parse($(this).data('member'))
+			members: $(this).data('members')
 		};
 		var pw = '';
 		var spinner = new Spinner().spin();
@@ -107,7 +107,7 @@ wwm.lobby = (function (){
 		if ($(this).has('.passwordroom').length) {
 			pw = prompt('비밀번호');
 		}
-		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id})
+		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name})
 			.done(function(res) {
 				console.log(res);
 				data.day = res[0].day;

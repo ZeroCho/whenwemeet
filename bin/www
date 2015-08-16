@@ -23,7 +23,7 @@ MongoClient.connect(url, function(err, database) {
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(global.PORT || '4000');
+var port = normalizePort(process.env.PORT || '4000');
 /**
  * Create HTTP server.
  */
@@ -33,25 +33,25 @@ io.on('connection', function (socket) {
 	console.log('a user connected');
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
-		io.in(global.CURRENT_ROOM).emit('out', global.MY_ID);
-		socket.leave(global.CURRENT_ROOM);
+		io.in(process.env.CURRENT_ROOM).emit('out', process.env.MY_ID);
+		socket.leave(process.env.CURRENT_ROOM);
 	});
 	socket.on('busy', function(data) {
 		console.log(data);
-		io.in(global.CURRENT_ROOM).emit('busy', data);
+		io.in(process.env.CURRENT_ROOM).emit('busy', data);
 	});
 	socket.on('not-busy', function(data) {
 		console.log(data);
-		io.in(global.CURRENT_ROOM).emit('not-busy', data);
+		io.in(process.env.CURRENT_ROOM).emit('not-busy', data);
 	});
 	socket.on('chat', function(data) {
-		io.in(global.CURRENT_ROOM).emit('chat', data);
+		io.in(process.env.CURRENT_ROOM).emit('chat', data);
 	});
 	socket.on('enter', function(data) {
 		console.log(data);
-		console.log(global.MY_ID);
-		global.CURRENT_ROOM = data.rid;
-		socket.join(global.CURRENT_ROOM);
+		console.log(process.env.MY_ID);
+		process.env.CURRENT_ROOM = data.rid;
+		socket.join(process.env.CURRENT_ROOM);
 		roomCollection.find({rid: data.rid.toString()}).toArray(function(err, docs) {
 			if (err) {
 				console.log('entererror:' + err);
@@ -59,18 +59,22 @@ io.on('connection', function (socket) {
 				console.log('enter result:');
 				docs[0].id = data.id;
 				docs[0].name = data.name;
+				docs[0].socket = socket.id;
 				console.log(docs);
-				io.in(global.CURRENT_ROOM).emit('newMember', docs[0]);
+				socket.broadcast.to(process.env.CURRENT_ROOM).emit('newMember', docs[0]);
+				socket.on('uptodateArr', function(data) {
+					io.sockets.connected[data.sid].emit('uptodateArr', data);
+				});
 			}
 		});
 	});
 	socket.on('quit', function(data) {
-		io.in(global.CURRENT_ROOM).emit('quit', data.id);
-		socket.leave(global.CURRENT_ROOM);
+		io.in(process.env.CURRENT_ROOM).emit('quit', data.id);
+		socket.leave(process.env.CURRENT_ROOM);
 	});
 	socket.on('out', function(data) {
-		io.in(global.CURRENT_ROOM).emit('out', data.id);
-		socket.leave(global.CURRENT_ROOM);
+		io.in(process.env.CURRENT_ROOM).emit('out', data.id);
+		socket.leave(process.env.CURRENT_ROOM);
 	});
 });
 

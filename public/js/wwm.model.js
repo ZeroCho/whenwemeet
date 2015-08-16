@@ -86,13 +86,14 @@ wwm.model = (function () {
 	}
 	function createRoom(data) {
 		var deferred = $.Deferred();
+		console.log('modeldata', data);
 		$.get('/member/' + data.maker).done(function(res) {
 			console.log(res);
 			if (res[0].roomcount >= 3) {
 				var msg = '방은 최대 세 개까지 만들 수 있습니다.';
 				deferred.reject(msg);
 			} else {
-				$.post('/addroom/' + data.id, data).done(function () {
+				$.post('/addroom/' + data.rid, data).done(function () {
 					deferred.resolve(res);				
 				}).fail(function (err) {
 					console.log(err);
