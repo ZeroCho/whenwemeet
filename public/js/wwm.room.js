@@ -6,8 +6,8 @@ wwm.room = (function(){
 		nightArray: null,
 		memberList: [],
 		myInfo: {
-			id: userInfo.id,
-			name: userInfo.name,
+			id: null,
+			name: null,
 			confirm: false
 		},
 		onlineList: [],
@@ -471,7 +471,6 @@ wwm.room = (function(){
 		wwm.confirm.initModule(stMap);
 	}
 	function initModule(doc, status) {
-		console.log(userInfo.id);
 		// docs 정보를 방 모듈에 입력 및 다른 유저들에게 방에 입장했음을 알림.
 		socket.emit('enter', {id: userInfo.id, rid: doc.rid, name: userInfo.name});
 		if (status === 'create') { // dayArray와 nightArray를 설정.
@@ -489,6 +488,8 @@ wwm.room = (function(){
 		for (var i = 0; i < stMap.memberList.length; i++) {
 			if (stMap.memberList[i].id == userInfo.id) {
 				stMap.personColor = i + 1;
+				stMap.myInfo.id = userInfo.id;
+				stMap.myInfo.name = userInfo.name;
 				stMap.myInfo.confirm = stMap.memberList[i].confirm;
 				if (stMap.myInfo.confirm) {
 					jqMap.$confirm.addClass('confirmed');
