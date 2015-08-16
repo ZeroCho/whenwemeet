@@ -286,7 +286,8 @@
 					</ul>
 					<button>시간 예외</button>
 				</div>
-				<button id="room-back">뒤로가기</button>
+				<button id="room-back">목록으로</button>
+				<button id="quit">나가기</button>
 			</div>
 			<div id="my-info">
 				{~lb}name{~rb}
