@@ -448,7 +448,7 @@ wwm.room = (function(){
 			} else {
 				jqMap.$confirm.removeClass('confirmed');
 			}
-			socket.emit('confirmed', {id: userInfo.id, bool: data.bool);
+			socket.emit('confirmed', {id: userInfo.id, bool: data.bool});
 		});
 		confirmPromise.fail(function(err) {
 			console.log(err);
