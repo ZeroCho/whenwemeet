@@ -8,6 +8,7 @@ wwm.login = (function () {
 			console.log(err.responseText);
 		});
 		window.userInfo = res;
+		console.log(userInfo);
 		localStorage.login = JSON.stringify(res);
 		localStorage.loginType = 'localhost';
 		wwm.lobby.initModule(jqMap.$con);

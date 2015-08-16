@@ -471,6 +471,7 @@ wwm.room = (function(){
 		wwm.confirm.initModule(stMap);
 	}
 	function initModule(doc, status) {
+		console.log(userInfo.id);
 		// docs 정보를 방 모듈에 입력 및 다른 유저들에게 방에 입장했음을 알림.
 		socket.emit('enter', {id: userInfo.id, rid: doc.rid, name: userInfo.name});
 		if (status === 'create') { // dayArray와 nightArray를 설정.
