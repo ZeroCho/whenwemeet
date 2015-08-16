@@ -114,7 +114,7 @@ router.post('/confirm/:rid', function(req, res) {
 				} else {
 					res.send(res);
 				}
-			}
+			});
 		}
 	});
 });
