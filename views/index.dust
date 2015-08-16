@@ -6,7 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<title>우리 언제 만나</title>
 	<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="/dist/whenwemeet.min.css"/>
+	<link rel="stylesheet" href="/dist/whenwemeet.css"/>
 </head>
 <body>
 	<div id="whenwemeet">
