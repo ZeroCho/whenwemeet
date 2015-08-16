@@ -192,7 +192,7 @@ wwm.room = (function(){
 	function showMembers() {
 		console.log('showMembers', stMap.memberList);
 		for (var i = 0; i < stMap.memberList.length; i++) {
-			jqMap.$memberList.find('ul').append('<li data-id="' + stMap.memberList[i].id + '"><span class="online">오프라인</span>&nbsp;<span>' + stMap.memberList[i].name + '</span></li>');
+			jqMap.$memberList.find('ul').append('<li data-id="' + stMap.memberList[i].id + '"><span class="online">오프라인</span>&nbsp;<span class="' + cfMap.colorList[i] + '-text">' + stMap.memberList[i].name + '</span></li>');
 		}
 	}
 	function newMember(doc) {

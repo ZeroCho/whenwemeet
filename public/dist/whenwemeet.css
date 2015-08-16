@@ -20,6 +20,7 @@ table {
 input {
 	padding: 2px 4px;
 	color: #555;
+	height: 32px;
 	background-color: #fff;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
@@ -41,7 +42,7 @@ button {
 	border-radius: 3px;
 	border: 1px solid #bbb;
 	cursor: pointer;
-	height: 26px;
+	height: 32px;
 	padding: 2px 4px;
 }
 button:focus, button:hover {
@@ -119,19 +120,23 @@ li {
 #rooms {
 	position: absolute;
 	border: 1px solid gray;
+	box-shadow: inset 0 0 10px black;
 	margin: 0 auto;
+	background: silver
 	top: 20px;
 	right: 10px;
 	bottom: 20px;
 	left: 10px;
 }
 .room {
-	border: 1px solid black;
+	border: 1px solid gray;
+	box-shadow: 0 8px 6px -6px black;
 	margin: 10px;
 }
 #refresh-list {
 	position: absolute;
 	right: 0;
+	top: -26px;
 	margin-right: 5px;
 }
 #show-createroom-modal {
@@ -173,6 +178,9 @@ li {
 	width: 100%;
 	user-select: none;
 }
+#room-people-info {
+	float: right;
+}
 #room-main {
 	position: absolute;
 	width: 100%;
@@ -181,6 +189,7 @@ li {
 #member-list {
 	position: absolute;
 	left: 0;
+	border: 1px solid silver;
 }
 #confirm-calendar, #refresh-calendar {
 	float: right;
@@ -195,12 +204,12 @@ li {
 #room-main table {
 	width: 100%;
 	user-select: none;
-
+	border-color: gray;
 }
 #room-main table td {
 	height: 20px;
 }
-#day-exception, #time-exception, #room-back, #chat, #my-info, #admin-menu {
+#my-menu, #day-exception, #time-exception, #room-back, #my-info, #admin-menu {
 	display: inline-block;
 }
 #admin-menu ul, #day-exception ul, #time-exception ul {
@@ -216,7 +225,7 @@ li {
 	bottom: 0;
 	width: 100%;
 }
-#chat {
+#send-chat {
 	float: right;
 }
 .box-0 {
@@ -319,4 +328,13 @@ li {
 }
 .selected {
 	background: gray;
+}
+.red-text {
+	color: red;
+}
+.orange-text {
+	color: orange;
+}
+.yellow-text {
+	color: yellow;
 }

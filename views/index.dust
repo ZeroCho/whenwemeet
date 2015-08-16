@@ -87,8 +87,8 @@
 	<script type="text/html" id="wwm-room">
 		<header id="room-header">
 			<b id="title">{~lb}title{~rb}</b>&nbsp;
-			<span><b id="current-number">{~lb}current{~rb}</b>명</span>
-			<span>/<b id="total-number">{~lb}total{~rb}</b>명</span>
+			<div id="room-people-info"><span><b id="current-number">{~lb}current{~rb}</b>명</span>
+			<span>/<b id="total-number">{~lb}total{~rb}</b>명</span></div>
 		</header>
 		<main id="room-main">
 			<div>
@@ -231,8 +231,8 @@
 				<ul>
 				</ul>
 			</div>
-			<button id="refresh-calendar"><i class="fa fa-refresh"></i></button>
 			<button id="confirm-calendar">확정!</button>
+			<button id="refresh-calendar"><i class="fa fa-refresh"></i></button>
 			<div id="chat-list"></div>
 		</main>
 		<footer id="room-footer">
