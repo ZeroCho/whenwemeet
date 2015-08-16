@@ -121,6 +121,8 @@ wwm.lobby = (function (){
 		jqMap.$list.append(spinner.el);
 		if ($this.has('.locked').length) {
 			pw = prompt('비밀번호');
+		} else if ($this.has('.unlocked').length) {
+			pw = 'master';
 		}
 		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name})
 			.done(function(res) {

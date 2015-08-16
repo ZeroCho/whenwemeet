@@ -156,8 +156,13 @@ router.post('/enterroom/:rid', function(req, res) {
 	process.env.MY_ID = pid;
 	process.env.CURRENT_ROOM = rid;
 	console.log('rid: ' + rid + ', pw: ' + pw);
-	
-	roomCollection.find({rid: rid, password: pw}).toArray(function(err, docs) {
+	var cursor;
+	if (pw === 'master') {
+		cursor = roomCollection.find({rid: rid});
+	} else {
+		cursor = roomCollection.find({rid: rid, password: pw});
+	}
+	cursor.toArray(function(err, docs) {
 		if (err) {
 			console.log('enterroomerror:' + err);
 		} else {
@@ -173,11 +178,11 @@ router.post('/enterroom/:rid', function(req, res) {
 				console.log(docs);
 				res.send(docs);
 			} else {
-				roomCollection.update({rid: rid}, {$push: {members: {id: pid, name: name, confirm: false}}}, function(err, res) {
+				roomCollection.update({rid: rid}, {$push: {members: {id: pid, name: name, confirm: false}}}, function(err, result) {
 					if (err) {
 						console.log('enterroomaddmembererror:' + err);
 					} else {
-
+						res.send(result);
 					}
 				});
 			}			
