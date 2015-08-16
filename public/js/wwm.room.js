@@ -593,7 +593,7 @@ wwm.room = (function(){
 			jqMap.$notTime.click(excludeTime);
 			jqMap.$confirm.click({id: userInfo.id, rid: doc.rid, day: stMap.dayArray, night: stMap.nightArray}, confirm);
 			jqMap.$refresh.click(refresh);
-			jqMap.$allConfirmed.clck(toConfirmPage);
+			jqMap.$allConfirmed.click(toConfirmPage);
 		});
 	}
 	

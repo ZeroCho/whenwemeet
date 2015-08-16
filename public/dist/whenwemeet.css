@@ -175,7 +175,6 @@ li {
 	visibility: hidden;
 }
 #room-header {
-	text-align: center;
 	position: absolute;
 	top: 0;
 	width: 100%;
@@ -191,10 +190,11 @@ li {
 }
 #member-list {
 	position: absolute;
+	background: white;
 	left: 0;
 	border: 1px solid silver;
 }
-#confirm-calendar, #refresh-calendar {
+#confirm-calendar, #refresh-calendar, #all-confirmed {
 	float: right;
 }
 #day, #night {
@@ -207,11 +207,11 @@ li {
 #room-main table {
 	width: 100%;
 	user-select: none;
-	border-color: gray;
+	border: 1px solid gray;
 }
-#room-main table td {
+#room-main table td, #room-main table th {
 	height: 20px;
-	border-color: gray;
+	border: 1px solid gray;
 }
 #my-menu, #day-exception, #time-exception, #room-back, #my-info, #admin-menu {
 	display: inline-block;
@@ -226,8 +226,12 @@ li {
 	background: white;
 	margin: 0 auto;
 	right: 10px;
+	border: 1px solid silver;
 	box-shadow: 0 8px 6px -6px black;
 	display: none;
+}
+#admin-menu li, #day-exception li, #time-exception li {
+	border-top: 1px solid silver;
 }
 #room-footer {
 	background: white;
@@ -353,4 +357,19 @@ li {
 }
 .yellow-text {
 	color: yellow;
+}
+.yellowgreen-text {
+	color: yellowgreen;
+}
+.skyblue-text {
+	color: skyblue;
+}
+.purple-text {
+	color: purple;
+}
+.violet-text {
+	color: violet;
+}
+.pink-text {
+	color: pink;
 }
