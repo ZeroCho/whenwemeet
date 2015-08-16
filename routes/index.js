@@ -108,7 +108,7 @@ router.post('/confirm/:rid', function(req, res) {
 		if (err) {
 			console.log('confirmupdatedayerror:' + err);
 		} else {
-			roomCollection.update({rid: rid, members.id: id}, {$set: {members.$.confirm: bool}}, function(err, res) {
+			roomCollection.update({rid: rid, 'members.id': id}, {$set: {'members.$.confirm': bool}}, function(err, res) {
 				if (err) {
 					console.log('confirmerror:' + err);
 				} else {
