@@ -18,7 +18,14 @@
 	<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 	<script src="/bower_components/spin.js/spin.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="/dist/whenwemeet.js"></script>
+	<script src="/js/wwm.js"></script>
+	<script src="/js/wwm.model.js"></script>
+	<script src="/js/wwm.shell.js"></script>
+	<script src="/js/wwm.login.js"></script>
+	<script src="/js/wwm.lobby.js"></script>
+	<script src="/js/wwm.modal.js"></script>
+	<script src="/js/wwm.room.js"></script>
+	<script src="/js/wwm.confirm.js"></script>
 	<script type="text/html" id="wwm-login">
 		<div id="logo">
 			우리언제만나
