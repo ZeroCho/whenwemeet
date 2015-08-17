@@ -82,19 +82,11 @@ router.get('/member/:pid', function (req, res) {
 router.post('/ban/:id', function(req, res) {
 	var id = req.params.id;
 	var rid = req.body.rid;
-	roomCollection.find({rid: rid}).toArray(function(err, docs) {
+	roomCollection.update({rid: rid}, {$pull: {members: {id: id}}}, function(err, res) {
 		if (err) {
-			console.log('findroomerror:' + err);
+			console.log('ban error:' + err);
 		} else {
-			var members = docs[0].members.indexOf(id);
-			docs[0].members.splice(members, 1);
-			roomCollection.update({rid: rid}, {members: docs[0].members}).toArray(function(err, res) {
-				if (err) {
-					console.log('findroomerror:' + err);
-				} else {
-					res.send(res);
-				}	
-			});
+			res.send(res);
 		}	
 	});
 });
@@ -118,7 +110,17 @@ router.post('/confirm/:rid', function(req, res) {
 		}
 	});
 });
-
+router.post('/quit/:rid', function (req, res) {
+	var rid = req.params.rid;
+	var id = req.body.id;
+	roomCollection.update({rid: rid}, {$pull: {members: {id: id}}}, function(err, result) {
+		if (err) {
+			console.log('quiterror:' + err);
+		} else {
+			res.send(result);
+		}	
+	});
+});
 router.post('/addroom/:rid', function (req, res) {
 	var rid = req.params.rid;
 	var maker = req.body.maker;
@@ -131,11 +133,11 @@ router.post('/addroom/:rid', function (req, res) {
 	process.env.NAME = members[0].name;
 	var number = req.body.number || 2;
 	var password = req.body.password || null;
-	memberCollection.update({id: maker}, {$inc: {roomcount: 1}}, function(err, docs) {
+	memberCollection.update({id: maker}, {$inc: {roomcount: 1}}, function(err, result) {
 		if (err) {
 			console.log('roomcounterror:' + err);
 		} else {
-			console.log(docs);
+			console.log(result);
 			roomCollection.insert({rid: rid, maker: maker, password: password, title: title, members: members, number: number}, function(err, docs){
 				if (err) {
 					console.log('addroomerror:' + err);
