@@ -91,14 +91,14 @@
 			<div id="room-list">
 				<div class="title">리스트</div>
 				<div id="rooms"></div>
-				<button id="refresh-list"><i class="fa fa-refresh"></i></button>
+				<button id="refresh-list"><i class="fa fa-refresh"><span class="sr-only">새로고침</span></i></button>
 			</div>
 		</main>
 		<footer id="lobby-footer">
 			<button id="show-createroom-modal">방 만들기</button>
 			<div id="search">
 				<input type="text" placeholder="방 제목"/>
-				<button id="searchroom-btn"><i class="fa fa-search"></i></button>
+				<button id="searchroom-btn"><i class="fa fa-search"><span class="sr-only">검색</span></i></button>
 			</div>
 		</footer>
 	</script>
@@ -278,10 +278,10 @@
 				<ul>
 				</ul>
 			</div>
-			<button id="confirm-calendar">확정!</button>
-			<button id="refresh-calendar"><i class="fa fa-refresh"></i></button>
-			<button id="all-confirmed" hidden>결과보기</button>
 			<div id="chat-list"></div>
+			<button id="confirm-calendar">확정!</button>
+			<button id="refresh-calendar"><i class="fa fa-refresh"><span class="sr-only">새로고침</span></i></button>
+			<button id="all-confirmed">결과보기</button>
 		</main>
 		<footer id="room-footer">
 			<div id="my-menu">				
