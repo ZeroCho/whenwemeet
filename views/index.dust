@@ -17,7 +17,7 @@
 	</div>
 	<script>
 		document.addEventListener("DOMContentLoaded", function(event) {
-			var canvas = document.getElementsById('splashscreen');
+			var canvas = document.getElementById('splashscreen');
 			var ctx = canvas.getContext('2d');
 			drawEqTriangle(ctx, 50, canvas.width/2 + 3, canvas.height/2, 'magenta');
 			drawRevEqTriangle(ctx, 50, canvas.width/2 - 3, canvas.height/2, 'cyan');
