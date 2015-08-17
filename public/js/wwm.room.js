@@ -8,11 +8,15 @@ wwm.room = (function(){
 		myInfo: {
 			id: null,
 			name: null,
-			confirm: false
+			confirm: false,
+			personColor: 0
 		},
 		onlineList: [],
-		personColor: 0,
-		rid: null
+		maker: 0,
+		rid: null,
+		title: null,
+		total: 0,
+		current: 0
 	};
 	var cfMap = {
 		$con: $('#view'),
@@ -24,6 +28,7 @@ wwm.room = (function(){
 			$con: $con,
 			$explode: $con.find('#explode-room'),
 			$ban: $con.find('#ban-people-btn'),
+			$banList: $con.find('#ban-member-list'),
 			$changeLimit: $con.find('#change-number-btn'),
 			$changeTitle: $con.find('#change-room-title'),
 			$calendar: $con.find('table'),
@@ -40,6 +45,7 @@ wwm.room = (function(){
 			$timeExp: $con.find('#time-exception'),
 			$notTime: $con.find('#time-exception').find('li'),
 			$title: $con.find('#title'),
+			$current: $con.find('#current-number'),
 			$total: $con.find('#total-number'),
 			$sendChat: $con.find('#send-chat'),
 			$chatList: $con.find('#chat-list'),
@@ -105,7 +111,7 @@ wwm.room = (function(){
 					$cell.find('div').remove();
 					var $box = $('<div/>').addClass('box-' + number);
 					for (var k = 0; k < number; k++) {
-						$box.append($('<div/>', {class: cfMap.colorList[dayCell[k] - 1]}));
+						$box.append($('<div/>', {class: cfMap.colorList[dayCell[k]]}));
 					}
 					$box.appendTo($cell);
 				} else {
@@ -117,8 +123,8 @@ wwm.room = (function(){
 					$cell.find('div').remove();
 					var $box = $('<div/>').addClass('box-' + number);
 					for (var k = 0; k < number; k++) {
-						console.log(cfMap.colorList[dayCell[k] - 1]);
-						$box.append($('<div/>', {class: cfMap.colorList[dayCell[k] - 1]}));
+						console.log(cfMap.colorList[dayCell[k]]);
+						$box.append($('<div/>', {class: cfMap.colorList[dayCell[k]]}));
 					}
 					$box.appendTo($cell);
 				}
@@ -137,7 +143,7 @@ wwm.room = (function(){
 					$cell.find('div').remove();
 					var $box = $('<div/>').addClass('box-' + number);
 					for (var k = 0; k < number; k++) {
-						$box.append($('<div/>', {class: cfMap.colorList[nightCell[k] - 1]}));
+						$box.append($('<div/>', {class: cfMap.colorList[nightCell[k]]}));
 					}
 					$box.appendTo($cell);
 				} else {
@@ -149,7 +155,7 @@ wwm.room = (function(){
 					$cell.find('div').remove();
 					var $box = $('<div/>').addClass('box-' + number);
 					for (var k = 0; k < number; k++) {
-						$box.append($('<div/>', {class: cfMap.colorList[nightCell[k] - 1]}));
+						$box.append($('<div/>', {class: cfMap.colorList[nightCell[k]]}));
 					}
 					$box.appendTo($cell);
 				}
@@ -171,7 +177,7 @@ wwm.room = (function(){
 					if (number > 0) {
 						var $box = $('<div/>').addClass('box-' + number);
 						for (k = 0; k < number; k++) {
-							$box.append($('<div/>', {class: cfMap.colorList[dayCell[k] - 1]}));
+							$box.append($('<div/>', {class: cfMap.colorList[dayCell[k]]}));
 						}
 						$box.appendTo($cell);
 					}
@@ -188,7 +194,7 @@ wwm.room = (function(){
 					if (number > 0) {
 						var $box = $('<div/>').addClass('box-' + number);
 						for (k = 0; k < number; k++) {
-							$box.append($('<div/>', {class: cfMap.colorList[nightCell[k] - 1]}));
+							$box.append($('<div/>', {class: cfMap.colorList[nightCell[k]]}));
 						}
 						$box.appendTo($cell);
 					}
@@ -198,8 +204,10 @@ wwm.room = (function(){
 	}
 	function showMembers() {
 		console.log('showMembers', stMap.memberList);
+		jqMap.$memberList.find('ul').empty();
 		for (var i = 0; i < stMap.memberList.length; i++) {
-			jqMap.$memberList.find('ul').append('<li data-id="' + stMap.memberList[i].id + '"><span class="online">오프라인</span>&nbsp;<span class="' + cfMap.colorList[i] + '-text">' + stMap.memberList[i].name + '</span></li>');
+			var member = stMap.memberList[i];
+			jqMap.$memberList.find('ul').append('<li data-id="' + member.id + '"><span class="offline">오프라인</span>&nbsp;<span class="' + cfMap.colorList[i] + '-text">' + member.name + '</span><span class="chat"></span></li>');
 		}
 	}
 	function newMember(doc) {
@@ -215,18 +223,40 @@ wwm.room = (function(){
 		if (alreadyMember) {
 			jqMap.$memberList.find('[data-id=' + doc.id + ']').find('.online').text('온라인');		
 		} else {			
-			jqMap.$memberList.find('ul').append('<li data-id="' + doc.id + '"><span class="online">온라인</span>&nbsp;<span>' + doc.name + '</span></li>');
+			jqMap.$memberList.find('ul').append('<li data-id="' + doc.id + '"><span class="online">온라인</span>&nbsp;<span class="' + findInfo(id).color + '-text">' + doc.name + '</span><span class="chat"></span></li>');
 		}
 	}
+	function findInfo(id) {
+		var info = {};
+		for (var i = 0; i < stMap.memberList.length; i++) {
+			if (id == stMap.memberList[i].id) {
+				info.personColor = i;
+				info.name = stMap.memberList[i].name;
+				info.color = cfMap.colorList[i];
+			}
+		}
+		return info;
+	}
 	function ban(e) {
-		var banPromise = wwm.model.ban(e.data.rid);
-		banPromise.done(function(res) {});
-		banPromise.fail(function(err) {});
+		var banned = $(this).prev().val();
+		if (banned == stMap.maker) {
+			alert('자기 자신을 강퇴시키면 안 되겠죠?');
+			return;
+		}
+		var banPromise = wwm.model.ban(banned, e.data.rid);
+		banPromise.done(function(res) {
+			socket.emit('ban', {id: banned, order: findInfo(banned).personColor});
+		});
+		banPromise.fail(function(err) {
+			console.log(err);
+			alert('퇴장당하지 않으려고 버티는중! 다시 시도하세요.');
+		});
 	}
 	function changeTitle(e) {
 		var title = $(this).prev().val();
 		var titlePromise = wwm.model.changeTitle(e.data.rid, title);
 		titlePromise.done(function(res) {
+			stMap.title = title;
 			jqMap.$title.text(title);
 		});
 		titlePromise.fail(function(err) {
@@ -236,9 +266,13 @@ wwm.room = (function(){
 	}
 	function changeLimit(e) {
 		var number = $(this).prev().val();
+		if (number < current) {
+			alert('현재 사람이 설정한 수보다 많습니다.');
+			return;
+		}
 		var limitPromise = wwm.model.changeLimit(e.data.rid, number);
 		limitPromise.done(function(res) {
-			jqMap.$total.text(number);
+			changeTotalNumber(number);	
 		});
 		limitPromise.fail(function(err) {
 			alert('인원수 바꾸기 실패!');
@@ -255,15 +289,15 @@ wwm.room = (function(){
 		}
 		var allSelected = true;
 		for (var i = 0; i < 12; i++) {
-			if (arr[i][day].indexOf(stMap.personColor) == -1) {
+			if (arr[i][day].indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
 				break;
 			}
 		}
 		if (allSelected) {
-			socket.emit('not-busy', {cur: stMap.current, sid: stMap.personColor, arr: tableToArray([this], false)});
+			socket.emit('not-busy', {cur: stMap.current, sid: stMap.myInfo.personColor, arr: tableToArray([this], false)});
 		} else {
-			socket.emit('busy', {cur: stMap.current, sid: stMap.personColor, arr: tableToArray([this], true)});
+			socket.emit('busy', {cur: stMap.current, sid: stMap.myInfo.personColor, arr: tableToArray([this], true)});
 		}
 	}
 	function onClickTime() {
@@ -276,15 +310,15 @@ wwm.room = (function(){
 		}
 		var allSelected = true;
 		for (var i = 0; i < 12; i++) {
-			if (arr[time][i].indexOf(stMap.personColor) == -1) {
+			if (arr[time][i].indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
 				break;
 			}
 		}
 		if (allSelected) {
-			socket.emit('not-busy', {cur: stMap.current, sid: stMap.personColor, arr: tableToArray([this], false)});
+			socket.emit('not-busy', {cur: stMap.current, sid: stMap.myInfo.personColor, arr: tableToArray([this], false)});
 		} else {
-			socket.emit('busy', {cur: stMap.current, sid: stMap.personColor, arr: tableToArray([this], true)});
+			socket.emit('busy', {cur: stMap.current, sid: stMap.myInfo.personColor, arr: tableToArray([this], true)});
 		}
 	}
 	function showAdminMenu() {
@@ -338,16 +372,16 @@ wwm.room = (function(){
 			arr = stMap.nightArray;
 		}
 		cell = arr[this.parentNode.rowIndex - 1][this.cellIndex - 1];
-		console.log('not-busy', cell, cell.length, stMap.personColor);
+		console.log('not-busy', cell, cell.length, stMap.myInfo.personColor);
 		if (cell) {
-			console.log(cell.indexOf(stMap.personColor) > -1);
-			if (cell.length && cell.indexOf(stMap.personColor) > -1) {
-				socket.emit('not-busy', {cur: stMap.current, sid: stMap.personColor, arr: tableToArray([this], false)});
+			console.log(cell.indexOf(stMap.myInfo.personColor) > -1);
+			if (cell.length && cell.indexOf(stMap.myInfo.personColor) > -1) {
+				socket.emit('not-busy', {cur: stMap.current, sid: stMap.myInfo.personColor, arr: tableToArray([this], false)});
 			} else {
-				socket.emit('busy', {cur: stMap.current, sid: stMap.personColor, arr: tableToArray([this], true)});
+				socket.emit('busy', {cur: stMap.current, sid: stMap.myInfo.personColor, arr: tableToArray([this], true)});
 			}
 		} else {
-			socket.emit('busy', {cur: stMap.current, sid: stMap.personColor, arr: tableToArray([this], true)});
+			socket.emit('busy', {cur: stMap.current, sid: stMap.myInfo.personColor, arr: tableToArray([this], true)});
 		}
 	}
 	function excludeDay(e) {
@@ -415,21 +449,22 @@ wwm.room = (function(){
 	function quit(e) {
 		if (confirm('정말 나가시겠습니까? 잠시 나가는 거면 목록 버튼을 클릭하세요.')) {
 			socket.emit('quit', {id: userInfo.id, rid: e.data.rid});
-			var quitPromise = wwm.model.quit({id: userinfo.id, rid: e.data.rid});
-			quitPromise.done(function() {
-				wwm.lobby.initModule(jqMap.$con);
-			});
-			quitPromise.fail(function(err) {
-				console.log(err);
-				alert('나가는 것도 실패를 하네요. 들어올 때는 마음대로였지만 나갈 때는...');	
-			});
+			wwm.lobby.initModule(jqMap.$con);
 		}
+	}
+	function changeCurrentNumber(gap) {
+		stMap.current += gap;
+		jqMap.$current.text(stMap.current);		
+	}
+	function changeTotalNumber(num) {
+		stMap.total = number;
+		jqMap.$total.text(number);
 	}
 	function sendChat() {
 		var text = $(this).prev('#chatbox').val();
 		socket.emit('chat', {
-			id: userInfo.id,
-			name: userInfo.name,
+			id: stMap.myInfo.id,
+			name: stMap.myInfo.name,
 			text: text
 		});
 	}
@@ -481,48 +516,48 @@ wwm.room = (function(){
 		wwm.confirm.initModule(stMap);
 	}
 	function initModule(doc, status) {
-		// docs 정보를 방 모듈에 입력 및 다른 유저들에게 방에 입장했음을 알림.
-		socket.emit('enter', {id: userInfo.id, rid: doc.rid, name: userInfo.name});
+		// docs 정보를 방 모듈에 입력.
+		stMap.title = doc.title;
+		stMap.current = stMap.memberList.length;
+		stMap.total = doc.number;
+		stMap.rid = doc.rid;
+		stMap.maker = doc.maker;
+		console.log('entered room id' + stMap.rid);
+		console.log('is doc.member array? ' + Array.isArray(doc.members));
 		if (status === 'create') { // dayArray와 nightArray를 설정.
 			stMap.dayArray = createArray(12,7);
 			stMap.nightArray = createArray(12,7);
-			console.log(stMap.dayArray, stMap.nightArray);
 		} else if (status === 'enter') {
 			stMap.dayArray = doc.day || createArray(12,7);
 			stMap.nightArray = doc.night || createArray(12,7);
-			console.log(stMap.dayArray, stMap.nightArray);
 		}
-		stMap.rid = doc.rid;
-		console.log('doc.members', doc.members);
+		// 내 정보를 입력.
 		stMap.memberList = Array.isArray(doc.members) ? doc.members : JSON.parse(doc.members);
 		for (var i = 0; i < stMap.memberList.length; i++) {
 			if (stMap.memberList[i].id == userInfo.id) {
-				stMap.personColor = i + 1;
+				stMap.myInfo.personColor = i;
 				stMap.myInfo.id = userInfo.id;
-				stMap.myInfo.name = userInfo.name;
+				stMap.myInfo.name = userInfo.name || userInfo.properties.nickname;
 				stMap.myInfo.confirm = stMap.memberList[i].confirm;
 				if (stMap.myInfo.confirm) {
 					jqMap.$confirm.addClass('confirmed');
 				}
 			}
 		}
-		console.log('stMap.personColor', stMap.personColor);
+		socket.emit('enter', {id: stMap.myInfo.id, rid: stMap.rid, name: stMap.myInfo.name});
 		var parser = {
-			name: userInfo.name || userInfo.properties.nickname, //유저네임
-			title: doc.title, //타이틀
-			current: doc.current, //현재원
-			total: doc.number, //총원
+			name: stMap.myInfo.name, //유저네임
+			title: stMap.title, //타이틀
+			current: stMap.current, //현재원
+			total: stMap.total, //총원
 			members: stMap.memberList
 		};
-		if (userInfo.id == doc.maker) {
+		if (stMap.myInfo.id == stMap.maker) {
 			parser.admin = true;
 		}
-		console.log('admin?', userInfo.id == doc.maker);
-		console.log('parser', parser);
+		console.log('admin?', stMap.myInfo.id == stMap.maker);
 		var src = $('#wwm-room').text();
-		var comp = dust.compile(src);
-		var tmpl = dust.loadSource(comp);
-		dust.render(tmpl, parser, function(err, out) {
+		dust.render(dust.loadSource(dust.compile(src), parser, function(err, out) {
 			if (err) {
 				cfMap.$con.html(err);
 				return;
@@ -537,21 +572,27 @@ wwm.room = (function(){
 				var target = stMap.onlineList.indexOf(id);
 				stMap.onlineList.splice(target, 1);
 				console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
-				jqMap.$memberList.find('[data-id=' + id + ']').find('.online').text('오프라인');
+				jqMap.$memberList.find('[data-id=' + id + ']').find('.online').addClass('offline').removeClass('online').text('오프라인');
 				console.log('out', stMap.onlineList, stMap.memberList);
 			});
 			socket.on('quit', function(id) {
 				var target = stMap.onlineList.indexOf(id);
 				stMap.onlineList.splice(target, 1);
-				var target = stMap.memberList.indexOf(id);
-				stMap.memberList.splice(target, 1);
+				for (var i = 0; i < stMap.memberList.length; i++) {
+					if (stMap.memberList[i].id == id) {
+						stMap.memberList.splice(i, 1);
+					}
+				}
 				console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
-				jqMap.$memberList.find('[data-id=' + id + ']').remove();
+				changeCurrentNumber(-1);
+				showMembers();
 				console.log('quit', stMap.onlineList, stMap.memberList);
 			});
 			socket.on('newMember', function(data) {
 				console.log('new member entered', data);
-				socket.emit('uptodateArr', {sid: data.socket, day: stMap.dayArray, night: stMap.nightArray});				
+				socket.emit('uptodateArr', {sid: data.socket, day: stMap.dayArray, night: stMap.nightArray});	
+				changeCurrentNumber(1);
+				jqMap.$banList.append('<option value="' + data.id + '">' + findInfo(data.id).name + '</option>');
 				newMember(data);
 			});
 			socket.on('uptodateArr', function(data) {
@@ -561,7 +602,7 @@ wwm.room = (function(){
 				renderTable(stMap.current);
 			});
 			socket.on('chat', function(data) {
-				jqMap.$chatList.append('<div>' + data.name + ' send: ' + data.text + '</div>');
+				jqMap.$memberList.find('li').eq(findInfo(data.id).personColor).find('.chat').text(data.text);
 			});
 			socket.on('busy', function(data) {
 				console.log('socketbusy:', data.arr, data.sid, data.cur);
@@ -570,6 +611,28 @@ wwm.room = (function(){
 			socket.on('not-busy', function(data) {
 				console.log('socketnotbusy:', data.arr, data.sid, data.cur);
 				arrayToTable(data.arr, data.sid, data.cur, false);
+			});
+			socket.on('ban', function(data) {
+				// 강퇴당한 경우.
+				if (stMap.myInfo.personColor == data.id) {
+					alert('강퇴당하셨습니다...');
+					wwm.lobby.initModule(jqMap.$con);
+					return;
+				}
+				// 다른 사람이 강퇴당한 경우.
+				if (stMap.myInfo.personColor > data.order) {
+					stMap.myInfo.personColor--;
+				}
+				alert(findInfo(id).name + '님이 강제퇴장 되었습니다. 잘가요!');
+				for (var i = 0; i < stMap.memberList.length; i++) {
+					if (banned == stMap.memberList[i].id) {
+						stMap.memberList.splice(i, 1);
+						break;
+					}
+				}
+				changeCurrentNumber(-1);
+				jqMap.$banList.find('option').eq(data.order).remove();
+				showMembers();
 			});
 			socket.on('confirmed', function(data) {
 				var confirmCount = 0;
@@ -588,23 +651,23 @@ wwm.room = (function(){
 				}
 			});
 			jqMap.$calendar.find('td').click(onClickCell);
-			jqMap.$explode.click({id: doc.rid}, deleteRoom);
-			jqMap.$back.click({rid: doc.rid}, goBack);
+			jqMap.$explode.click({id: stMap.rid}, deleteRoom);
+			jqMap.$back.click({rid: stMap.rid}, goBack);
 			jqMap.$day.click(toDay);
 			jqMap.$night.click(toNight);
 			jqMap.$admin.click(showAdminMenu);
 			jqMap.$dayExp.click(showDayException);
 			jqMap.$timeExp.click(showTimeException);
-			jqMap.$ban.click({id: doc.rid}, ban);
-			jqMap.$changeLimit.click({id: doc.rid}, changeLimit);
-			jqMap.$changeTitle.click({id: doc.rid}, changeTitle);
+			jqMap.$ban.click({rid: stMap.rid}, ban);
+			jqMap.$changeLimit.click({id: stMap.rid}, changeLimit);
+			jqMap.$changeTitle.click({id: stMap.rid}, changeTitle);
 			jqMap.$sendChat.click(sendChat);
 			jqMap.$notDay.click(excludeDay);
 			jqMap.$notTime.click(excludeTime);
-			jqMap.$confirm.click({id: userInfo.id, rid: doc.rid, day: stMap.dayArray, night: stMap.nightArray}, confirm);
+			jqMap.$confirm.click({id: stMap.myInfo.id, rid: stMap.rid, day: stMap.dayArray, night: stMap.nightArray}, confirm);
 			jqMap.$refresh.click(refresh);
 			jqMap.$allConfirmed.click(toConfirmPage);
-			jqMap.$quit.click(quit);
+			jqMap.$quit.click({id: stMap.myInfo.id, rid: stMap.rid}, quit);
 		});
 	}
 	

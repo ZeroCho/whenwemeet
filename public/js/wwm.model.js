@@ -84,15 +84,6 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	}
-	function quit(data) {
-		var deferred = $.Deferred();
-		$.post('/quit/' + data.rid, {id: data.id}).done(function(res) {
-			deferred.resolve(res);
-		}).fail(function(err) {
-			deferred.reject(err);
-		});
-		return deferred.promise();
-	}
 	function createRoom(data) {
 		var deferred = $.Deferred();
 		console.log('modeldata', data);
@@ -144,7 +135,6 @@ wwm.model = (function () {
 		changeLimit: changeLimit,
 		searchList: searchList,
 		confirm: confirm,
-		join: join,
-		quit: quit
+		join: join
 	};
 }());

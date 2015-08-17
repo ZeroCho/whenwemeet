@@ -95,19 +95,46 @@ wwm.login = (function () {
 			$canvas: $con.find('#canvas-logo')
 		};
 	}
+	function showLogo() {
+		var canvas = document.getElementById('splashscreen');
+		var ctx = canvas.getContext('2d');
+		drawEqTriangle(ctx, 50, canvas.width/2 + 13, canvas.height/2, 'magenta');
+		drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');
+		drawEqTriangle(ctx, 50, canvas.width/2 - 16, canvas.height/2 - 49, 'yellow');
+		drawRevEqTriangle(ctx, 50, canvas.width/2 + 36, canvas.height/2 + 49, 'greenyellow');
+		function drawEqTriangle(ctx, side, cx, cy, color){  
+			var h = side * (Math.sqrt(3)/2);    
+			ctx.fillStyle = color;
+			ctx.beginPath();
+			ctx.moveTo(cx, cy - h / 2);
+			ctx.lineTo(cx - side / 2, cy + h / 2);
+			ctx.lineTo(cx + side / 2, cy + h / 2);
+			ctx.lineTo(cx, cy - h / 2);
+			ctx.shadowOffsetX = 1;
+			ctx.shadowOffsetY = 3;
+			ctx.shadowBlur    = 1;
+			ctx.shadowColor   = 'rgb(204, 204, 204)';      
+			ctx.fill(); 
+		}
+		function drawRevEqTriangle(ctx, side, cx, cy, color){  
+			var h = side * (Math.sqrt(3)/2); 
+			ctx.fillStyle = color;
+			ctx.beginPath(); 
+			ctx.moveTo(cx, cy - h / 2);
+			ctx.lineTo(cx - side, cy - h / 2);
+			ctx.lineTo(cx - side / 2, cy + h / 2);
+			ctx.lineTo(cx, cy - h / 2);
+			ctx.shadowOffsetX = 1;
+			ctx.shadowOffsetY = 3;
+			ctx.shadowBlur    = 1;
+			ctx.shadowColor   = 'rgb(204, 204, 204)'; 
+			ctx.fill(); 
+		}
+	}
 	function initModule($con) {
 		$con.html($('#wwm-login').html());
 		setJqMap($con);
-		var ctx = jqMap.$canvas[0].getContext('2d');
-		var path= new Path2D();
-		path.arc(75,75,50,0,Math.PI*2,true); // Outer circle
-		path.moveTo(110,75);
-		path.arc(75,75,35,0,Math.PI,false);  // Mouth (clockwise)
-		path.moveTo(65,65);
-		path.arc(60,65,5,0,Math.PI*2,true);  // Left eye
-		path.moveTo(95,65);
-		path.arc(90,65,5,0,Math.PI*2,true);  // Right eye
-		ctx.stroke(path);
+		showLogo();
 		jqMap.$kakaoLogin.on({
 			click: kakaoLogin,
 			mouseover: function () {

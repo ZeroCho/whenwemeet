@@ -110,17 +110,7 @@ router.post('/confirm/:rid', function(req, res) {
 		}
 	});
 });
-router.post('/quit/:rid', function (req, res) {
-	var rid = req.params.rid;
-	var id = req.body.id;
-	roomCollection.update({rid: rid}, {$pull: {members: {id: id}}}, function(err, result) {
-		if (err) {
-			console.log('quiterror:' + err);
-		} else {
-			res.send(result);
-		}	
-	});
-});
+
 router.post('/addroom/:rid', function (req, res) {
 	var rid = req.params.rid;
 	var maker = req.body.maker;

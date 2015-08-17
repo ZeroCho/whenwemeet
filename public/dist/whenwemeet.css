@@ -93,6 +93,9 @@ li {
 	width: 100%;
 	text-align: center;
 }
+#canvas-logo {
+	width: 100%;
+}
 #fb-login-btn, #kakao-login-btn {
 	cursor: pointer;
 }
@@ -177,7 +180,7 @@ li {
 	width: 10%;
 	vertical-align: middle;
 	margin-left: -1px;
-	margin-top: -4px;
+	margin-top: -2px;
 }
 #createroom-header {
 	text-align: center;
@@ -226,6 +229,22 @@ li {
 	width: 100%;
 	padding: 10px;
 	overflow: auto;
+	margin-bottom: 85px;
+}
+#day, #night {
+	width: 49.4%;
+	display: inline-block;
+	text-align: center;
+}
+#room-main table {
+	width: 100%;
+	user-select: none;
+	border: 1px solid silver;
+	margin-bottom: 10px;
+}
+#room-main table td, #room-main table th {
+	height: 20px;
+	border: 1px solid silver;
 }
 #member-list {
 	display: inline-block;
@@ -243,20 +262,12 @@ li {
 #all-confirmed {
 	display: none;
 }
-#day, #night {
-	width: 49.4%;
-	display: inline-block;
-	text-align: center;
-}
-#room-main table {
+#room-footer {
+	background: white;
+	position: fixed;
+	bottom: 0;
 	width: 100%;
-	user-select: none;
-	border: 1px solid silver;
-	margin-bottom: 10px;
-}
-#room-main table td, #room-main table th {
-	height: 20px;
-	border: 1px solid silver;
+	padding: 10px;
 }
 #my-menu, #day-exception, #time-exception, #room-back, #my-info, #admin-menu {
 	display: inline-block;
@@ -267,7 +278,7 @@ li {
 #admin-menu ul, #day-exception ul, #time-exception ul {
 	position: absolute;
 	left: 10px;
-	bottom: 64px;
+	bottom: 85px;
 	background: white;
 	margin: 0 auto;
 	right: 10px;
@@ -277,38 +288,27 @@ li {
 }
 #admin-menu li, #day-exception li, #time-exception li {
 	border-top: 1px solid silver;
+	height: 34px;
 }
-#room-footer {
-	background: white;
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	padding: 10px;
-}
+
 #chat {
 	display: table;
 	width: 100%;
 }
-#chat input {
+#chatbox {
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 	display: table-cell;
 	width: 90%;
 }
-#chat button {
+#send-chat {
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 	display: table-cell;
 	width: 10%;
 	vertical-align: middle;
 	margin-left: -1px;
-	margin-top: -4px;
-}
-#chatbox {
-	
-}
-#send-chat {
-	
+	margin-top: -2px;
 }
 .box-0 {
 	display: none;

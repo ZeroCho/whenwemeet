@@ -51,6 +51,9 @@ io.on('connection', function (socket) {
 		console.log(data.id + ' confirmed');
 		io.in(process.env.CURRENT_ROOM).emit('confirmed', data);
 	});
+	socket.on('ban', function(data) {
+		io.in(process.env.CURRENT_ROOM).emit('ban', data);
+	});
 	socket.on('enter', function(data) {
 		console.log(data);
 		console.log(process.env.MY_ID);
@@ -73,8 +76,14 @@ io.on('connection', function (socket) {
 		});
 	});
 	socket.on('quit', function(data) {
-		io.in(process.env.CURRENT_ROOM).emit('quit', data.id);
-		socket.leave(process.env.CURRENT_ROOM);
+		roomCollection.update({rid: data.rid}, {$pull: {members: {id: data.id}}}, function(err, result) {
+			if (err) {
+				console.log('quiterror:' + err);
+			} else {
+				io.in(process.env.CURRENT_ROOM).emit('quit', data.id);
+				socket.leave(process.env.CURRENT_ROOM);
+			}	
+		});
 	});
 	socket.on('out', function(data) {
 		io.in(process.env.CURRENT_ROOM).emit('out', data.id);
