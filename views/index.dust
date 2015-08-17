@@ -11,45 +11,47 @@
 <body>
 	<div id="whenwemeet">
 		<div id="view">
-			<canvas id="splashscreen"></canvas>
+			<canvas id="splashscreen" style="width: 100%; height: 100%;"></canvas>
 		</div>
 		<div id="modal"></div>
 	</div>
 	<script>
-		var canvas = document.getElementsById('splashscreen');
-		var ctx = canvas.getContext('2d');
-		drawEqTriangle(ctx, 50, canvas.width/2 + 3, canvas.height/2, 'magenta');
-		drawRevEqTriangle(ctx, 50, canvas.width/2 - 3, canvas.height/2, 'cyan');
-		drawEqTriangle(ctx, 50, canvas.width/2 - 26, canvas.height/2 - 49, 'yellow');
-		drawRevEqTriangle(ctx, 50, canvas.width/2 + 26, canvas.height/2 + 49, 'greenyellow');
-		function drawEqTriangle(ctx, side, cx, cy, color){  
-			var h = side * (Math.sqrt(3)/2);    
-			ctx.fillStyle = color;
-			ctx.beginPath();
-			ctx.moveTo(cx, cy - h / 2);
-			ctx.lineTo(cx - side / 2, cy + h / 2);
-			ctx.lineTo(cx + side / 2, cy + h / 2);
-			ctx.lineTo(cx, cy - h / 2);
-			ctx.shadowOffsetX = 1;
-			ctx.shadowOffsetY = 3;
-			ctx.shadowBlur    = 1;
-			ctx.shadowColor   = 'rgb(204, 204, 204)';      
-			ctx.fill(); 
-		}
-		function drawRevEqTriangle(ctx, side, cx, cy, color){  
-			var h = side * (Math.sqrt(3)/2); 
-			ctx.fillStyle = color;
-			ctx.beginPath(); 
-			ctx.moveTo(cx, cy - h / 2);
-			ctx.lineTo(cx - side, cy - h / 2);
-			ctx.lineTo(cx - side / 2, cy + h / 2);
-			ctx.lineTo(cx, cy - h / 2);
-			ctx.shadowOffsetX = 1;
-			ctx.shadowOffsetY = 3;
-			ctx.shadowBlur    = 1;
-			ctx.shadowColor   = 'rgb(204, 204, 204)'; 
-			ctx.fill(); 
-		}
+		document.addEventListener("DOMContentLoaded", function(event) {
+			var canvas = document.getElementsById('splashscreen');
+			var ctx = canvas.getContext('2d');
+			drawEqTriangle(ctx, 50, canvas.width/2 + 3, canvas.height/2, 'magenta');
+			drawRevEqTriangle(ctx, 50, canvas.width/2 - 3, canvas.height/2, 'cyan');
+			drawEqTriangle(ctx, 50, canvas.width/2 - 26, canvas.height/2 - 49, 'yellow');
+			drawRevEqTriangle(ctx, 50, canvas.width/2 + 26, canvas.height/2 + 49, 'greenyellow');
+			function drawEqTriangle(ctx, side, cx, cy, color){  
+				var h = side * (Math.sqrt(3)/2);    
+				ctx.fillStyle = color;
+				ctx.beginPath();
+				ctx.moveTo(cx, cy - h / 2);
+				ctx.lineTo(cx - side / 2, cy + h / 2);
+				ctx.lineTo(cx + side / 2, cy + h / 2);
+				ctx.lineTo(cx, cy - h / 2);
+				ctx.shadowOffsetX = 1;
+				ctx.shadowOffsetY = 3;
+				ctx.shadowBlur    = 1;
+				ctx.shadowColor   = 'rgb(204, 204, 204)';      
+				ctx.fill(); 
+			}
+			function drawRevEqTriangle(ctx, side, cx, cy, color){  
+				var h = side * (Math.sqrt(3)/2); 
+				ctx.fillStyle = color;
+				ctx.beginPath(); 
+				ctx.moveTo(cx, cy - h / 2);
+				ctx.lineTo(cx - side, cy - h / 2);
+				ctx.lineTo(cx - side / 2, cy + h / 2);
+				ctx.lineTo(cx, cy - h / 2);
+				ctx.shadowOffsetX = 1;
+				ctx.shadowOffsetY = 3;
+				ctx.shadowBlur    = 1;
+				ctx.shadowColor   = 'rgb(204, 204, 204)'; 
+				ctx.fill(); 
+			}
+		});
 	</script>
 	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
