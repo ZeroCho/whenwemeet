@@ -33,6 +33,7 @@ wwm.room = (function(){
 			$day: $con.find('#day'),
 			$night: $con.find('#night'),
 			$back: $con.find('#room-back'),
+			$quit: $con.find('#quit'),
 			$admin: $con.find('#admin-menu'),
 			$dayExp: $con.find('#day-exception'),
 			$notDay: $con.find('#day-exception').find('li'),
@@ -411,9 +412,18 @@ wwm.room = (function(){
 		socket.emit('out', {id: userInfo.id, rid: e.data.rid});
 		wwm.lobby.initModule(jqMap.$con);
 	}
-	function quit() {
-		socket.emit('quit', {id: userInfo.id, rid: e.data.rid});
-		wwm.lobby.initModule(jqMap.$con);
+	function quit(e) {
+		if (confirm('정말 나가시겠습니까? 잠시 나가는 거면 목록 버튼을 클릭하세요.')) {
+			socket.emit('quit', {id: userInfo.id, rid: e.data.rid});
+			var quitPromise = wwm.model.quit({id: userinfo.id, rid: e.data.rid});
+			quitPromise.done(function() {
+				wwm.lobby.initModule(jqMap.$con);
+			});
+			quitPromise.fail(function(err) {
+				console.log(err);
+				alert('나가는 것도 실패를 하네요. 들어올 때는 마음대로였지만 나갈 때는...');	
+			});
+		}
 	}
 	function sendChat() {
 		var text = $(this).prev('#chatbox').val();
@@ -594,6 +604,7 @@ wwm.room = (function(){
 			jqMap.$confirm.click({id: userInfo.id, rid: doc.rid, day: stMap.dayArray, night: stMap.nightArray}, confirm);
 			jqMap.$refresh.click(refresh);
 			jqMap.$allConfirmed.click(toConfirmPage);
+			jqMap.$quit.click(quit);
 		});
 	}
 	
