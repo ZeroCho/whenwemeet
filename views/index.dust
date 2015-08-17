@@ -11,7 +11,7 @@
 <body>
 	<div id="whenwemeet">
 		<div id="view">
-			<canvas id="splashscreen" style="width: 100%; height: 100%;"></canvas>
+			<canvas id="splashscreen" style="width: 100%;"></canvas>
 		</div>
 		<div id="modal"></div>
 	</div>
@@ -19,10 +19,10 @@
 		document.addEventListener("DOMContentLoaded", function(event) {
 			var canvas = document.getElementById('splashscreen');
 			var ctx = canvas.getContext('2d');
-			drawEqTriangle(ctx, 50, canvas.width/2 + 3, canvas.height/2, 'magenta');
-			drawRevEqTriangle(ctx, 50, canvas.width/2 - 3, canvas.height/2, 'cyan');
-			drawEqTriangle(ctx, 50, canvas.width/2 - 26, canvas.height/2 - 49, 'yellow');
-			drawRevEqTriangle(ctx, 50, canvas.width/2 + 26, canvas.height/2 + 49, 'greenyellow');
+			drawEqTriangle(ctx, 50, canvas.width/2 + 13, canvas.height/2, 'magenta');
+			drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');
+			drawEqTriangle(ctx, 50, canvas.width/2 - 16, canvas.height/2 - 49, 'yellow');
+			drawRevEqTriangle(ctx, 50, canvas.width/2 + 36, canvas.height/2 + 49, 'greenyellow');
 			function drawEqTriangle(ctx, side, cx, cy, color){  
 				var h = side * (Math.sqrt(3)/2);    
 				ctx.fillStyle = color;
