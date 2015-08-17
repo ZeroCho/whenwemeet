@@ -96,7 +96,7 @@ wwm.login = (function () {
 		};
 	}
 	function showLogo() {
-		var canvas = document.getElementById('splashscreen');
+		var canvas = document.getElementById('canvas-logo');
 		var ctx = canvas.getContext('2d');
 		drawEqTriangle(ctx, 50, canvas.width/2 + 13, canvas.height/2, 'magenta');
 		drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');

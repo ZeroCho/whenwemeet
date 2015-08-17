@@ -557,7 +557,7 @@ wwm.room = (function(){
 		}
 		console.log('admin?', stMap.myInfo.id == stMap.maker);
 		var src = $('#wwm-room').text();
-		dust.render(dust.loadSource(dust.compile(src), parser, function(err, out) {
+		dust.render(dust.loadSource(dust.compile(src)), parser, function(err, out) {
 			if (err) {
 				cfMap.$con.html(err);
 				return;
