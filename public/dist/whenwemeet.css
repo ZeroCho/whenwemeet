@@ -1,6 +1,8 @@
 * {
 	margin: 0;
 	padding: 0;
+	box-sizing: border-box;
+	//outline: 1px dashed salmon;
 }
 html {
 	height: 100%;
@@ -22,7 +24,7 @@ table {
 input, select {
 	padding: 2px 4px;
 	color: #555;
-	height: 26px;
+	height: 30px;
 	background-color: #fff;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
@@ -44,7 +46,7 @@ button {
 	border-radius: 3px;
 	border: 1px solid #bbb;
 	cursor: pointer;
-	height: 32px;
+	height: 30px;
 	padding: 2px 4px;
 }
 button:focus, button:hover {
@@ -106,18 +108,20 @@ li {
 #lobby-header {
 	padding: 5px 5px 0;
 	text-align: center;
+	padding: 10px;
+	position: relative;
 }
 #logout-btn {
 	position: absolute;
 	right: 0;
 	top: 0;
-	margin-right: 5px;
-	margin-top: 5px;
+	margin-right: 10px;
+	margin-top: 10px;
 }
 #lobby-main {
 	text-align: center;
 	position: absolute;
-	top: 30px;
+	top: 40px;
 	bottom: 30px;
 	width: 100%;
 }
@@ -140,18 +144,37 @@ li {
 }
 #refresh-list {
 	position: absolute;
-	right: -5px;
-	margin-right: 5px;
+	bottom: 20px;
+	left: 10px;
 }
 #show-createroom-modal {
 	float: right;
-	margin-right: 10px;
+	margin-bottom: 10px;
 }
 #lobby-footer {
+	padding: 10px;
 	position: absolute;
 	width: 100%;
 	bottom: 0;
-	padding: 0 5px 5px;
+}
+#search {
+	display: table;
+	width: 100%;
+}
+#search input {
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	display: table-cell;
+	width: 90%;
+}
+#search button {
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	display: table-cell;
+	width: 10%;
+	vertical-align: middle;
+	margin-left: -1px;
+	margin-top: -4px;
 }
 #createroom-header {
 	text-align: center;
@@ -176,43 +199,48 @@ li {
 	visibility: hidden;
 }
 #room-header {
-	position: absolute;
-	top: 0;
+	position: relative;
 	width: 100%;
 	user-select: none;
+	padding: 10px;
+	margin-bottom: 5px;
 }
 #room-people-info {
 	float: right;
 }
 #room-main {
-	position: absolute;
+	position: relative;
 	width: 100%;
-	top: 30px;
+	padding: 10px;
+	overflow: auto;
 }
 #member-list {
-	position: absolute;
+	display: inline-block;
 	background: white;
-	left: 0;
+	padding: 5px;
 	border: 1px solid silver;
 }
 #confirm-calendar, #refresh-calendar, #all-confirmed {
 	float: right;
+	margin-left: 5px;
+}
+#all-confirmed {
+	display: none;
 }
 #day, #night {
-	width: 50%;
+	width: 49.4%;
 	display: inline-block;
 	text-align: center;
-	border: 1px solid silver;
-	box-sizing: border-box;
 }
 #room-main table {
 	width: 100%;
 	user-select: none;
-	border: 1px solid gray;
+	border: 1px solid silver;
+	margin-bottom: 10px;
 }
 #room-main table td, #room-main table th {
 	height: 20px;
-	border: 1px solid gray;
+	border: 1px solid silver;
 }
 #my-menu, #day-exception, #time-exception, #room-back, #my-info, #admin-menu {
 	display: inline-block;
@@ -239,15 +267,32 @@ li {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
+	padding: 10px;
+}
+#chat {
+	display: table;
+	width: 100%;
+}
+#chat input {
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	display: table-cell;
+	width: 90%;
+}
+#chat button {
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	display: table-cell;
+	width: 10%;
+	vertical-align: middle;
+	margin-left: -1px;
+	margin-top: -4px;
 }
 #chatbox {
-	position: absolute;
-	left: 0;
-	right: 70px;
+	
 }
 #send-chat {
-	position: absolute;
-	right: 0;
+	
 }
 .box-0 {
 	display: none;
@@ -349,6 +394,12 @@ li {
 }
 .selected {
 	background: gray;
+}
+.online {
+	color: lawngreen;
+}
+.offline {
+	color: crimson;
 }
 .red-text {
 	color: red;
