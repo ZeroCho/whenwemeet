@@ -47,9 +47,7 @@
 		<canvas class="canvas-logo"></canvas>
 	</script>
 	<script type="text/html" id="wwm-login">
-		<div id="logo">
-			<canvas id="canvas-logo"></canvas>
-		</div>
+		<div id="login-logo"></div>
 		<div id="login">
 			<div>
 				<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png"/>

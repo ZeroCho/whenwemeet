@@ -106,6 +106,10 @@ svg .triangle-3 { color: 'greenyellow'; }
 	width: 100%;
 	text-align: center;
 }
+#login-logo {
+	position: relative;
+	top: 20%;
+}
 #fb-login-btn, #kakao-login-btn {
 	cursor: pointer;
 }
@@ -119,7 +123,6 @@ svg .triangle-3 { color: 'greenyellow'; }
 	background: white;
 }
 #lobby-header {
-	padding: 5px 5px 0;
 	text-align: center;
 	padding: 10px;
 	position: relative;
@@ -242,7 +245,7 @@ svg .triangle-3 { color: 'greenyellow'; }
 	margin-bottom: 85px;
 }
 #day, #night {
-	width: 49.4%;
+	width: 50%;
 	display: inline-block;
 	text-align: center;
 }

@@ -89,6 +89,9 @@ io.on('connection', function (socket) {
 		io.in(process.env.CURRENT_ROOM).emit('out', data.id);
 		socket.leave(process.env.CURRENT_ROOM);
 	});
+	socket.on('explode', function(rid) {
+		socket.broadcast.to(process.env.CURRENT_ROOM).emit('explode', rid);
+	});
 });
 
 httpServer.listen(port);

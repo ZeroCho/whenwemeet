@@ -92,49 +92,14 @@ wwm.login = (function () {
 			$fbLogin: $con.find('#fb-login-btn'),
 			$localhost: $con.find('#localhost-login'),
 			$localhost2: $con.find('#localhost2-login'),
-			$canvas: $con.find('#canvas-logo')
+			$logo: $con.find('#login-logo')
 		};
-	}
-	function showLogo() {
-		var canvas = document.getElementById('canvas-logo');
-		var ctx = canvas.getContext('2d');
-		drawEqTriangle(ctx, 50, canvas.width/2 + 13, canvas.height/2, 'magenta');
-		drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');
-		drawEqTriangle(ctx, 50, canvas.width/2 - 16, canvas.height/2 - 49, 'yellow');
-		drawRevEqTriangle(ctx, 50, canvas.width/2 + 36, canvas.height/2 + 49, 'greenyellow');
-		function drawEqTriangle(ctx, side, cx, cy, color){  
-			var h = side * (Math.sqrt(3)/2);    
-			ctx.fillStyle = color;
-			ctx.beginPath();
-			ctx.moveTo(cx, cy - h / 2);
-			ctx.lineTo(cx - side / 2, cy + h / 2);
-			ctx.lineTo(cx + side / 2, cy + h / 2);
-			ctx.lineTo(cx, cy - h / 2);
-			ctx.shadowOffsetX = 1;
-			ctx.shadowOffsetY = 3;
-			ctx.shadowBlur    = 1;
-			ctx.shadowColor   = 'rgb(204, 204, 204)';      
-			ctx.fill(); 
-		}
-		function drawRevEqTriangle(ctx, side, cx, cy, color){  
-			var h = side * (Math.sqrt(3)/2); 
-			ctx.fillStyle = color;
-			ctx.beginPath(); 
-			ctx.moveTo(cx, cy - h / 2);
-			ctx.lineTo(cx - side, cy - h / 2);
-			ctx.lineTo(cx - side / 2, cy + h / 2);
-			ctx.lineTo(cx, cy - h / 2);
-			ctx.shadowOffsetX = 1;
-			ctx.shadowOffsetY = 3;
-			ctx.shadowBlur    = 1;
-			ctx.shadowColor   = 'rgb(204, 204, 204)'; 
-			ctx.fill(); 
-		}
 	}
 	function initModule($con) {
 		$con.html($('#wwm-login').html());
 		setJqMap($con);
 		showLogo();
+		wwm.showSVGLogo(jqMap.$logo, 300);
 		jqMap.$kakaoLogin.on({
 			click: kakaoLogin,
 			mouseover: function () {

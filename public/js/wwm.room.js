@@ -352,11 +352,12 @@ wwm.room = (function(){
 		}
 	}
 	function deleteRoom(e) {
-		var id = e.data.rid;
-		var deletePromise = wwm.model.deleteRoom(id, userInfo.id);
+		var rid = e.data.rid;
+		var deletePromise = wwm.model.deleteRoom(rid, userInfo.id);
 		deletePromise.done(function(res) {
 			alert('삭제되었습니다.');
 			wwm.lobby.initModule(jqMap.$con);
+			socket.emit('explode', rid);
 		});
 		deletePromise.fail(function(err) {
 			console.log(err);
@@ -443,12 +444,16 @@ wwm.room = (function(){
 		} // not after
 	}
 	function goBack(e) {
-		socket.emit('out', {id: userInfo.id, rid: e.data.rid});
+		socket.emit('out', {id: stMap.myInfo.id, rid: e.data.rid});
 		wwm.lobby.initModule(jqMap.$con);
 	}
 	function quit(e) {
+		if (confirm('혼자 있을 때 방을 나가면 방이 사라집니다.그래도 나가시겠습니까?')) {
+			wwm.model.deleteroom(e.data.rid, stMap.myInfo.id);
+			return;
+		}
 		if (confirm('정말 나가시겠습니까? 잠시 나가는 거면 목록 버튼을 클릭하세요.')) {
-			socket.emit('quit', {id: userInfo.id, rid: e.data.rid});
+			socket.emit('quit', {id: stMap.myInfo.id, rid: e.data.rid});
 			wwm.lobby.initModule(jqMap.$con);
 		}
 	}
@@ -493,7 +498,7 @@ wwm.room = (function(){
 			} else {
 				jqMap.$confirm.removeClass('confirmed');
 			}
-			socket.emit('confirmed', {id: userInfo.id, bool: data.bool});
+			socket.emit('confirmed', {id: stMap.myInfo.id, bool: data.bool});
 		});
 		confirmPromise.fail(function(err) {
 			console.log(err);
@@ -649,6 +654,10 @@ wwm.room = (function(){
 				} else {
 					jqMap.$allConfirmed.hide();
 				}
+			});
+			socket.on('explode', function(rid) {
+				alert('방이 폭파되었습니다. 로비로 이동합니다.');
+				wwm.lobby.initModule(jqMap.$con);
 			});
 			jqMap.$calendar.find('td').click(onClickCell);
 			jqMap.$explode.click({id: stMap.rid}, deleteRoom);
