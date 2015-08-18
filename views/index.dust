@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko_KR">
+<html lang="ko_KR" style="margin: 0; padding: 0; height: 100%; box-sizing: border-box;">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -8,51 +8,20 @@
 	<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css"/>
 	<link rel="stylesheet" href="/dist/whenwemeet.css"/>
 </head>
-<body>
-	<div id="whenwemeet">
-		<div id="view">
-			<canvas id="splashscreen" style="width: 100%;"></canvas>
+<body style="height: 100%;">
+	<div id="whenwemeet" style="height: 100%">
+		<div id="view" style="height: 100%">
+			<div id="logo" style="text-align:center; height:100%;">
+				<svg viewbox="0 0 168 300" style="position: relative; top: 50%; transform: translateY(-50%); margin: 0 auto; width: 84px; height: 150px; display: inline-block;">
+					<polygon points="5,100 105,100 55,13.4" style="-webkit-filter:drop-shadow(5px 5px 3px #ccc);filter:drop-shadow(5px 5px 3px #ccc);fill:yellow"/>
+					<polygon points="0,110 100,110 50,196.6" style="-webkit-filter:drop-shadow(5px 5px 3px #ccc);filter:drop-shadow(5px 5px 3px #ccc);fill:cyan"/>
+					<polygon points="60,200 160,200 110,113.4" style="-webkit-filter:drop-shadow(5px 5px 3px #ccc);filter:drop-shadow(5px 5px 3px #ccc);fill:magenta"/>
+					<polygon points="55,210 155,210 105,296.6" style="-webkit-filter:drop-shadow(5px 5px 3px #ccc);filter:drop-shadow(5px 5px 3px #ccc);fill:greenyellow"/>
+				</svg>
+			</div>
 		</div>
 		<div id="modal"></div>
 	</div>
-	<script>
-		document.addEventListener("DOMContentLoaded", function(event) {
-			var canvas = document.getElementById('splashscreen');
-			var ctx = canvas.getContext('2d');
-			drawEqTriangle(ctx, 50, canvas.width/2 + 13, canvas.height/2, 'magenta');
-			drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');
-			drawEqTriangle(ctx, 50, canvas.width/2 - 16, canvas.height/2 - 49, 'yellow');
-			drawRevEqTriangle(ctx, 50, canvas.width/2 + 36, canvas.height/2 + 49, 'greenyellow');
-			function drawEqTriangle(ctx, side, cx, cy, color){  
-				var h = side * (Math.sqrt(3)/2);    
-				ctx.fillStyle = color;
-				ctx.beginPath();
-				ctx.moveTo(cx, cy - h / 2);
-				ctx.lineTo(cx - side / 2, cy + h / 2);
-				ctx.lineTo(cx + side / 2, cy + h / 2);
-				ctx.lineTo(cx, cy - h / 2);
-				ctx.shadowOffsetX = 1;
-				ctx.shadowOffsetY = 3;
-				ctx.shadowBlur    = 1;
-				ctx.shadowColor   = 'rgb(204, 204, 204)';      
-				ctx.fill(); 
-			}
-			function drawRevEqTriangle(ctx, side, cx, cy, color){  
-				var h = side * (Math.sqrt(3)/2); 
-				ctx.fillStyle = color;
-				ctx.beginPath(); 
-				ctx.moveTo(cx, cy - h / 2);
-				ctx.lineTo(cx - side, cy - h / 2);
-				ctx.lineTo(cx - side / 2, cy + h / 2);
-				ctx.lineTo(cx, cy - h / 2);
-				ctx.shadowOffsetX = 1;
-				ctx.shadowOffsetY = 3;
-				ctx.shadowBlur    = 1;
-				ctx.shadowColor   = 'rgb(204, 204, 204)'; 
-				ctx.fill(); 
-			}
-		});
-	</script>
 	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
 	<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
@@ -66,6 +35,17 @@
 	<script src="/js/wwm.modal.js"></script>
 	<script src="/js/wwm.room.js"></script>
 	<script src="/js/wwm.confirm.js"></script>
+	<script type="text/html" id="wwm-svg-logo">
+		<svg class="svg-logo" viewbox="0 0 168 300">
+			<polygon class="triangle triangle-0" points="5,100 105,100 55,13.4"/>
+			<polygon class="triangle triangle-1" points="0,110 100,110 50,196.6"/>
+			<polygon class="triangle triangle-2" points="60,200 160,200 110,113.4"/>
+			<polygon class="triangle triangle-3" points="55,210 155,210 105,296.6"/>
+		</svg>
+	</script>
+	<script type="text/html" id="wwm-canvas-logo">
+		<canvas class="canvas-logo"></canvas>
+	</script>
 	<script type="text/html" id="wwm-login">
 		<div id="logo">
 			<canvas id="canvas-logo"></canvas>
