@@ -34,16 +34,21 @@ var wwm = (function () {
 		ctx.shadowColor   = 'rgb(204, 204, 204)'; 
 		ctx.fill(); 
 	}
-	function showCanvasLogo() {
-		var canvas = document.getElementById('canvas-logo');
+	function showCanvasLogo($target, width) {
+		var $logo = $($('#wwm-canvas-logo').html());
+		var canvas = $logo[0];
 		var ctx = canvas.getContext('2d');
 		drawEqTriangle(ctx, 50, canvas.width/2 + 13, canvas.height/2, 'magenta');
 		drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');
 		drawEqTriangle(ctx, 50, canvas.width/2 - 16, canvas.height/2 - 49, 'yellow');
 		drawRevEqTriangle(ctx, 50, canvas.width/2 + 36, canvas.height/2 + 49, 'greenyellow');
+		$logo.width(width);
+		$target.prepend($logo);
 	}
-	function showSVGLogo() {
-		
+	function showSVGLogo($target, width) {
+		var $logo = $($('#wwm-svg-logo').html());
+		$logo.width(width);
+		$target.prepend($logo);
 	}
 	return {
 		initModule: initModule,
