@@ -79,22 +79,32 @@ li {
 	z-index: 0;
 	top: 0;
 }
-#splashscreen {
-	position: relative;
-	top: 20px;
-	width: 100%;
-	margin: 0 auto;
-	top: 50%;
-	transform: translateY(-50%);
+#logo {
+	text-align: center; height: 100%;
 }
+#logo svg {
+	width: 300px;
+}
+svg {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%); 
+	margin: 0 auto;
+	display: inline-block;
+}
+svg .triangle {
+	-webkit-filter: drop-shadow(5px 5px 3px #ccc);
+	filter: drop-shadow(5px 5px 3px #ccc);
+}
+svg .triangle-0 { color: 'yellow'; }
+svg .triangle-1 { color: 'cyan'; }
+svg .triangle-2 { color: 'magenta'; }
+svg .triangle-3 { color: 'greenyellow'; }
 #login {
 	position: absolute;
 	bottom: 30px;
 	width: 100%;
 	text-align: center;
-}
-#canvas-logo {
-	width: 100%;
 }
 #fb-login-btn, #kakao-login-btn {
 	cursor: pointer;
