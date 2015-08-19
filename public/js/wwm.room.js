@@ -381,7 +381,7 @@ wwm.room = (function(){
 		var arr, cell;
 		if (stMap.current === 'day') {
 			arr = stMap.dayArray;
-		} else if (stMap.current === 'night') {
+		} else {
 			arr = stMap.nightArray;
 		}
 		cell = arr[this.parentNode.rowIndex - 1][this.cellIndex - 1];

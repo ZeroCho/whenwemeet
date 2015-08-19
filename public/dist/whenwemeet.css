@@ -108,7 +108,7 @@ svg .triangle-3 { color: 'greenyellow'; }
 }
 #login-logo {
 	position: relative;
-	top: 20%;
+	height: 70%;
 }
 #fb-login-btn, #kakao-login-btn {
 	cursor: pointer;
