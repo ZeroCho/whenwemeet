@@ -68,6 +68,7 @@ wwm.room = (function(){
 		return arr;
 	}
 	function tableToArray(cellList, busy) {
+		console.log('tableToArray');
 		var arrList = [];
 		for (var i = 0; i < cellList.length; i++) {
 			var cell = cellList[i];
@@ -78,7 +79,7 @@ wwm.room = (function(){
 		return arrList;
 	}
 	function arrayToTable(cellList, sid, cur, busy) {
-		console.log(cellList, sid, cur, stMap.current, busy);
+		console.log('arrayTotable', cellList, sid, cur, stMap.current, busy);
 		if (cur !== stMap.current) {
 			if (cur === 'day') {
 				for (var i = 0; i < cellList.length; i++) {
@@ -211,7 +212,7 @@ wwm.room = (function(){
 		}
 	}
 	function newMember(doc) {
-		console.log(doc.id, stMap.memberList);
+		console.log('newMember', doc.id, stMap.memberList);
 		var alreadyMember = false;
 		for (var i = 0; i < stMap.memberList.length; i++) {
 			if (stMap.memberList[i].id == doc.id) {
@@ -227,6 +228,7 @@ wwm.room = (function(){
 		}
 	}
 	function findInfo(id) {
+		console.log('findInfo', id);
 		var info = {};
 		for (var i = 0; i < stMap.memberList.length; i++) {
 			if (id == stMap.memberList[i].id) {
@@ -238,6 +240,7 @@ wwm.room = (function(){
 		return info;
 	}
 	function ban(e) {
+		console.log('ban');
 		var banned = $(this).prev().val();
 		if (banned == stMap.maker) {
 			alert('자기 자신을 강퇴시키면 안 되겠죠?');
@@ -253,6 +256,7 @@ wwm.room = (function(){
 		});
 	}
 	function changeTitle(e) {
+		console.log('changeTitle');
 		var title = $(this).prev().val();
 		var titlePromise = wwm.model.changeTitle(e.data.rid, title);
 		titlePromise.done(function(res) {
@@ -265,6 +269,7 @@ wwm.room = (function(){
 		});
 	}
 	function changeLimit(e) {
+		console.log('changeLiimit');
 		var number = $(this).prev().val();
 		if (number < current) {
 			alert('현재 사람이 설정한 수보다 많습니다.');
@@ -280,6 +285,7 @@ wwm.room = (function(){
 		});
 	}
 	function onClickDay() {
+		console.log('onClickDay');
 		var day = this.cellIndex - 1;
 		var arr;
 		if (stMap.current === 'day') {
@@ -301,6 +307,7 @@ wwm.room = (function(){
 		}
 	}
 	function onClickTime() {
+		conosle.log('onClickTime');
 		var time = this.parentNode.rowIndex - 1;
 		var arr;
 		if (stMap.current === 'day') {
@@ -322,6 +329,7 @@ wwm.room = (function(){
 		}
 	}
 	function showAdminMenu() {
+		console.log('showAdminMenu');
 		var $this = $(this);
 		if ($this.hasClass('opened')) {				
 			$this.removeClass('opened');
@@ -332,6 +340,7 @@ wwm.room = (function(){
 		}
 	}
 	function showDayException() {
+		console.log('showDayException');
 		var $this = $(this);
 		if ($this.hasClass('opened')) {				
 			$this.removeClass('opened');
@@ -342,6 +351,7 @@ wwm.room = (function(){
 		}
 	}
 	function showTimeException() {
+		console.log('showTimeexception');
 		var $this = $(this);
 		if ($this.hasClass('opened')) {
 			$this.removeClass('opened');
@@ -352,6 +362,7 @@ wwm.room = (function(){
 		}
 	}
 	function deleteRoom(e) {
+		console.log('deleteRoom', e.data.rid);
 		var rid = e.data.rid;
 		var deletePromise = wwm.model.deleteRoom(rid, userInfo.id);
 		deletePromise.done(function(res) {
@@ -365,6 +376,7 @@ wwm.room = (function(){
 		});
 	}
 	function onClickCell() {
+		console.log('onclickCell');
 		// 어레이를 발송
 		var arr, cell;
 		if (stMap.current === 'day') {
@@ -386,6 +398,7 @@ wwm.room = (function(){
 		}
 	}
 	function excludeDay(e) {
+		console.log('excludeDay');
 		// 해당일에 대한 어레이를 발송
 		e.stopPropagation();
 		alert($(this).index());
@@ -403,6 +416,7 @@ wwm.room = (function(){
 		}
 	}
 	function excludeTime(e) {
+		conosle.log('excludeTime');
 		// 해당 시간에 대한 어레이를 발송
 		e.stopPropagation();
 		alert($(this).index());
@@ -444,10 +458,12 @@ wwm.room = (function(){
 		} // not after
 	}
 	function goBack(e) {
+		console.log('goBack', e.data.rid);
 		socket.emit('out', {id: stMap.myInfo.id, rid: e.data.rid});
 		wwm.lobby.initModule(jqMap.$con);
 	}
 	function quit(e) {
+		console.log('quit', e.data.rid);
 		if (confirm('혼자 있을 때 방을 나가면 방이 사라집니다.그래도 나가시겠습니까?')) {
 			wwm.model.deleteroom(e.data.rid, stMap.myInfo.id);
 			return;
@@ -458,15 +474,18 @@ wwm.room = (function(){
 		}
 	}
 	function changeCurrentNumber(gap) {
+		console.log('changeCurrentNumber', gap);
 		stMap.current += gap;
 		jqMap.$current.text(stMap.current);		
 	}
 	function changeTotalNumber(num) {
+		console.log('changeTotalNumber', num);
 		stMap.total = number;
 		jqMap.$total.text(number);
 	}
 	function sendChat() {
 		var text = $(this).prev('#chatbox').val();
+		console.log('sendChat', stMap.myInfo.id, text);		
 		socket.emit('chat', {
 			id: stMap.myInfo.id,
 			name: stMap.myInfo.name,
@@ -474,6 +493,7 @@ wwm.room = (function(){
 		});
 	}
 	function refresh(e) {
+		console.log('refresh', stMap.rid);
 		$.post('/roominfo/' + stMap.rid).done(function(res) {
 			stMap.day =  res[0].day ? res[0].day : stMap.day;
 			stMap.night = res[0].night ? res[0].night : stMap.night;
@@ -484,6 +504,7 @@ wwm.room = (function(){
 		});
 	}
 	function confirm(e) {
+		console.log('confirm', e.data);
 		var data = e.data;
 		if (stMap.myInfo.confirm) { //이미 confirm했으면.
 			data.bool = false;
@@ -506,21 +527,25 @@ wwm.room = (function(){
 		});
 	}
 	function toDay() {
+		console.log('toDay', stMap.current);
 		stMap.current = 'day';
 		renderTable(stMap.current);
 		jqMap.$night.css('background', 'white');
 		jqMap.$day.css('background', 'gray');
 	}
 	function toNight() {
+		console.log('toNight', stMap.current);
 		stMap.current = 'night';
 		renderTable(stMap.current);
 		jqMap.$day.css('background', 'white');
 		jqMap.$night.css('background', 'gray');
 	}
 	function toConfirmPage() {
+		console.log('toConfirmPage', stMap);
 		wwm.confirm.initModule(stMap);
 	}
 	function initModule(doc, status) {
+		console.log('room initModule', status);
 		// docs 정보를 방 모듈에 입력.
 		stMap.title = doc.title;
 		stMap.current = stMap.memberList.length;

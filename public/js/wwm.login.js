@@ -98,7 +98,6 @@ wwm.login = (function () {
 	function initModule($con) {
 		$con.html($('#wwm-login').html());
 		setJqMap($con);
-		showLogo();
 		wwm.showSVGLogo(jqMap.$logo, 300);
 		jqMap.$kakaoLogin.on({
 			click: kakaoLogin,

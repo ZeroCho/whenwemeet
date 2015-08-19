@@ -139,6 +139,7 @@ wwm.lobby = (function (){
 			});
 	}
 	function refreshList() {
+		console.log('refreshlist');
 		getList();
 	}
 	function setJqMap($con) {
