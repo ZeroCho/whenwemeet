@@ -170,6 +170,42 @@ wwm.lobby = (function (){
 				jqMap.$searchroomBtn.click(onSearchRoom);
 				jqMap.$logout.click(logout);
 				jqMap.$refresh.click(refreshList);
+				socket.on('titleChanged', function(data) {
+					var $rooms = $('.room');
+					var rid = $rooms.map(function(idx, item) {
+						$(item).data('rid');
+					}).get();
+					for (var i = 0; i < rid.length; i++) {
+						if (data.rid === rid[i]) {
+							$rooms.eq(i).find('.title').text(data.title);
+							break;
+						}
+					}
+				});
+				socket.on('currentChanged', function(data) {
+					var $rooms = $('.room');
+					var rid = $rooms.map(function(idx, item) {
+						$(item).data('rid');
+					}).get();
+					for (var i = 0; i < rid.length; i++) {
+						if (data.rid === rid[i]) {
+							$rooms.eq(i).find('.current').text(data.number);
+							break;
+						}
+					}	
+				});
+				socket.on('limitChanged', function(data) {
+					var $rooms = $('.room');
+					var rid = $rooms.map(function(idx, item) {
+						$(item).data('rid');
+					}).get();
+					for (var i = 0; i < rid.length; i++) {
+						if (data.rid === rid[i]) {
+							$rooms.eq(i).find('.total').text(data.number);
+							break;
+						}
+					}
+				});
 				$(document).on('click', '.room', enterRoom);
 			}
 		});
