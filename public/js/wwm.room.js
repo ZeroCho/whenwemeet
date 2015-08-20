@@ -51,7 +51,9 @@ wwm.room = (function(){
 			$chatList: $con.find('#chat-list'),
 			$confirm: $con.find('#confirm-calendar'),
 			$refresh: $con.find('#refresh-calendar'),
-			$allConfirmed: $con.find('#all-confirmed')
+			$allConfirmed: $con.find('#all-confirmed'),
+			$kakaoInvite: $con.find('#kakao-invite'),
+			$fbInvite: $con.find('#fb-invite')
 		};
 	}
 	function createArray(length) {
@@ -546,6 +548,28 @@ wwm.room = (function(){
 		console.log('toConfirmPage', stMap);
 		wwm.confirm.initModule(stMap);
 	}
+	function kakaoInvite() {
+		Kakao.Link.createTalkLinkButton({
+			container: '#kakao-invite',
+			label: '카카오링크 샘플에 오신 것을 환영합니다.',
+			image: {
+				src: 'http://dn.api1.kage.kakao.co.kr/14/dn/btqaWmFftyx/tBbQPH764Maw2R6IBhXd6K/o.jpg',
+				width: '300',
+				height: '200'
+			},
+			webButton: {
+				text: '우리 언제 만나',
+				url: 'http://whenwemeet.herokuapp.com' // The URLs domain should be configured in app settings.
+			},
+			appButton: {
+				text: '우리 언제 만나'
+			},
+			fail: function() {
+				alert('KakaoLink is currently only supported in iOS and Android platforms.');
+			}
+		});
+	}
+	function fbInvite() {}
 	function initModule(doc, status) {
 		console.log('room initModule', status);
 		// docs 정보를 방 모듈에 입력.
@@ -708,6 +732,8 @@ wwm.room = (function(){
 			jqMap.$refresh.click(refresh);
 			jqMap.$allConfirmed.click(toConfirmPage);
 			jqMap.$quit.click({id: stMap.myInfo.id, rid: stMap.rid}, quit);
+			jqMap.$kakaoInvite.click(kakaoInvite);
+			jqMap.$fbInvite.click(fbInvite);
 		});
 	}
 	
