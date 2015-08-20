@@ -263,8 +263,8 @@
 		<footer id="room-footer">
 			<div id="my-menu">				
 				<div id="admin-menu">
-					{~lb}?admin{~rb}
 					<ul>
+						{~lb}?admin{~rb}
 						<li id="ban-people">
 							<label for="ban-member-list" class="sr-only">현재 참여자</label>
 							<select id="ban-member-list">
@@ -279,15 +279,19 @@
 							인원수 조정 <input id="current-people-number" value="{~lb}number{~rb}"/><button id="change-number-btn">변경</button>
 						</li>
 						<li id="explode-room">방 폭파</li>
-						<li id="invite">초대장보내기</li>
+						{~lb}/admin{~rb}
+						<li id="invite">
+							초대장 보내기
+							<img src="/kakaolink_btn_medium.png" id="kakao-invite"/>
+							<img id="fb-invite"/>
+						</li>
 					</ul>
+					{~lb}?admin{~rb}
 					<button>관리자 메뉴</button>
 					{~lb}:else{~rb}
-					<ul><li id="invite">초대장보내기</li></ul>
 					<button>초대</button>
 					{~lb}/admin{~rb}
 				</div>
-				
 				<div id="day-exception">
 					<ul>
 						<li id="not-mon">월요일은 안 돼요</li>
@@ -326,15 +330,16 @@
 		</footer>
 	</script>
 	<script type="text/html" id="wwm-confirm">
-		<header>결과</header>
-		<main>
+		<header id="confirm-header">결과</header>
+		<main id="confirm-main">
 			<div id="result"></div>
 			<div id="result-to-sns">
-				<div id="result-to-kakao">카카오</div>
-				<div id="result-to-fb">페북</div>
+				결과 보내기
+				<div id="result-to-kakao"><img src="/kakaolink_btn_medium.png"/></div>
+				<div id="result-to-fb"><img src=""/>페북</div>
 			</div>
 		</main>
-		<footer>
+		<footer id="confirm-footer">
 			<button id="to-lobby">로비</button>
 			<button id="to-room">방으로</button>
 		</footer>
