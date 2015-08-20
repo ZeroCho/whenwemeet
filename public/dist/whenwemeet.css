@@ -79,40 +79,6 @@ li {
 	z-index: 0;
 	top: 0;
 }
-#logo {
-	text-align: center; height: 100%;
-}
-#logo svg {
-	width: 300px;
-}
-svg {
-	position: relative;
-	top: 50%;
-	transform: translateY(-50%); 
-	margin: 0 auto;
-	display: inline-block;
-}
-svg .triangle {
-	-webkit-filter: drop-shadow(5px 5px 3px #ccc);
-	filter: drop-shadow(5px 5px 3px #ccc);
-}
-svg .triangle-0 { color: 'yellow'; }
-svg .triangle-1 { color: 'cyan'; }
-svg .triangle-2 { color: 'magenta'; }
-svg .triangle-3 { color: 'greenyellow'; }
-#login {
-	position: absolute;
-	bottom: 30px;
-	width: 100%;
-	text-align: center;
-}
-#login-logo {
-	position: relative;
-	height: 70%;
-}
-#fb-login-btn, #kakao-login-btn {
-	cursor: pointer;
-}
 #modal {
 	position: absolute;
 	top: 0;
@@ -122,11 +88,48 @@ svg .triangle-3 { color: 'greenyellow'; }
 	z-index: 10;
 	background: white;
 }
+#logo {
+	text-align: center; 
+	height: 100%;
+}
+#logo svg {
+	width: 300px;
+}
+svg {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+svg .triangle {
+	-webkit-filter: drop-shadow(5px 7px 2px #aaa);
+	filter: drop-shadow(5px 7px 2px #aaa);
+}
+svg .triangle-0 { fill: yellow; }
+svg .triangle-1 { fill: cyan; }
+svg .triangle-2 { fill: magenta; }
+svg .triangle-3 { fill: greenyellow; }
+
+#login-logo {
+	height: 70%;
+	text-align: center;
+}
+
+#login {
+	position: absolute;
+	bottom: 30px;
+	width: 100%;
+	text-align: center;
+}
+#fb-login-btn, #kakao-login-btn {
+	cursor: pointer;
+}
+
 #lobby-header {
 	text-align: center;
 	padding: 10px;
 	position: relative;
 }
+
 #logout-btn {
 	position: absolute;
 	right: 0;
