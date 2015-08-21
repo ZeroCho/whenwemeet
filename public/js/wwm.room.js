@@ -574,7 +574,6 @@ wwm.room = (function(){
 		console.log('room initModule', status);
 		// docs 정보를 방 모듈에 입력.
 		stMap.title = doc.title;
-		stMap.current = stMap.memberList.length;
 		stMap.total = doc.number;
 		stMap.rid = doc.rid;
 		stMap.maker = doc.maker;
@@ -589,6 +588,7 @@ wwm.room = (function(){
 		}
 		// 내 정보를 입력.
 		stMap.memberList = Array.isArray(doc.members) ? doc.members : JSON.parse(doc.members);
+		stMap.current = stMap.memberList.length;
 		for (var i = 0; i < stMap.memberList.length; i++) {
 			if (stMap.memberList[i].id == userInfo.id) {
 				stMap.myInfo.personColor = i;
