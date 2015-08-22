@@ -39,6 +39,7 @@ wwm.room = (function(){
 			$night: $con.find('#night'),
 			$back: $con.find('#room-back'),
 			$quit: $con.find('#quit'),
+			$myMenu: $con.find('#my-menu'),
 			$admin: $con.find('#admin-menu'),
 			$dayExp: $con.find('#day-exception'),
 			$notDay: $con.find('#day-exception').find('li'),
@@ -225,7 +226,8 @@ wwm.room = (function(){
 		console.log(alreadyMember);
 		if (alreadyMember) {
 			jqMap.$memberList.find('[data-id=' + doc.id + ']').find('.online').text('온라인');		
-		} else {			
+		} else {
+			jqMap.$banList.append('<option value="' + data.id + '">' + findInfo(data.id).name + '</option>');
 			jqMap.$memberList.find('ul').append('<li data-id="' + doc.id + '"><span class="online">온라인</span>&nbsp;<span class="' + findInfo(id).color + '-text">' + doc.name + '</span><span class="chat"></span></li>');
 		}
 	}
@@ -333,6 +335,7 @@ wwm.room = (function(){
 	function showAdminMenu() {
 		console.log('showAdminMenu');
 		var $this = $(this);
+		jqMap.$myMenu.find('ul').hide();
 		if ($this.hasClass('opened')) {				
 			$this.removeClass('opened');
 			$this.find('ul').hide();
@@ -344,6 +347,7 @@ wwm.room = (function(){
 	function showDayException() {
 		console.log('showDayException');
 		var $this = $(this);
+		jqMap.$myMenu.find('ul').hide();
 		if ($this.hasClass('opened')) {				
 			$this.removeClass('opened');
 			$this.find('ul').hide();
@@ -355,6 +359,7 @@ wwm.room = (function(){
 	function showTimeException() {
 		console.log('showTimeexception');
 		var $this = $(this);
+		jqMap.$myMenu.find('ul').hide();
 		if ($this.hasClass('opened')) {
 			$this.removeClass('opened');
 			$this.find('ul').hide();
@@ -637,9 +642,11 @@ wwm.room = (function(){
 				for (var i = 0; i < stMap.memberList.length; i++) {
 					if (stMap.memberList[i].id == id) {
 						stMap.memberList.splice(i, 1);
+						break;
 					}
 				}
 				console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
+				jqMap.$banList.find('[value=' + id + ']').remove();
 				changeCurrentNumber(-1);
 				showMembers();
 				console.log('socketquit', stMap.onlineList, stMap.memberList);
@@ -648,7 +655,6 @@ wwm.room = (function(){
 				console.log('socket newmember', data);
 				socket.emit('uptodateArr', {sid: data.socket, day: stMap.dayArray, night: stMap.nightArray});	
 				changeCurrentNumber(1);
-				jqMap.$banList.append('<option value="' + data.id + '">' + findInfo(data.id).name + '</option>');
 				newMember(data);
 			});
 			socket.on('uptodateArr', function(data) {
