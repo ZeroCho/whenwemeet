@@ -128,8 +128,8 @@ wwm.lobby = (function (){
 		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name})
 			.done(function(res) {
 				console.log(res);
-				data.day = res[0].day;
-				data.night = res[0].night;
+				data.day = res[0].day || null;
+				data.night = res[0].night || null;
 				wwm.room.initModule(data, 'enter');	
 			})
 			.fail(function(err) {
