@@ -19,8 +19,8 @@ wwm.lobby = (function (){
 				var $room = $('<div/>')
 					.addClass('room')
 					.attr({
-						'data-rid': room.rid,
-						'data-maker': room.maker,
+						'data-rid': room.rid.toString(),
+						'data-maker': room.maker.toString(),
 						'data-members': JSON.stringify(room.members)
 					})
 					.append($title)
