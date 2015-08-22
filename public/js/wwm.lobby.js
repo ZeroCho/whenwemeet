@@ -52,7 +52,7 @@ wwm.lobby = (function (){
 		});
 	}
 	function onSearchRoom () {
-		var query = $(this).prev().val();
+		var query = $(this).prev().val().trim();
 		console.log('query', query);
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
@@ -121,9 +121,12 @@ wwm.lobby = (function (){
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
 		if ($this.has('.locked').length) {
-			pw = prompt('비밀번호');
+			pw = prompt('비밀번호', '');
 		} else if ($this.has('.unlocked').length) {
 			pw = 'master';
+		}
+		if (pw.trim() === '') {
+			return;
 		}
 		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name})
 			.done(function(res) {

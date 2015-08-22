@@ -20,9 +20,9 @@ wwm.modal = (function (){
 		var spinner = new Spinner().spin();
 		jqMap.$con.append(spinner.el);
 		var data;
-		var title = jqMap.$title.val();
+		var title = jqMap.$title.val().trim();
 		var number = jqMap.$number.val();
-		var password = jqMap.$password.val();
+		var password = jqMap.$password.val().trim();
 		var userInfo = JSON.parse(localStorage.login);
 		var maker = userInfo.id || userInfo._id;
 		if (!title) {

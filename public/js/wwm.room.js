@@ -213,6 +213,7 @@ wwm.room = (function(){
 			var member = stMap.memberList[i];
 			jqMap.$memberList.find('ul').append('<li data-id="' + member.id + '"><span class="offline">오프라인</span>&nbsp;<span class="' + cfMap.colorList[i] + '-text">' + member.name + '</span><span class="chat"></span></li>');
 		}
+		showOnline();
 	}
 	function newMember(doc) {
 		console.log('newMember', doc, doc.id, stMap.memberList);
@@ -224,11 +225,25 @@ wwm.room = (function(){
 			}
 		}
 		console.log(alreadyMember);
-		if (alreadyMember) {
-			jqMap.$memberList.find('[data-id=' + doc.id + ']').find('.online').text('온라인');		
-		} else {
+		if (!alreadyMember) {
 			jqMap.$banList.append('<option value="' + data.id + '">' + findInfo(data.id).name + '</option>');
 			jqMap.$memberList.find('ul').append('<li data-id="' + doc.id + '"><span class="online">온라인</span>&nbsp;<span class="' + findInfo(id).color + '-text">' + doc.name + '</span><span class="chat"></span></li>');
+		}
+		showOnline();
+	}
+	function showOnline() {
+		console.log('showOnline');
+		for (var i = 0; i < stMap.memberList.length; i++) {
+		 	var $list = jqMap.$memberList.find('ul').eq(i);
+			if (stMap.onlineList[i]) {
+				 if ($list.has('.offline')) {
+				 	$list.find('.offline').removeClass().addClass('.online').text('온라인');
+				 }
+			} else {
+				 if ($list.has('.online')) {
+				 	$list.find('.nline').removeClass().addClass('.offline').text('오프라인');
+				 }
+			}
 		}
 	}
 	function findInfo(id) {
@@ -566,9 +581,6 @@ wwm.room = (function(){
 				text: '우리 언제 만나',
 				url: 'http://whenwemeet.herokuapp.com' // The URLs domain should be configured in app settings.
 			},
-			appButton: {
-				text: '우리 언제 만나'
-			},
 			fail: function() {
 				alert('KakaoLink is currently only supported in iOS and Android platforms.');
 			}
@@ -605,6 +617,7 @@ wwm.room = (function(){
 				}
 			}
 		}
+		stMap.onlineList[stMap.myInfo.personColor] = true;
 		socket.emit('enter', {id: stMap.myInfo.id, rid: stMap.rid, name: stMap.myInfo.name});
 		var parser = {
 			name: stMap.myInfo.name, //유저네임
@@ -630,17 +643,20 @@ wwm.room = (function(){
 			});
 			showMembers();
 			socket.on('out', function(id) {
-				var target = stMap.onlineList.indexOf(id);
-				stMap.onlineList.splice(target, 1);
 				console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
-				jqMap.$memberList.find('[data-id=' + id + ']').find('.online').addClass('offline').removeClass('online').text('오프라인');
+				for (var i = 0; i < stMap.memberList.length; i++) {
+					if (stMap.memberList[i].id == id) {
+						stMap.onlineList[i] = false;
+						break;
+					}
+				}
+				showOnline();
 				console.log('socketout', stMap.onlineList, stMap.memberList);
 			});
 			socket.on('quit', function(id) {
-				var target = stMap.onlineList.indexOf(id);
-				stMap.onlineList.splice(target, 1);
 				for (var i = 0; i < stMap.memberList.length; i++) {
 					if (stMap.memberList[i].id == id) {
+						stMap.onlineList.splice(i, 1);
 						stMap.memberList.splice(i, 1);
 						break;
 					}
@@ -654,6 +670,7 @@ wwm.room = (function(){
 			socket.on('newMember', function(data) {
 				console.log('socket newmember', data);
 				socket.emit('uptodateArr', {sid: data.socket, day: stMap.dayArray, night: stMap.nightArray});	
+				stMap.onlineList[stMap.memberList.length] = true;
 				changeCurrentNumber(1);
 				newMember(data);
 			});
@@ -661,6 +678,8 @@ wwm.room = (function(){
 				console.log('socket uptodateArr');
 				stMap.dayArray = data.day;
 				stMap.nightArray = data.night;
+				stMap.onlineList = data.online;
+				showOnline();
 				renderTable(stMap.now);
 			});
 			socket.on('chat', function(data) {
@@ -690,6 +709,7 @@ wwm.room = (function(){
 				for (var i = 0; i < stMap.memberList.length; i++) {
 					if (banned == stMap.memberList[i].id) {
 						stMap.memberList.splice(i, 1);
+						stMap.onlineList.splice(i, 1);
 						break;
 					}
 				}
