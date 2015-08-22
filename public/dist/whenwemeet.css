@@ -116,7 +116,7 @@ svg .triangle-3 { fill: greenyellow; }
 
 #login {
 	position: absolute;
-	bottom: 30px;
+	height: 30%;
 	width: 100%;
 	text-align: center;
 }
@@ -168,6 +168,7 @@ svg .triangle-3 { fill: greenyellow; }
 	position: absolute;
 	bottom: 20px;
 	left: 10px;
+	z-index: 1;
 }
 #show-createroom-modal {
 	float: right;
