@@ -82,7 +82,7 @@ io.on('connection', function (socket) {
 	});
 	socket.on('quit', function(data) {
 		console.log('socket quit ' + data.rid + ' ' + data.id);
-		roomCollection.update({'rid': data.rid}, {$pull: {'members': {'id': data.id}}}, function(err, result) {
+		roomCollection.update({'rid': data.rid.toString()}, {$pull: {'members': {'id': data.id}}}, function(err, result) {
 			if (err) {
 				console.log('quiterror:' + err);
 			} else {
