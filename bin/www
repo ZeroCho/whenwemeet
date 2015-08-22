@@ -37,24 +37,29 @@ io.on('connection', function (socket) {
 		socket.leave(process.env.CURRENT_ROOM);
 	});
 	socket.on('busy', function(data) {
+		console.log('socket busy');
 		console.log(data);
 		io.in(process.env.CURRENT_ROOM).emit('busy', data);
 	});
 	socket.on('not-busy', function(data) {
+		console.log('socket not-busy');
 		console.log(data);
 		io.in(process.env.CURRENT_ROOM).emit('not-busy', data);
 	});
 	socket.on('chat', function(data) {
+		console.log('socket chat');
 		io.in(process.env.CURRENT_ROOM).emit('chat', data);
 	});
 	socket.on('confirmed', function(data) {
-		console.log(data.id + ' confirmed');
+		console.log(data.id + ' socket confirmed');
 		io.in(process.env.CURRENT_ROOM).emit('confirmed', data);
 	});
 	socket.on('ban', function(data) {
+		console.log('socket ban');
 		io.in(process.env.CURRENT_ROOM).emit('ban', data);
 	});
 	socket.on('enter', function(data) {
+		console.log('socket enter');
 		console.log(data);
 		console.log(process.env.MY_ID);
 		process.env.CURRENT_ROOM = data.rid;
@@ -76,20 +81,24 @@ io.on('connection', function (socket) {
 		});
 	});
 	socket.on('quit', function(data) {
+		console.log('socket quit');
 		roomCollection.update({rid: data.rid}, {$pull: {members: {id: data.id}}}, function(err, result) {
 			if (err) {
 				console.log('quiterror:' + err);
 			} else {
+				console.log('member deleted');
 				io.in(process.env.CURRENT_ROOM).emit('quit', data.id);
 				socket.leave(process.env.CURRENT_ROOM);
 			}	
 		});
 	});
 	socket.on('out', function(data) {
+		console.log('socket out');
 		io.in(process.env.CURRENT_ROOM).emit('out', data.id);
 		socket.leave(process.env.CURRENT_ROOM);
 	});
 	socket.on('explode', function(rid) {
+		console.log('socket explode');
 		socket.broadcast.to(process.env.CURRENT_ROOM).emit('explode', rid);
 	});
 });
