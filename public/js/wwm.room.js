@@ -214,7 +214,7 @@ wwm.room = (function(){
 		}
 	}
 	function newMember(doc) {
-		console.log('newMember', doc.id, stMap.memberList);
+		console.log('newMember', doc, doc.id, stMap.memberList);
 		var alreadyMember = false;
 		for (var i = 0; i < stMap.memberList.length; i++) {
 			if (stMap.memberList[i].id == doc.id) {
