@@ -2,10 +2,11 @@ wwm.shell = (function () {
 	var cfMap = {
 		$con: $('#whenwemeet'),
 		$view: $('#view'),
-		$modal: $('#modal)
+		$modal: $('#modal')
 	};
 	function onPopstate(e) {
 		var state = e.originalEvent.state;
+		console.log('onpopstate', state);
 		switch (state) {
 			case 'login':
 				wwm.login.initModule(wwm.shell.view);
@@ -13,6 +14,8 @@ wwm.shell = (function () {
 			case 'lobby':
 				wwm.lobby.initModule(wwm.shell.view);
 				break;
+			case 'room':
+				wwm.room.initModule(wwm.shell.view);
 			default:
 				wwm.shell.initModule();
 		}
@@ -74,14 +77,14 @@ wwm.shell = (function () {
 		var logged = localStorage.login && JSON.parse(localStorage.login);
 		var first = localStorage.first && JSON.parse(localStorage.first);
 		if (first) {
-			history.pushState({mod: 'intro'}, '', '/intro');
+			history.pushState({mod: 'intro'}, '', 'intro');
 			wwm.modal.initModule($('#wwm-intro').html());
 		}
 		if (logged) {
-			history.pushState({mode: 'lobby'}, '', '/lobby/' + userInfo.id);
+			history.pushState({mode: 'lobby'}, '', 'lobby/' + userInfo.id);
 			wwm.lobby.initModule(wwm.shell.view);
 		} else {
-			history.pushState({mode: 'login'}, '', '/login');
+			history.pushState({mode: 'login'}, '', 'login');
 			wwm.login.initModule(wwm.shell.view);
 		}
 		$(window).on('error', onError).on('popstate', onPopstate);
