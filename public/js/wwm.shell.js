@@ -6,8 +6,9 @@ wwm.shell = (function () {
 	};
 	function onPopstate(e) {
 		var state = e.originalEvent.state;
-		console.log('onpopstate', state);
-		switch (state) {
+		var mod = state.mod;
+		console.log('onpopstate', mod);
+		switch (mod) {
 			case 'login':
 				wwm.login.initModule(wwm.shell.view);
 				break;
@@ -15,7 +16,20 @@ wwm.shell = (function () {
 				wwm.lobby.initModule(wwm.shell.view);
 				break;
 			case 'room':
-				wwm.room.initModule(wwm.shell.view);
+				$.post('/enterroom/' + state.rid, {pw: state.pw, pid: userInfo.id, name: userInfo.name})
+				.done(function(res) {
+					res[0].title = state.title;
+					res[0].current = state.current;
+					res[0].number = state.number;
+					res[0].maker = state.maker;
+					res[0].members = state.members;
+					console.log('enterroompostresult', res[0]);
+					wwm.room.initModule(res[0], 'enter');	
+				})
+				.fail(function(err) {
+					alert('비밀번호가 틀렸습니다.');
+				});
+				break;
 			default:
 				wwm.shell.initModule();
 		}

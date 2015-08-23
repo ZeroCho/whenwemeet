@@ -134,7 +134,7 @@ wwm.lobby = (function (){
 				console.log('enterroompostresult', res[0]);
 				data.day = res[0].day || null;
 				data.night = res[0].night || null;
-				history.pushState({mod: 'room'}, '', 'room/' + data.rid);
+				history.pushState({mod: 'room', rid: data.rid, pw: pw, title: data.title, current: data.current, number: data.number, maker: data.maker, members: data.members}, '', 'room/' + data.rid);
 				wwm.room.initModule(data, 'enter');	
 			})
 			.fail(function(err) {
