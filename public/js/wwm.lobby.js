@@ -125,12 +125,13 @@ wwm.lobby = (function (){
 		} else if ($this.has('.unlocked').length) {
 			pw = 'master';
 		}
-		if (pw.trim() === '') {
+		if (pw === null || pw.trim() === '') {
+			$(spinner.el).remove();
 			return;
 		}
 		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name})
 			.done(function(res) {
-				console.log(res);
+				console.log('enterroompostresult', res[0]);
 				data.day = res[0].day || null;
 				data.night = res[0].night || null;
 				wwm.room.initModule(data, 'enter');	

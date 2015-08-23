@@ -235,13 +235,14 @@ wwm.room = (function(){
 		console.log('showOnline');
 		for (var i = 0; i < stMap.memberList.length; i++) {
 		 	var $list = jqMap.$memberList.find('ul').eq(i);
+		 	console.log('onlineList', stMap.onlineList);
 			if (stMap.onlineList[i]) {
 				 if ($list.has('.offline')) {
-				 	$list.find('.offline').removeClass().addClass('.online').text('온라인');
+				 	$list.find('.offline').toggleClass('offline online').text('온라인');
 				 }
 			} else {
 				 if ($list.has('.online')) {
-				 	$list.find('.nline').removeClass().addClass('.offline').text('오프라인');
+				 	$list.find('.online').toggleClass('online offline').text('오프라인');
 				 }
 			}
 		}
@@ -618,6 +619,7 @@ wwm.room = (function(){
 			}
 		}
 		stMap.onlineList[stMap.myInfo.personColor] = true;
+		console.log('onlineList', stMap.onlineList);
 		socket.emit('enter', {id: stMap.myInfo.id, rid: stMap.rid, name: stMap.myInfo.name});
 		var parser = {
 			name: stMap.myInfo.name, //유저네임

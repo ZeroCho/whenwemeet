@@ -123,6 +123,8 @@ wwm.model = (function () {
 	function initModule() {
 		if (localStorage.login) {
 			window.userInfo = JSON.parse(localStorage.login);
+		} else {
+			window.userInfo = {};
 		}
 	}
 	return {
