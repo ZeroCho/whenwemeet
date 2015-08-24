@@ -17,18 +17,18 @@ wwm.shell = (function () {
 				break;
 			case 'room':
 				$.post('/enterroom/' + state.rid, {pw: state.pw, pid: userInfo.id, name: userInfo.name})
-				.done(function(res) {
-					res[0].title = state.title;
-					res[0].current = state.current;
-					res[0].number = state.number;
-					res[0].maker = state.maker;
-					res[0].members = state.members;
-					console.log('enterroompostresult', res[0]);
-					wwm.room.initModule(res[0], 'enter');	
-				})
-				.fail(function(err) {
-					alert('비밀번호가 틀렸습니다.');
-				});
+					.done(function(res) {
+						res[0].title = state.title;
+						res[0].current = state.current;
+						res[0].number = state.number;
+						res[0].maker = state.maker;
+						res[0].members = state.members;
+						console.log('enterroompostresult', res[0]);
+						wwm.room.initModule(res[0], 'enter');	
+					})
+					.fail(function(err) {
+						alert('비밀번호가 틀렸습니다.');
+					});
 				break;
 			default:
 				wwm.shell.initModule();
@@ -95,13 +95,14 @@ wwm.shell = (function () {
 			wwm.modal.initModule($('#wwm-intro').html());
 		}
 		if (logged) {
-			history.pushState({mode: 'lobby'}, '', 'lobby/' + userInfo.id);
+			history.pushState({mode: 'lobby', id: userInfo.id}, '', 'lobby/' + userInfo.id);
 			wwm.lobby.initModule(wwm.shell.view);
 		} else {
 			history.pushState({mode: 'login'}, '', 'login');
 			wwm.login.initModule(wwm.shell.view);
 		}
-		$(window).on('error', onError).on('popstate', onPopstate);
+		window.onerror = onError;
+		$(window).on('popstate', onPopstate);
 	}
 
 	return {
