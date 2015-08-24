@@ -96,18 +96,18 @@ wwm.shell = (function () {
 	function initModule() {
 		console.log('login', localStorage.login);
 		console.log('first', localStorage.first);
+		window.onerror = onError;
+		$(window).on('popstate', onPopstate);
 		var logged = localStorage.login && JSON.parse(localStorage.login);
 		var first = localStorage.first && JSON.parse(localStorage.first);
 		if (first) {
-			history.pushState({mod: 'intro'}, '', 'intro');
+			history.pushState({mod: 'intro'}, '', '/intro');
 		}
 		if (logged) {
-			history.pushState({mode: 'lobby', id: userInfo.id}, '', 'lobby/' + userInfo.id);
+			history.pushState({mode: 'lobby', id: userInfo.id}, '', '/lobby/' + userInfo.id);
 		} else {
-			history.pushState({mode: 'directlogin'}, '', 'login');
+			history.pushState({mode: 'directlogin'}, '', '/login');
 		}
-		window.onerror = onError;
-		$(window).on('popstate', onPopstate);
 	}
 
 	return {

@@ -233,16 +233,20 @@ wwm.room = (function(){
 	}
 	function showOnline() {
 		console.log('showOnline');
+		console.log('onlineList', stMap.onlineList);		
 		for (var i = 0; i < stMap.memberList.length; i++) {
 		 	var $list = jqMap.$memberList.find('ul').eq(i);
-		 	console.log('onlineList', stMap.onlineList);
 			if (stMap.onlineList[i]) {
 				 if ($list.has('.offline')) {
 				 	$list.find('.offline').toggleClass('offline online').text('온라인');
+				 } else {
+				 	$list.find('.online').text('온라인');
 				 }
 			} else {
 				 if ($list.has('.online')) {
 				 	$list.find('.online').toggleClass('online offline').text('오프라인');
+				 } else {
+				 	$list.find('.offline').text('오프라인');
 				 }
 			}
 		}
