@@ -101,10 +101,7 @@ wwm.lobby = (function (){
 		});
 	}
 	function logout() {
-		delete window.userInfo;
-		localStorage.removeItem('login');
-		localStorage.removeItem('loginType');
-		wwm.login.initModule(jqMap.$con);
+		history.pushState({mod: 'logout'}, '', '/');
 	}
 	function enterRoom() {
 		var $this = $(this);
@@ -131,11 +128,10 @@ wwm.lobby = (function (){
 		}
 		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name})
 			.done(function(res) {
-				console.log('enterroompostresult', res[0]);
-				data.day = res[0].day || null;
-				data.night = res[0].night || null;
-				history.pushState({mod: 'room', rid: data.rid, pw: pw, title: data.title, current: data.current, number: data.number, maker: data.maker, members: data.members}, '', 'room/' + data.rid);
-				wwm.room.initModule(data, 'enter');	
+				console.log('enterroompostresult');
+				data.day = res.day || null;
+				data.night = res.night || null;
+				history.pushState({mod: 'room', data: data}, '', 'room/' + data.rid);
 			})
 			.fail(function(err) {
 				alert('비밀번호가 틀렸습니다.');

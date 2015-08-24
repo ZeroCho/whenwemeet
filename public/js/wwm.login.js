@@ -7,11 +7,7 @@ wwm.login = (function () {
 			alert('가입 오류 발생!');
 			console.log(err.responseText);
 		});
-		window.userInfo = res;
-		console.log(userInfo);
-		localStorage.login = JSON.stringify(res);
-		localStorage.loginType = 'localhost';
-		wwm.lobby.initModule(jqMap.$con);
+		history.pushState({mod: 'login', data: res, type: 'local'}, '', '/lobby/123456789'});
 	}
 	function localhost2Login() {
 		var res = {id: "987654321", name: '테스터'};
@@ -20,10 +16,7 @@ wwm.login = (function () {
 			alert('가입 오류 발생!');
 			console.log(err.responseText);
 		});
-		window.userInfo = res;
-		localStorage.login = JSON.stringify(res);
-		localStorage.loginType = 'localhost';
-		wwm.lobby.initModule(jqMap.$con);
+		history.pushState({mod: 'login', data: res, type: 'local2'}, '', '/lobby/987654321');
 	}
 	function kakaoLogin() {
 		Kakao.Auth.login({
@@ -42,10 +35,7 @@ wwm.login = (function () {
 							alert('가입 오류 발생!');
 							console.log(err.responseText);
 						});
-						window.userInfo = res;
-						localStorage.login = JSON.stringify(res);
-						localStorage.loginType = 'kakao';
-						wwm.lobby.initModule(jqMap.$con);
+						history.pushState({mod: 'login', data: res, type: 'kakao'}, '', '/lobby/' + res.id);
 					},
 					fail: function (error) {
 						alert(JSON.stringify(error));
@@ -72,10 +62,7 @@ wwm.login = (function () {
 						alert('가입 오류 발생!');
 						console.log(err.responseText);
 					});
-					window.userInfo = res;
-					localStorage.login = JSON.stringify(res);
-					localStorage.loginType = 'facebook';
-					wwm.lobby.initModule(jqMap.$con);
+					history.pushState({mod: 'login', data: res, type: 'facebook'}, '', '/lobby/' + res.id);
 				});
 			} else if (res.status === 'not_authorized') {
 				// The person is logged into Facebook, but not your app.

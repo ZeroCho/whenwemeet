@@ -150,16 +150,16 @@ router.post('/enterroom/:rid', function(req, res) {
 	console.log('rid: ' + rid + ', pw: ' + pw);
 	var cursor;
 	if (pw === 'master') {
-		cursor = roomCollection.find({rid: rid});
+		cursor = roomCollection.findOne({rid: rid});
 	} else {
-		cursor = roomCollection.find({rid: rid, password: pw});
+		cursor = roomCollection.findOne({rid: rid, password: pw});
 	}
-	cursor.toArray(function(err, docs) {
+	cursor.toArray(function(err, doc) {
 		if (err) {
 			console.log('enterroomerror:' + err);
 		} else {
-			for (var i = 0; i < docs[0].members.length; i++) {
-				if (docs[0].members[i].id == pid) {
+			for (var i = 0; i < doc.members.length; i++) {
+				if (doc.members[i].id == pid) {
 					alreadyMember = true;
 					break;
 				}
@@ -167,14 +167,14 @@ router.post('/enterroom/:rid', function(req, res) {
 			if (alreadyMember) {
 				process.env.CURRENT_ROOM = rid;
 				console.log('enterroom result');
-				console.log(docs);
-				res.send(docs);
+				console.log(doc);
+				res.send(doc);
 			} else {
 				roomCollection.update({rid: rid}, {$push: {members: {id: pid, name: name, confirm: false}}}, function(err, result) {
 					if (err) {
 						console.log('enterroomaddmembererror:' + err);
 					} else {
-						res.send(result);
+						res.send(doc);
 					}
 				});
 			}			

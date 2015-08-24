@@ -10,25 +10,30 @@ wwm.shell = (function () {
 		console.log('onpopstate', mod);
 		switch (mod) {
 			case 'login':
+				window.userInfo = state.data;
+				localStorage.login = JSON.stringify(state.data);
+				localStorage.loginType = state.type;
+				wwm.lobby.initModule(wwm.shell.view);
+				break;
+			case 'directlogin':
 				wwm.login.initModule(wwm.shell.view);
 				break;
 			case 'lobby':
 				wwm.lobby.initModule(wwm.shell.view);
 				break;
+			case 'intro':
+				wwm.modal.initModule($('#wwm-intro').html());
+				break;
+			case 'logout':
+				delete window.userInfo;
+				localStorage.removeItem('login');
+				localStorage.removeItem('loginType');
+				wwm.login.initModule(wwm.shell.view);
+				break;
 			case 'room':
-				$.post('/enterroom/' + state.rid, {pw: state.pw, pid: userInfo.id, name: userInfo.name})
-					.done(function(res) {
-						res[0].title = state.title;
-						res[0].current = state.current;
-						res[0].number = state.number;
-						res[0].maker = state.maker;
-						res[0].members = state.members;
-						console.log('enterroompostresult', res[0]);
-						wwm.room.initModule(res[0], 'enter');	
-					})
-					.fail(function(err) {
-						alert('비밀번호가 틀렸습니다.');
-					});
+				wwm.room.initModule(state.data, 'enter');
+				break;
+			case 'confirm':
 				break;
 			default:
 				wwm.shell.initModule();
@@ -92,14 +97,11 @@ wwm.shell = (function () {
 		var first = localStorage.first && JSON.parse(localStorage.first);
 		if (first) {
 			history.pushState({mod: 'intro'}, '', 'intro');
-			wwm.modal.initModule($('#wwm-intro').html());
 		}
 		if (logged) {
 			history.pushState({mode: 'lobby', id: userInfo.id}, '', 'lobby/' + userInfo.id);
-			wwm.lobby.initModule(wwm.shell.view);
 		} else {
-			history.pushState({mode: 'login'}, '', 'login');
-			wwm.login.initModule(wwm.shell.view);
+			history.pushState({mode: 'directlogin'}, '', 'login');
 		}
 		window.onerror = onError;
 		$(window).on('popstate', onPopstate);
