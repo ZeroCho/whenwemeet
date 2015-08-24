@@ -216,7 +216,7 @@ wwm.lobby = (function (){
 		});
 	}
 	return {
-		initModule: initModules,
+		initModule: initModule,
 		showSearchResult: showSearchResult
 	};
 }());
