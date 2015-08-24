@@ -24,6 +24,9 @@ wwm.shell = (function () {
 			case 'intro':
 				wwm.modal.initModule($('#wwm-intro').html());
 				break;
+			case 'search':
+				wwm.lobby.showSearchResult(state.data);
+				break;
 			case 'logout':
 				delete window.userInfo;
 				localStorage.removeItem('login');

@@ -56,9 +56,24 @@ wwm.lobby = (function (){
 		console.log('query', query);
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
-		var $frag = $(document.createDocumentFragment());
 		var searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
+			history.pushState({mod: 'search', data: res}, '', '/search/' + query);
+		});
+		searchPromise.fail(function (err) {
+			if (err === 'no_room') {
+				jqMap.$list.html('검색 결과가 없습니다.');
+				return;
+			}
+			console.log(err);
+			jqMap.$list.html(err.responseText);
+		});
+		searchPromise.always(function() {
+			$(spinner.el).remove();
+		});
+	}
+	function showSearchResult(res) {
+		var $frag = $(document.createDocumentFragment());
 			for (var i = 0; i < res.length; i++) {
 				var room = res[i];
 				var $title = $('<div/>').addClass('title').text(room.title);
@@ -87,18 +102,6 @@ wwm.lobby = (function (){
 				$frag.append($room);
 			}
 			jqMap.$list.html($frag);
-		});
-		searchPromise.fail(function (err) {
-			if (err === 'no_room') {
-				jqMap.$list.html('검색 결과가 없습니다.');
-				return;
-			}
-			console.log(err);
-			jqMap.$list.html(err.responseText);
-		});
-		searchPromise.always(function() {
-			$(spinner.el).remove();
-		});
 	}
 	function logout() {
 		history.pushState({mod: 'logout'}, '', '/');
@@ -131,7 +134,7 @@ wwm.lobby = (function (){
 				console.log('enterroompostresult');
 				data.day = res.day || null;
 				data.night = res.night || null;
-				history.pushState({mod: 'room', data: data}, '', 'room/' + data.rid);
+				history.pushState({mod: 'room', data: res}, '', '/room/' + data.rid);
 			})
 			.fail(function(err) {
 				alert('비밀번호가 틀렸습니다.');
@@ -213,6 +216,7 @@ wwm.lobby = (function (){
 		});
 	}
 	return {
-		initModule: initModule
+		initModule: initModules,
+		showSearchResult: showSearchResult
 	};
 }());

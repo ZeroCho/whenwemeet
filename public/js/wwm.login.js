@@ -6,8 +6,9 @@ wwm.login = (function () {
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');
 			console.log(err.responseText);
+			return;
 		});
-		history.pushState({mod: 'login', data: res, type: 'local'}, '', '/lobby/123456789'});
+		history.pushState({mod: 'login', data: res, type: 'local'}, '', '/lobby/123456789');
 	}
 	function localhost2Login() {
 		var res = {id: "987654321", name: '테스터'};
@@ -15,6 +16,7 @@ wwm.login = (function () {
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');
 			console.log(err.responseText);
+			return;
 		});
 		history.pushState({mod: 'login', data: res, type: 'local2'}, '', '/lobby/987654321');
 	}
@@ -34,6 +36,7 @@ wwm.login = (function () {
 						joinPromise.fail(function(err){
 							alert('가입 오류 발생!');
 							console.log(err.responseText);
+							return;
 						});
 						history.pushState({mod: 'login', data: res, type: 'kakao'}, '', '/lobby/' + res.id);
 					},
@@ -61,6 +64,7 @@ wwm.login = (function () {
 					joinPromise.fail(function(err){
 						alert('가입 오류 발생!');
 						console.log(err.responseText);
+						return;
 					});
 					history.pushState({mod: 'login', data: res, type: 'facebook'}, '', '/lobby/' + res.id);
 				});
