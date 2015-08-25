@@ -486,6 +486,7 @@ wwm.room = (function(){
 	}
 	function goBack(e) {
 		console.log('goBack', e.data.rid);
+		history.pushState({mod: 'lobby'}, '', '/lobby/' + stMap.myInfo.id);
 		socket.emit('out', {id: stMap.myInfo.id, rid: e.data.rid});
 		wwm.lobby.initModule(jqMap.$con);
 	}
@@ -498,6 +499,7 @@ wwm.room = (function(){
 			return;
 		}
 		if (confirm('정말 나가시겠습니까? 잠시 나가는 거면 목록 버튼을 클릭하세요.')) {
+			history.replaceState({mod: 'lobby'}, '', '/lobby/' + stMap.myInfo.id);
 			socket.emit('quit', {id: stMap.myInfo.id, rid: e.data.rid});
 			wwm.lobby.initModule(jqMap.$con);
 		}
