@@ -16,6 +16,7 @@ wwm.lobby = (function (){
 				var $current = $('<span/>').addClass('current').text(room.members.length);
 				var $total = $('<span/>').addClass('total').text(room.number);
 				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
+				var $result = $('<div/>').addClass('result');
 				var $room = $('<div/>')
 					.addClass('room')
 					.attr({
@@ -24,7 +25,8 @@ wwm.lobby = (function (){
 						'data-members': JSON.stringify(room.members)
 					})
 					.append($title)
-					.append($number);
+					.append($number)
+					.append($result);
 				if (room.password) {
 					var $password = $('<div/>').addClass('locked').html('<i class="fa fa-lock"></i>');
 					for (var j = 0; j < room.members.length; j++) {
@@ -59,6 +61,7 @@ wwm.lobby = (function (){
 		var searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
 			history.pushState({mod: 'search', data: res}, '', '/search/' + query);
+			showSearchResult(res);
 		});
 		searchPromise.fail(function (err) {
 			if (err === 'no_room') {
@@ -80,6 +83,7 @@ wwm.lobby = (function (){
 				var $current = $('<span/>').addClass('current').text(room.members.length);
 				var $total = $('<span/>').addClass('total').text(room.number);
 				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
+				var $reseult = $('<div/>').addClass('result');
 				var $room = $('<div/>')
 					.addClass('room')
 					.attr({
@@ -88,7 +92,8 @@ wwm.lobby = (function (){
 						'data-members': JSON.stringify(room.members)
 					})
 					.append($title)
-					.append($number);
+					.append($number)
+					.append($result);
 				if (room.password) {
 					var $password = $('<div/>').addClass('locked').html('<i class="fa fa-lock"></i>');
 					for (var j = 0; j < room.members.length; j++) {
@@ -105,6 +110,10 @@ wwm.lobby = (function (){
 	}
 	function logout() {
 		history.pushState({mod: 'logout'}, '', '/');
+		delete window.userInfo;
+		localStorage.removeItem('login');
+		localStorage.removeItem('loginType');
+		wwm.login.initModule(wwm.shell.view);
 	}
 	function enterRoom() {
 		var $this = $(this);
@@ -135,6 +144,7 @@ wwm.lobby = (function (){
 				data.day = res.day || null;
 				data.night = res.night || null;
 				history.pushState({mod: 'room', data: res}, '', '/room/' + data.rid);
+				wwm.room.initModule(res, 'enter');
 			})
 			.fail(function(err) {
 				alert('비밀번호가 틀렸습니다.');
@@ -147,6 +157,10 @@ wwm.lobby = (function (){
 		console.log('refreshlist');
 		getList();
 	}
+	function showResult() {
+		history.pushState({mod: 'confirm'}, '', '/result');
+		wwm.confirm.initModule();
+	}
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
@@ -154,7 +168,8 @@ wwm.lobby = (function (){
 			$searchroomBtn: $con.find('#searchroom-btn'),
 			$list: $con.find('#rooms'),
 			$logout: $con.find('#logout-btn'),
-			$refresh: $con.find('#refresh-list')
+			$refresh: $con.find('#refresh-list'),
+			$result: $con.find('.result')
 		};
 	}
 	function initModule($con) {
@@ -212,6 +227,7 @@ wwm.lobby = (function (){
 					}
 				});
 				$(document).on('click', '.room', enterRoom);
+				$(document).on('click', '.result', showResult);
 			}
 		});
 	}
