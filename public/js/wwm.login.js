@@ -9,6 +9,10 @@ wwm.login = (function () {
 			return;
 		});
 		history.pushState({mod: 'login', data: res, type: 'local'}, '', '/lobby/123456789');
+		window.userInfo = res;
+		localStorage.login = JSON.stringify(res);
+		localStorage.loginType = 'local';
+		wwm.lobby.initModule(wwm.shell.view);
 	}
 	function localhost2Login() {
 		var res = {id: "987654321", name: '테스터'};
@@ -19,6 +23,10 @@ wwm.login = (function () {
 			return;
 		});
 		history.pushState({mod: 'login', data: res, type: 'local2'}, '', '/lobby/987654321');
+		window.userInfo = res;
+		localStorage.login = JSON.stringify(res);
+		localStorage.loginType = 'local2';
+		wwm.lobby.initModule(wwm.shell.view);
 	}
 	function kakaoLogin() {
 		Kakao.Auth.login({
@@ -39,6 +47,10 @@ wwm.login = (function () {
 							return;
 						});
 						history.pushState({mod: 'login', data: res, type: 'kakao'}, '', '/lobby/' + res.id);
+						window.userInfo = res;
+						localStorage.login = JSON.stringify(res);
+						localStorage.loginType = 'kakao';
+						wwm.lobby.initModule(wwm.shell.view);
 					},
 					fail: function (error) {
 						alert(JSON.stringify(error));
@@ -67,6 +79,10 @@ wwm.login = (function () {
 						return;
 					});
 					history.pushState({mod: 'login', data: res, type: 'facebook'}, '', '/lobby/' + res.id);
+					window.userInfo = res;
+					localStorage.login = JSON.stringify(res);
+					localStorage.loginType = 'facebook';
+					wwm.lobby.initModule(wwm.shell.view);
 				});
 			} else if (res.status === 'not_authorized') {
 				// The person is logged into Facebook, but not your app.
