@@ -186,9 +186,17 @@ wwm.room = (function(){
 	function showMembers() {
 		console.log('showMembers', stMap.memberList);
 		jqMap.$memberList.find('ul').empty();
+		var src = $('#wwm-member-list').html();
 		for (var i = 0; i < stMap.memberList.length; i++) {
 			var member = stMap.memberList[i];
-			jqMap.$memberList.find('ul').append('<li data-id="' + member.id + '"><span class="offline">오프라인</span>&nbsp;<span class="' + cfMap.colorList[i] + '-text">' + member.name + '</span><span class="chat"></span></li>');
+			dust.render(dust.loadSource(dust.compile(src)), {id: member.id, color: cfMap.colorList[i], name: member.name}, function(err, out){
+				if (err) {
+					jqMap.$memberList.find('ul').html(err);
+					return;
+				} else {
+					jqMap.$memberList.find('ul').append(out);
+				}
+			});
 		}
 		showOnline();
 	}
@@ -202,9 +210,17 @@ wwm.room = (function(){
 			}
 		}
 		console.log(alreadyMember);
+		var src = $('#wwm-member-list').html();
 		if (!alreadyMember) {
 			jqMap.$banList.append('<option value="' + data.id + '">' + findInfo(data.id).name + '</option>');
-			jqMap.$memberList.find('ul').append('<li data-id="' + doc.id + '"><span class="online">온라인</span>&nbsp;<span class="' + findInfo(id).color + '-text">' + doc.name + '</span><span class="chat"></span></li>');
+			dust.render(dust.loadSource(dust.compile(src)), {id: doc.id, color: findInfo(id).color, name: doc.name}, function(err, out) {
+				if (err) {
+					jqMap.$memberList.find('ul').html(err);
+					return;
+				} else {
+					jqMap.$memberList.find('ul').append(out);
+				}
+			});
 		}
 		showOnline();
 	}
@@ -510,6 +526,7 @@ wwm.room = (function(){
 	function refresh(e) {
 		console.log('refresh', {rid: stMap.rid, id: stMap.myInfo.id});
 		socket.on('responseArr', function(data) {
+			console.log('socket responseArr');
 			stMap.dayArray = data.day;
 			stMap.nightArray = data.night;
 		});
@@ -686,6 +703,7 @@ wwm.room = (function(){
 				arrayToTable(data.arr, data.sid, data.cur, false);
 			});
 			socket.on('requestArr', function(data) {
+				console.log('socket requestArr');
 				socket.emit('responseArr', {rid: data.rid, id: data.id, day: stMap.dayArray, night: stMap.nightArray});
 			});
 			socket.on('ban', function(data) {

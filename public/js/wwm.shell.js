@@ -42,12 +42,6 @@ wwm.shell = (function () {
 				wwm.shell.initModule();
 		}
 	}
-	function onError(errorMsg, url, lineNumber, column, errorObj) {
-		if (typeof errorMsg === 'string' && errorMsg.indexOf('Script error.') > -1) {
-			return;
-		}
-		console.log('Error: ', errorMsg, ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' + errorObj);
-	}
 	function drawEqTriangle(ctx, side, cx, cy, color){  
 		var h = side * (Math.sqrt(3)/2);    
 		ctx.fillStyle = color;
@@ -96,7 +90,6 @@ wwm.shell = (function () {
 	function initModule() {
 		console.log('login', localStorage.login);
 		console.log('first', localStorage.first);
-		window.onerror = onError;
 		$(window).on('popstate', onPopstate);
 		var logged = localStorage.login && JSON.parse(localStorage.login);
 		var first = localStorage.first && JSON.parse(localStorage.first);

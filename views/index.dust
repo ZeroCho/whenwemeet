@@ -477,7 +477,7 @@
 		</footer>
 	</script>
 	<script type="text/html" id="wwm-member-list">
-		<li>
+		<li data-id="{~lb}id{~rb}">
 			<span class="offline"><i class="fa"></i></span>
 			&nbsp;
 			<span class="{~lb}color{~rb}-text">{~lb}name{~rb}</span>
