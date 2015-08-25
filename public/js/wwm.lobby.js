@@ -138,7 +138,7 @@ wwm.lobby = (function (){
 			}
 			ajax = $.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name});
 		} else if ($this.has('.unlocked').length) {
-			ajax = $.post('/enterroommaster/' + data.rod, {pid: userInfo.id, name: userInfo.name});
+			ajax = $.post('/enterroommaster/' + data.rid, {pid: userInfo.id, name: userInfo.name});
 		}
 		ajax.done(function(res) {
 			console.log('enterroompostresult');
