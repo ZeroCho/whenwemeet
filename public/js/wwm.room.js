@@ -434,12 +434,12 @@ wwm.room = (function(){
 			arr.push([i, idx]);
 		}
 		if ($(this).hasClass('selected')) {
-			socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
-			socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
+			socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
+			socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 			$(this).removeClass('selected');
 		} else {
-			socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
-			socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
+			socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
+			socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 			$(this).addClass('selected');
 		}
 	}
@@ -460,12 +460,12 @@ wwm.room = (function(){
 			}
 			console.log('arr', arr);
 			if ($(this).hasClass('selected')) {
-				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
-				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
+				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
+				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 				$(this).removeClass('selected');
 			} else { // no selected
-				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
-				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
+				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
+				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 				$(this).addClass('selected');
 			} // not before
 		} else { // not after
@@ -477,12 +477,12 @@ wwm.room = (function(){
 			}
 			console.log('arr', arr);
 			if ($(this).hasClass('selected')) {
-				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
-				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
+				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
+				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 				$(this).removeClass('selected');
 			} else { // no selected
-				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
-				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
+				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
+				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 				$(this).addClass('selected');
 			}
 		} // not after
