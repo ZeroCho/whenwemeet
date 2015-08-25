@@ -102,11 +102,14 @@ wwm.shell = (function () {
 		var first = localStorage.first && JSON.parse(localStorage.first);
 		if (first) {
 			history.pushState({mod: 'intro'}, '', '/intro');
+			wwm.modal.initModule($('#wwm-intro').html());
 		}
 		if (logged) {
 			history.pushState({mode: 'lobby', id: userInfo.id}, '', '/lobby/' + userInfo.id);
+			wwm.lobby.initModule(wwm.shell.view);
 		} else {
 			history.pushState({mode: 'directlogin'}, '', '/login');
+			wwm.login.initModule(wwm.shell.view);
 		}
 	}
 
