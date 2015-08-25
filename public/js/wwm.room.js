@@ -40,10 +40,10 @@ wwm.room = (function(){
 			$back: $con.find('#room-back'),
 			$quit: $con.find('#quit'),
 			$myMenu: $con.find('#my-menu'),
-			$admin: $con.find('#admin-menu'),
-			$dayExp: $con.find('#day-exception'),
+			$admin: $con.find('#manage-btn'),
+			$dayExp: $con.find('#day-exc-btn'),
 			$notDay: $con.find('#day-exception').find('li'),
-			$timeExp: $con.find('#time-exception'),
+			$timeExp: $con.find('#time-exc-btn'),
 			$notTime: $con.find('#time-exception').find('li'),
 			$title: $con.find('#title'),
 			$current: $con.find('#current-number'),
@@ -236,18 +236,19 @@ wwm.room = (function(){
 		console.log('onlineList', stMap.onlineList);		
 		for (var i = 0; i < stMap.memberList.length; i++) {
 		 	var $list = jqMap.$memberList.find('ul').eq(i);
-			if (stMap.onlineList[i]) {
-				 if ($list.has('.offline')) {
-				 	$list.find('.offline').toggleClass('offline online').text('온라인');
-				 } else {
-				 	$list.find('.online').text('온라인');
-				 }
+		 	console.log(stMap.onlineList[i]);
+			if (stMap.onlineList[i]) {			
+			 if ($list.has('.offline')) {
+			 	$list.find('.offline').toggleClass('offline online').text('온라인');
+			 } else {
+			 	$list.find('.online').text('온라인');
+			 }
 			} else {
-				 if ($list.has('.online')) {
-				 	$list.find('.online').toggleClass('online offline').text('오프라인');
-				 } else {
-				 	$list.find('.offline').text('오프라인');
-				 }
+			 if ($list.has('.online')) {
+			 	$list.find('.online').toggleClass('online offline').text('오프라인');
+			 } else {
+			 	$list.find('.offline').text('오프라인');
+			 }
 			}
 		}
 	}
@@ -358,10 +359,10 @@ wwm.room = (function(){
 		jqMap.$myMenu.find('ul').hide();
 		if ($this.hasClass('opened')) {				
 			$this.removeClass('opened');
-			$this.find('ul').hide();
+			$this.prev('ul').hide();
 		} else {
 			$this.addClass('opened');
-			$this.find('ul').show();
+			$this.prev('ul').show();
 		}
 	}
 	function showDayException() {
@@ -370,10 +371,10 @@ wwm.room = (function(){
 		jqMap.$myMenu.find('ul').hide();
 		if ($this.hasClass('opened')) {				
 			$this.removeClass('opened');
-			$this.find('ul').hide();
+			$this.prev('ul').hide();
 		} else {
 			$this.addClass('opened');
-			$this.find('ul').show();
+			$this.prev('ul').show();
 		}
 	}
 	function showTimeException() {
@@ -382,10 +383,10 @@ wwm.room = (function(){
 		jqMap.$myMenu.find('ul').hide();
 		if ($this.hasClass('opened')) {
 			$this.removeClass('opened');
-			$this.find('ul').hide();
+			$this.prev('ul').hide();
 		} else {
 			$this.addClass('opened');
-			$this.find('ul').show();
+			$this.prev('ul').show();
 		}
 	}
 	function deleteRoom(e) {
@@ -427,26 +428,24 @@ wwm.room = (function(){
 	function excludeDay(e) {
 		console.log('excludeDay');
 		// 해당일에 대한 어레이를 발송
-		e.stopPropagation();
-		alert($(this).index());
 		var idx = $(this).index();
 		var arr = [];
 		for (var i = 0; i < 12; i++) {
 			arr.push([i, idx]);
 		}
 		if ($(this).hasClass('selected')) {
-			socket.emit('not-busy', arr);
+			socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
+			socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
 			$(this).removeClass('selected');
 		} else {
-			socket.emit('busy', arr);
+			socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
+			socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
 			$(this).addClass('selected');
 		}
 	}
 	function excludeTime(e) {
 		conosle.log('excludeTime');
 		// 해당 시간에 대한 어레이를 발송
-		e.stopPropagation();
-		alert($(this).index());
 		var idx = $(this).index();
 		var time = $(this).find('input').val();
 		if (!time) {
@@ -461,10 +460,12 @@ wwm.room = (function(){
 			}
 			console.log('arr', arr);
 			if ($(this).hasClass('selected')) {
-				socket.emit('not-busy', arr);
+				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
+				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
 				$(this).removeClass('selected');
 			} else { // no selected
-				socket.emit('busy', arr);
+				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
+				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
 				$(this).addClass('selected');
 			} // not before
 		} else { // not after
@@ -476,10 +477,12 @@ wwm.room = (function(){
 			}
 			console.log('arr', arr);
 			if ($(this).hasClass('selected')) {
-				socket.emit('not-busy', arr);
+				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
+				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, false)});
 				$(this).removeClass('selected');
-			} else {
-				socket.emit('busy', arr);
+			} else { // no selected
+				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
+				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: tableToArray(arr, true)});
 				$(this).addClass('selected');
 			}
 		} // not after
@@ -554,7 +557,7 @@ wwm.room = (function(){
 		});
 		confirmPromise.fail(function(err) {
 			console.log(err);
-			alert('confrim error!');
+			alert('confirm error!');
 		});
 	}
 	function toDay() {

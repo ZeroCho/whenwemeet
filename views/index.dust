@@ -282,14 +282,14 @@
 						{~lb}/admin{~rb}
 						<li id="invite">
 							초대장 보내기
-							<img src="/kakaolink_btn_medium.png" id="kakao-invite"/>
+							<img src="/kakaolink_btn_medium.png" height="30" id="kakao-invite"/>
 							<img id="fb-invite"/>
 						</li>
 					</ul>
 					{~lb}?admin{~rb}
-					<button>관리자 메뉴</button>
+					<button id="manage-btn">관리자 메뉴</button>
 					{~lb}:else{~rb}
-					<button>초대</button>
+					<button id="manage-btn">초대</button>
 					{~lb}/admin{~rb}
 				</div>
 				<div id="day-exception">
@@ -302,7 +302,7 @@
 						<li id="not-sat">토요일은 안 돼요</li>
 						<li id="not-sun">일요일은 안 돼요</li>
 					</ul>
-					<button>요일 예외</button>
+					<button id="day-exc-btn">요일 예외</button>
 				</div>
 				<div id="time-exception">					
 					<ul>
@@ -315,7 +315,7 @@
 							<input id="time-after"/>시 이후는 안돼요
 						</li>
 					</ul>
-					<button>시간 예외</button>
+					<button id="time-exc-btn">시간 예외</button>
 				</div>
 				<button id="room-back">목록으로</button>
 				<button id="quit">나가기</button>
