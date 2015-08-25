@@ -26,12 +26,9 @@ wwm.room = (function(){
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
-			$explode: $con.find('#explode-room'),
-			$ban: $con.find('#ban-people-btn'),
-			$banList: $con.find('#ban-member-list'),
-			$changeLimit: $con.find('#change-number-btn'),
-			$changeTitle: $con.find('#change-room-title'),
 			$calendar: $con.find('table'),
+			$dayTable: $con.find('#day-table'),
+			$nightTable: $con.find('#night-table'),
 			$thDay: $con.find('table').find('tr').eq(0).find('th'),
 			$thTime: $con.find('table').find('tr').first(),
 			$memberList: $con.find('#member-list'),
@@ -45,6 +42,11 @@ wwm.room = (function(){
 			$notDay: $con.find('#day-exception').find('li'),
 			$timeExp: $con.find('#time-exc-btn'),
 			$notTime: $con.find('#time-exception').find('li'),
+			$explode: $con.find('#explode-room'),
+			$ban: $con.find('#ban-people-btn'),
+			$banList: $con.find('#ban-member-list'),
+			$changeLimit: $con.find('#change-number-btn'),
+			$changeTitle: $con.find('#change-room-title'),
 			$title: $con.find('#title'),
 			$current: $con.find('#current-number'),
 			$total: $con.find('#total-number'),
@@ -70,7 +72,7 @@ wwm.room = (function(){
 		}
 		return arr;
 	}
-	function tableToArray(cellList, busy) {
+	function tableToArray(cellList, busy) { // cell을 선택했을 때 array로 바꾼다
 		console.log('tableToArray');
 		var arrList = [];
 		for (var i = 0; i < cellList.length; i++) {
@@ -81,32 +83,12 @@ wwm.room = (function(){
 		console.log('tableToArray', arrList);
 		return arrList;
 	}
-	function arrayToTable(cellList, sid, cur, busy) {
-		console.log('arrayTotable', cellList, sid, cur, stMap.now, busy);
-		if (cur !== stMap.now) {
-			if (cur === 'day') {
-				for (var i = 0; i < cellList.length; i++) {
-					var cell = cellList[i];
-					var dayCell = stMap.dayArray[cell[0]][cell[1]];
-					dayCell.push(sid);
-					console.log('different day', dayCell);
-					stMap.dayArray[cell[0]][cell[1]] = dayCell;
-				}
-			} else {
-				for (var i = 0; i < cellList.length; i++) {
-					var cell = cellList[i];
-					var nightCell = stMap.nightArray[cell[0]][cell[1]];
-					nightCell.push(sid);
-					console.log('different night', nightCell);
-					stMap.nightArray[cell[0]][cell[1]] = nightCell;
-				}
-			}
-			return;
-		}
-		if (stMap.now === 'day') {
+	function arrayToTable(cellList, sid, cur, busy) { // array를 table로 만든다.
+		console.log('arrayTotable', cellList, sid, cur, busy);
+		if (cur === 'day') {
 			for (var i = 0; i < cellList.length; i++) {		
 				var cell = cellList[i];
-				var $cell = jqMap.$calendar.find('tr').eq(cell[0] + 1).find('td').eq(cell[1]);
+				var $cell = jqMap.$dayTable.find('tr').eq(cell[0] + 1).find('td').eq(cell[1]);
 				var dayCell = stMap.dayArray[cell[0]][cell[1]];
 				var number;							
 				if (busy) {
@@ -135,11 +117,11 @@ wwm.room = (function(){
 				stMap.dayArray[cell[0]][cell[1]] = dayCell;
 			}
 			console.log('arrToTable:day', stMap.dayArray, stMap.nightArray);
-		} else {
+		} else if (cur === 'night') {
 			for (var i = 0; i < cellList.length; i++) {
 				var cell = cellList[i];
 				var number;
-				var $cell = jqMap.$calendar.find('tr').eq(cell[0] + 1).find('td').eq(cell[1]);
+				var $cell = jqMap.$nightTable.find('tr').eq(cell[0] + 1).find('td').eq(cell[1]);
 				var nightCell = stMap.nightArray[cell[0]][cell[1]];				
 				if (busy) {
 					nightCell.push(sid);
@@ -168,40 +150,35 @@ wwm.room = (function(){
 			console.log('arrToTable:night', stMap.dayArray, stMap.nightArray);
 		}
 	}
-	function renderTable(now) {
+	function renderTable() {
 		var i, j, k;
-		if (now === 'day') {
-			console.log('renderTable:day', stMap.dayArray);
-			for (i = 0; i < 12; i++) {
-				for (j = 0; j < 7; j++) {
-					var $cell = jqMap.$calendar.find('tr').eq(i + 1).find('td').eq(j);
-					var dayCell = stMap.dayArray[i][j];
-					var number = dayCell.length;
-					$cell.find('div').remove();
-					if (number > 0) {
-						var $box = $('<div/>').addClass('box-' + number);
-						for (k = 0; k < number; k++) {
-							$box.append($('<div/>', {class: cfMap.colorList[dayCell[k]]}));
-						}
-						$box.appendTo($cell);
+		for (i = 0; i < 12; i++) {
+			for (j = 0; j < 7; j++) {
+				var $cell = jqMap.$dayTalbe.find('tr').eq(i + 1).find('td').eq(j);
+				var dayCell = stMap.dayArray[i][j];
+				var number = dayCell.length;
+				$cell.find('div').remove();
+				if (number > 0) {
+					var $box = $('<div/>').addClass('box-' + number);
+					for (k = 0; k < number; k++) {
+						$box.append($('<div/>', {class: cfMap.colorList[dayCell[k]]}));
 					}
+					$box.appendTo($cell);
 				}
 			}
-		} else {
-			console.log('renderTable:night', stMap.nightArray);
-			for (i = 0; i < 12; i++) {
-				for (j = 0; j < 7; j++) {
-					var $cell = jqMap.$calendar.find('tr').eq(i + 1).find('td').eq(j);
-					var nightCell = stMap.nightArray[i][j];
-					var number = nightCell.length;
-					$cell.find('div').remove();
-					if (number > 0) {
-						var $box = $('<div/>').addClass('box-' + number);
-						for (k = 0; k < number; k++) {
-							$box.append($('<div/>', {class: cfMap.colorList[nightCell[k]]}));
-						}
-						$box.appendTo($cell);
+		}
+		for (i = 0; i < 12; i++) {
+			for (j = 0; j < 7; j++) {
+				var $cell = jqMap.$nightTable.find('tr').eq(i + 1).find('td').eq(j);
+				var nightCell = stMap.nightArray[i][j];
+				var number = nightCell.length;
+				$cell.find('div').remove();
+				if (number > 0) {
+					var $box = $('<div/>').addClass('box-' + number);
+					for (k = 0; k < number; k++) {
+						$box.append($('<div/>', {class: cfMap.colorList[nightCell[k]]}));
 					}
+					$box.appendTo($cell);
 				}
 			}
 		}
@@ -309,7 +286,7 @@ wwm.room = (function(){
 			console.log(err);
 		});
 	}
-	function onClickDay() {
+	function onClickDay() {`
 		console.log('onClickDay');
 		var day = this.cellIndex - 1;
 		var arr;
@@ -318,21 +295,23 @@ wwm.room = (function(){
 		} else {
 			arr = stMap.nightArray;
 		}
+		var dayList = [];
 		var allSelected = true;
 		for (var i = 0; i < 12; i++) {
 			if (arr[i][day].indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
-				break;
 			}
+			dayList.push([i, day]);
 		}
+		
 		if (allSelected) {
-			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: tableToArray([this], false)});
+			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: dayList});
 		} else {
-			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: tableToArray([this], true)});
+			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: dayList});
 		}
 	}
 	function onClickTime() {
-		conosle.log('onClickTime');
+		console.log('onClickTime');
 		var time = this.parentNode.rowIndex - 1;
 		var arr;
 		if (stMap.now === 'day') {
@@ -340,17 +319,18 @@ wwm.room = (function(){
 		} else {
 			arr = stMap.nightArray;
 		}
+		var timeList = [];
 		var allSelected = true;
 		for (var i = 0; i < 12; i++) {
 			if (arr[time][i].indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
-				break;
 			}
+			timeList.push([time, i]);
 		}
 		if (allSelected) {
-			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: tableToArray([this], false)});
+			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
 		} else {
-			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: tableToArray([this], true)});
+			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
 		}
 	}
 	function showAdminMenu() {
@@ -426,9 +406,9 @@ wwm.room = (function(){
 		}
 	}
 	function excludeDay(e) {
-		console.log('excludeDay');
 		// 해당일에 대한 어레이를 발송
 		var idx = $(this).index();
+		console.log('excludeDay', idx);
 		var arr = [];
 		for (var i = 0; i < 12; i++) {
 			arr.push([i, idx]);
@@ -444,10 +424,11 @@ wwm.room = (function(){
 		}
 	}
 	function excludeTime(e) {
-		conosle.log('excludeTime');
 		// 해당 시간에 대한 어레이를 발송
+
 		var idx = $(this).index();
 		var time = $(this).find('input').val();
+		console.log('excludeTime', idx, time);
 		if (!time) {
 			return;
 		}
@@ -527,15 +508,12 @@ wwm.room = (function(){
 		});
 	}
 	function refresh(e) {
-		console.log('refresh', stMap.rid);
-		$.post('/roominfo/' + stMap.rid).done(function(res) {
-			stMap.day =  res[0].day ? res[0].day : stMap.day;
-			stMap.night = res[0].night ? res[0].night : stMap.night;
-			renderTable();
-		}).fail(function(err) {
-			console.log(err);
-			alert('새로고침 오류!');
+		console.log('refresh', {rid: stMap.rid, id: stMap.myInfo.id});
+		socket.on('responseArr', function(data) {
+			stMap.dayArray = data.day;
+			stMap.nightArray = data.night;
 		});
+		socket.emit('requestArr', stMap.rid);
 	}
 	function confirmCalendar(e) {
 		console.log('confirm', e.data);
@@ -563,16 +541,18 @@ wwm.room = (function(){
 	function toDay() {
 		console.log('toDay', stMap.now);
 		stMap.now = 'day';
-		renderTable(stMap.now);
 		jqMap.$night.css('background', 'white');
-		jqMap.$day.css('background', 'gray');
+		jqMap.$day.css('background', 'crimson');
+		jqMap.$dayTable.show();
+		jqMap.$nightTable.hide();
 	}
 	function toNight() {
 		console.log('toNight', stMap.now);
 		stMap.now = 'night';
-		renderTable(stMap.now);
 		jqMap.$day.css('background', 'white');
-		jqMap.$night.css('background', 'gray');
+		jqMap.$night.css('background', 'crimson');
+		jqMap.$dayTable.hide();
+		jqMap.$nightTable.show();
 	}
 	function toConfirmPage() {
 		console.log('toConfirmPage', stMap);
@@ -644,11 +624,11 @@ wwm.room = (function(){
 		var src = $('#wwm-room').text();
 		dust.render(dust.loadSource(dust.compile(src)), parser, function(err, out) {
 			if (err) {
-				cfMap.$con.html(err);
+				wwm.shell.view.html(err);
 				return;
 			}
-			cfMap.$con.html(out);
-			setJqMap(cfMap.$con);
+			wwm.shell.view.html(out);
+			setJqMap(wwm.shell.view);
 			jqMap.$day.css({
 				background: 'gray'
 			});
@@ -691,7 +671,7 @@ wwm.room = (function(){
 				stMap.nightArray = data.night;
 				stMap.onlineList = data.online;
 				showOnline();
-				renderTable(stMap.now);
+				renderTable();
 			});
 			socket.on('chat', function(data) {
 				console.log('socket chat', data.id, data.text);
@@ -704,6 +684,9 @@ wwm.room = (function(){
 			socket.on('not-busy', function(data) {
 				console.log('socketnotbusy:', data.arr, data.sid, data.cur);
 				arrayToTable(data.arr, data.sid, data.cur, false);
+			});
+			socket.on('requestArr', function(data) {
+				socket.emit('responseArr', {rid: data.rid, id: data.id, day: stMap.dayArray, night: stMap.nightArray});
 			});
 			socket.on('ban', function(data) {
 				// 강퇴당한 경우.

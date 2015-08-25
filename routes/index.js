@@ -212,14 +212,14 @@ router.post('/enterroommaster/:rid', function(req, res) {
 
 router.post('/roominfo/:rid', function(req, res) {
 	var rid = req.params.rid;
-	roomCollection.find({rid: rid}).toArray(function(err, docs) {
+	roomCollection.findOne({rid: rid}).toArray(function(err, doc) {
 		if (err) {
 			console.log('roominfoerror:' + err);
 		} else {
 			process.env.CURRENT_ROOM = rid;
 			console.log('roominfo result');
-			console.log(docs);
-			res.send(docs);
+			console.log(doc);
+			res.send(doc);
 		}
 	});
 });

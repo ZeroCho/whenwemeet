@@ -54,6 +54,15 @@ io.on('connection', function (socket) {
 		console.log(data.id + ' socket confirmed');
 		io.in(process.env.CURRENT_ROOM).emit('confirmed', data);
 	});
+	socket.on('requestArr', function(data) {
+		console.log('socket request Arr ' + data.rid + ' ' + data.id);
+		data.sid = socket.id;
+		socket.broadcast.to(process.env.CURRENT_ROOM).emit('requestArr', data);
+	});
+	socket.on('responseArr', function(data) {
+		console.log('socket responseArr ' + data.id);
+		io.sockets.connected[data.sid].emit('responseArr', data);
+	});
 	socket.on('ban', function(data) {
 		console.log('socket ban');
 		io.in(process.env.CURRENT_ROOM).emit('ban', data);
@@ -64,16 +73,16 @@ io.on('connection', function (socket) {
 		console.log(process.env.MY_ID);
 		process.env.CURRENT_ROOM = data.rid;
 		socket.join(process.env.CURRENT_ROOM);
-		roomCollection.find({rid: data.rid.toString()}).toArray(function(err, docs) {
+		roomCollection.findOne({rid: data.rid.toString()}, function(err, doc) {
 			if (err) {
 				console.log('entererror:' + err);
 			} else {
 				console.log('enter result:');
-				docs[0].id = data.id;
-				docs[0].name = data.name;
-				docs[0].socket = socket.id;
-				console.log(docs);
-				socket.broadcast.to(process.env.CURRENT_ROOM).emit('newMember', docs[0]);
+				doc.id = data.id;
+				doc.name = data.name;
+				doc.socket = socket.id;
+				console.log(doc);
+				socket.broadcast.to(process.env.CURRENT_ROOM).emit('newMember', doc);
 				socket.on('uptodateArr', function(data) {
 					io.sockets.connected[data.sid].emit('uptodateArr', data);
 				});
