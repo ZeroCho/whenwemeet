@@ -765,6 +765,8 @@ wwm.room = (function(){
 			jqMap.$sendChat.click(sendChat);
 			jqMap.$notDay.click(excludeDay);
 			jqMap.$notTime.click(excludeTime);
+			jqMap.$thDay.click(onClickDay);
+			jqMap.$thTime.click(onClickTime);
 			jqMap.$confirm.click({id: stMap.myInfo.id, rid: stMap.rid, day: stMap.dayArray, night: stMap.nightArray}, confirmCalendar);
 			jqMap.$refresh.click(refresh);
 			jqMap.$allConfirmed.click(toConfirmPage);
