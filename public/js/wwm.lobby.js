@@ -127,31 +127,33 @@ wwm.lobby = (function (){
 			members: $this.data('members')
 		};
 		var pw = '';
+		var ajax;
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
 		if ($this.has('.locked').length) {
-			pw = prompt('비밀번호', '');
-		} else if ($this.has('.unlocked').length) {
-			pw = 'master';
-		}
-		if (pw === null || pw.trim() === '') {
-			$(spinner.el).remove();
-			return;
-		}
-		$.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name})
-			.done(function(res) {
-				console.log('enterroompostresult');
-				data.day = res.day || null;
-				data.night = res.night || null;
-				history.pushState({mod: 'room', data: res}, '', '/room/' + data.rid);
-				wwm.room.initModule(res, 'enter');
-			})
-			.fail(function(err) {
-				alert('비밀번호가 틀렸습니다.');
-			})
-			.always(function() {
+			pw = prompt('비밀번호', '');		
+			if (pw === null || pw.trim() === '') {
 				$(spinner.el).remove();
-			});
+				return;
+			}
+			ajax = $.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name});
+		} else if ($this.has('.unlocked').length) {
+			ajax = $.post('/enterroommaster/' + data.rod, {pid: userInfo.id, name: userInfo.name});
+		}
+		ajax.done(function(res) {
+			console.log('enterroompostresult');
+			data.day = res.day || null;
+			data.night = res.night || null;
+			history.pushState({mod: 'room', data: data}, '', '/room/' + data.rid);
+			wwm.room.initModule(data, 'enter');
+		})
+		.fail(function(err) {
+			console.log(err.responseText);
+			alert('비밀번호가 틀렸습니다.');
+		})
+		.always(function() {
+			$(spinner.el).remove();
+		});
 	}
 	function refreshList() {
 		console.log('refreshlist');
