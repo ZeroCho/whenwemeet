@@ -74,39 +74,43 @@
 		<footer id="lobby-footer">
 			<button id="show-createroom-modal">방 만들기</button>
 			<div id="search">
-				<input type="text" placeholder="방 제목"/>
-				<button id="searchroom-btn"><i class="fa fa-search"><span class="sr-only">검색</span></i></button>
+				<form>
+					<input type="text" placeholder="방 제목"/>
+					<button id="searchroom-btn"><i class="fa fa-search"><span class="sr-only">검색</span></i></button>
+				</form>
 			</div>
 		</footer>
 	</script>
 	<script type="text/html" id="wwm-createroom-modal">
 		<header id="createroom-header"><h1>방생성</h1></header>
-		<main id="createroom-main">
-			<div class="input-group">
-				<label for="room-title">방제목</label>
-				<input id="room-title"/>
-			</div>
-			<div class="input-group">
-				<label for="room-people-number">인원수</label>
-				<select id="room-people-number">
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-					<option value="6">6</option>
-					<option value="7">7</option>
-					<option value="8">8</option>
-				</select>
-			</div>
-			<div class="input-group">
-				<label for="room-password">비밀번호</label>
-				<input id="room-password" placeholder="빈칸이면 공개방">
-			</div>
-		</main>
-		<footer id="createroom-footer">
-			<button id="create-room-btn">방생성</button>
-			<button class="modal-close">취소</button>
-		</footer>
+		<form>
+			<main id="createroom-main">
+				<div class="input-group">
+					<label for="room-title">방제목</label>
+					<input id="room-title"/>
+				</div>
+				<div class="input-group">
+					<label for="room-people-number">인원수</label>
+					<select id="room-people-number">
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+					</select>
+				</div>
+				<div class="input-group">
+					<label for="room-password">비밀번호</label>
+					<input id="room-password" placeholder="빈칸이면 공개방">
+				</div>
+			</main>
+			<footer id="createroom-footer">
+				<button id="create-room-btn">방생성</button>
+				<button class="modal-close">취소</button>
+			</footer>
+		</form>
 	</script>
 	<script type="text/html" id="wwm-room">
 		<header id="room-header">
@@ -398,17 +402,27 @@
 					<ul>
 						{~lb}?admin{~rb}
 						<li id="ban-people">
+							<form>
 							<label for="ban-member-list" class="sr-only">현재 참여자</label>
-							<select id="ban-member-list">
-							{~lb}#members{~rb}
-								<option value="{~lb}id{~rb}">{~lb}name{~rb}</option>
-							{~lb}/members{~rb}
-							</select>
-							<button id="ban-people-btn">강퇴</button>
+								<select id="ban-member-list">
+								{~lb}#members{~rb}
+									<option value="{~lb}id{~rb}">{~lb}name{~rb}</option>
+								{~lb}/members{~rb}
+								</select>
+								<button id="ban-people-btn">강퇴</button>
+							</form>
 						</li>
-						<li><input id="current-room-title" value="{~lb}title{~rb}"/><button id="change-room-title">변경</button></li>
 						<li>
-							인원수 조정 <input id="current-people-number" value="{~lb}number{~rb}"/><button id="change-number-btn">변경</button>
+							<form>
+								<input id="current-room-title" value="{~lb}title{~rb}"/>
+								<button id="change-room-title">변경</button></li>
+							</form>
+						<li>
+							<form>
+								<span>인원수 조정 </span>
+								<input id="current-people-number" value="{~lb}number{~rb}"/>
+								<button id="change-number-btn">변경</button>
+							</form>
 						</li>
 						<li id="explode-room">방 폭파</li>
 						{~lb}/admin{~rb}
@@ -456,8 +470,11 @@
 				{~lb}name{~rb}
 			</div>
 			<div id="chat">
-				<input id="chatbox" placeholder="채팅창"/>
-				<button id="send-chat">전송</button>
+				<form>
+					
+				<input id="chatbox" placeholder="채팅창	"/>
+				<button id="send-chat">전송</bu
+				</form>tton>
 			</div>
 		</footer>
 	</script>
