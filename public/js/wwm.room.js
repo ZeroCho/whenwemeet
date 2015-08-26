@@ -30,7 +30,7 @@ wwm.room = (function(){
 			$dayTable: $con.find('#day-table'),
 			$nightTable: $con.find('#night-table'),
 			$thDay: $con.find('table').find('tr').eq(0).find('th'),
-			$thTime: $con.find('table').find('tr').first(),
+			$thTime: $con.find('table').find('tr').find('th:first-child'),
 			$memberList: $con.find('#member-list'),
 			$day: $con.find('#day'),
 			$night: $con.find('#night'),
