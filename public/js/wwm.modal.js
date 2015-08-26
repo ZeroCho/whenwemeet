@@ -13,10 +13,12 @@ wwm.modal = (function (){
 			$createRoom: $con.find('#create-room-btn')
 		};
 	}
-	function onCloseModal() {
+	function onCloseModal(e) {
+		e.preventDefault();
 		stMap.$modal.hide();
 	}
-	function createRoom() {
+	function createRoom(e) {
+		e.preventDefault();
 		var spinner = new Spinner().spin();
 		jqMap.$con.append(spinner.el);
 		var data;

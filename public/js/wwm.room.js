@@ -256,6 +256,7 @@ wwm.room = (function(){
 		return info;
 	}
 	function ban(e) {
+		e.preventDefault();
 		var banned = $(this).prev().val();
 		console.log('ban', banned);
 		if (banned == stMap.maker) {
@@ -272,6 +273,7 @@ wwm.room = (function(){
 		});
 	}
 	function changeTitle(e) {
+		e.preventDefault();
 		var title = $(this).prev().val();
 		console.log('changeTitle', title);
 		var titlePromise = wwm.model.changeTitle(stMap.rid, title);
@@ -285,6 +287,7 @@ wwm.room = (function(){
 		});
 	}
 	function changeLimit(e) {
+		e.preventDefault();
 		var number = $(this).prev().val();
 		console.log('changeLiimit', number);
 		if (number < stMap.current) {
@@ -519,7 +522,8 @@ wwm.room = (function(){
 		stMap.total = num;
 		jqMap.$total.text(num);
 	}
-	function sendChat() {
+	function sendChat(e) {
+		e.preventDefault();
 		var text = $(this).prev('#chatbox').val();
 		console.log('sendChat', stMap.myInfo.id, text);		
 		socket.emit('chat', {

@@ -53,7 +53,8 @@ wwm.lobby = (function (){
 			$(spinner.el).remove();
 		});
 	}
-	function onSearchRoom () {
+	function onSearchRoom (e) {
+		e.preventDefault();
 		var query = $(this).prev().val().trim();
 		console.log('query', query);
 		var spinner = new Spinner().spin();
