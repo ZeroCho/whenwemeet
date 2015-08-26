@@ -754,11 +754,6 @@ wwm.room = (function(){
 				wwm.lobby.initModule(jqMap.$con);
 				console.log('socket explode');
 			});
-			$(document).not(jqMap.$myMenu).click(function() {
-				console.log('hide ul');
-				jqMap.$myMenu.find('button').removeClass('opened');
-				jqMap.$myMenu.find('ul').hide();
-			});
 			jqMap.$calendar.find('td').click(onClickCell);
 			jqMap.$explode.click({id: stMap.rid}, deleteRoom);
 			jqMap.$back.click({rid: stMap.rid}, goBack);
