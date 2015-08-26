@@ -515,8 +515,8 @@ wwm.room = (function(){
 	}
 	function changeTotalNumber(num) {
 		console.log('changeTotalNumber', num);
-		stMap.total = number;
-		jqMap.$total.text(number);
+		stMap.total = num;
+		jqMap.$total.text(num);
 	}
 	function sendChat() {
 		var text = $(this).prev('#chatbox').val();
@@ -752,6 +752,10 @@ wwm.room = (function(){
 				alert('방이 폭파되었습니다. 로비로 이동합니다.');
 				wwm.lobby.initModule(jqMap.$con);
 				console.log('socket explode');
+			});
+			$(document).not(jqMap.$myMenu).click(function() {
+				jqMap.$myMenu.find('button').removeClass('opened');
+				jqMap.$myMenu.find('ul').hide();
 			});
 			jqMap.$calendar.find('td').click(onClickCell);
 			jqMap.$explode.click({id: stMap.rid}, deleteRoom);

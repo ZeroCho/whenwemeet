@@ -19,6 +19,21 @@ router.get('/', function(req, res) {
 		title: '우리언제만나'
 	});
 });
+router.get('/lobby/:id', function(req, res) {
+	var id = req.params.id;
+	res.render('error');
+});
+router.get('/room/:rid', function(req, res) {
+	var rid = req.params.rid;
+	res.render('error');
+});
+router.get('/login', function(req, res) {
+	res.render('error');
+});
+router.get('/confirm/:rid', function(req, res) {
+	var rid = req.params.rid;
+	res.render('error');
+});
 router.post('/join', function (req, res) {
 	var id = req.body.id;
 	var name = req.body.name;
@@ -96,7 +111,7 @@ router.post('/confirm/:rid', function(req, res) {
 	var night = JSON.stringify(req.body.night);
 	var id = req.body.id;
 	var bool = req.body.bool;
-	roomCollection.update({rid: rid}, {'$set': {day: day, night: night}}, function(err, res) {
+	roomCollection.update({rid: rid}, {day: day, night: night}, function(err, res) {
 		if (err) {
 			console.log('confirmupdatedayerror:' + err);
 		} else {
