@@ -232,15 +232,13 @@ wwm.room = (function(){
 		 	console.log(stMap.onlineList[i]);
 			if (stMap.onlineList[i]) {			
 			 if ($list.has('.offline')) {
-			 	$list.find('.offline').toggleClass('offline online').text('온라인');
-			 } else {
-			 	$list.find('.online').text('온라인');
+			 	$list.find('.offline').toggleClass('offline online');
 			 }
 			} else {
 			 if ($list.has('.online')) {
-			 	$list.find('.online').toggleClass('online offline').text('오프라인');
+			 	$list.find('.online').toggleClass('online offline');
 			 } else {
-			 	$list.find('.offline').text('오프라인');
+			 	$list.find('.offline');
 			 }
 			}
 		}
@@ -354,7 +352,8 @@ wwm.room = (function(){
 			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
 		}
 	}
-	function showAdminMenu() {
+	function showAdminMenu(e) {
+		e.stopPropagation();
 		console.log('showAdminMenu');
 		var $this = $(this);
 		jqMap.$myMenu.find('ul').hide();
@@ -366,7 +365,8 @@ wwm.room = (function(){
 			$this.prev('ul').show();
 		}
 	}
-	function showDayException() {
+	function showDayException(e) {
+		e.stopPropagation();		
 		console.log('showDayException');
 		var $this = $(this);
 		jqMap.$myMenu.find('ul').hide();
@@ -378,7 +378,8 @@ wwm.room = (function(){
 			$this.prev('ul').show();
 		}
 	}
-	function showTimeException() {
+	function showTimeException(e) {
+		e.stopPropagation();		
 		console.log('showTimeexception');
 		var $this = $(this);
 		jqMap.$myMenu.find('ul').hide();
@@ -754,6 +755,7 @@ wwm.room = (function(){
 				console.log('socket explode');
 			});
 			$(document).not(jqMap.$myMenu).click(function() {
+				console.log('hide ul');
 				jqMap.$myMenu.find('button').removeClass('opened');
 				jqMap.$myMenu.find('ul').hide();
 			});

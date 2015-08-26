@@ -66,7 +66,7 @@
 		</header>
 		<main id="lobby-main">
 			<div id="room-list">
-				<div class="title">리스트</div>
+				<div class="title sr-only">리스트</div>
 				<div id="rooms"></div>
 				<button id="refresh-list"><i class="fa fa-refresh"><span class="sr-only">새로고침</span></i></button>
 			</div>
@@ -415,7 +415,7 @@
 						<li id="invite">
 							초대장 보내기
 							<img src="/kakaolink_btn_medium.png" height="30" id="kakao-invite"/>
-							<img id="fb-invite"/>
+							<i class="fa fa-facebook"></i>
 						</li>
 					</ul>
 					{~lb}?admin{~rb}
@@ -478,7 +478,7 @@
 	</script>
 	<script type="text/html" id="wwm-member-list">
 		<li data-id="{~lb}id{~rb}">
-			<span class="offline"><i class="fa"></i></span>
+			<span class="offline"><i class="fa fa-circle"></i></span>
 			&nbsp;
 			<span class="{~lb}color{~rb}-text">{~lb}name{~rb}</span>
 			&nbsp;

@@ -138,17 +138,17 @@ router.post('/addroom/:rid', function (req, res) {
 	process.env.NAME = members[0].name;
 	var number = req.body.number || 2;
 	var password = req.body.password || null;
-	memberCollection.update({id: maker}, {$inc: {roomcount: 1}}, function(err, result) {
+	memberCollection.update({'id': maker}, {'$inc': {'roomcount': 1}}, function(err, result) {
 		if (err) {
 			console.log('roomcounterror:' + err);
 		} else {
 			console.log(result);
-			roomCollection.insert({rid: rid, maker: maker, password: password, title: title, members: members, number: number}, function(err, docs){
+			roomCollection.insertOne({'rid': rid, 'maker': maker, 'password': password, 'title': title, 'members': members, 'number': number, 'day': null, 'night': null}, function(err, r){
 				if (err) {
 					console.log('addroomerror:' + err);
 				} else {
-					console.log(docs);
-					res.send(docs);
+					console.log(r);
+					res.send(r);
 				}
 			});
 		}
