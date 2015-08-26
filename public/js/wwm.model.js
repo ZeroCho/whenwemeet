@@ -79,7 +79,7 @@ wwm.model = (function () {
 			console.log(res);
 			deferred.resolve(res);
 		}).fail(function(err) {
-			console.log(err);
+			console.log('confirmerror', err);
 			deferred.reject(err);
 		});
 		return deferred.promise();

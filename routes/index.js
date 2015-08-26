@@ -212,7 +212,7 @@ router.post('/enterroommaster/:rid', function(req, res) {
 
 router.post('/roominfo/:rid', function(req, res) {
 	var rid = req.params.rid;
-	roomCollection.findOne({rid: rid}).toArray(function(err, doc) {
+	roomCollection.findOne({rid: rid}, function(err, doc) {
 		if (err) {
 			console.log('roominfoerror:' + err);
 		} else {
@@ -227,22 +227,22 @@ router.post('/changeroom/:rid', function(req, res) {
 	var rid = req.params.rid;
 	if (req.body.title) {
 		var title = req.body.title;
-		roomCollection.update({id: rid}, {title: title}, function(err, res) {
+		roomCollection.update({id: rid}, {title: title}, function(err, result) {
 			if (err) {
 				console.log('changeroomerror:' + err);
 			} else {
-				console.log(res);
-				res.send(res);
+				console.log(result);
+				res.send(result);
 			}
 		});
 	} else if (req.body.number) {
 		var number = req.body.number;
-		roomCollection.update({id: rid}, {number: number}, function(err, res) {
+		roomCollection.update({id: rid}, {number: number}, function(err, result) {
 			if (err) {
 				console.log('changeroomerror:' + err);
 			} else {
-				console.log(res);
-				res.send(res);
+				console.log(result);
+				res.send(result);
 			}
 		});
 	}

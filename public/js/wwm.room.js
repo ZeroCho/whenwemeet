@@ -321,8 +321,10 @@ wwm.room = (function(){
 		}
 		
 		if (allSelected) {
+			$(this).removeClass('selected');
 			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: dayList});
 		} else {
+			$(this).addClass('selected');
 			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: dayList});
 		}
 	}
@@ -345,8 +347,10 @@ wwm.room = (function(){
 			timeList.push([time, i]);
 		}
 		if (allSelected) {
+			$(this).removeClass('selected');
 			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
 		} else {
+			$(this).addClass('selected');
 			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
 		}
 	}
