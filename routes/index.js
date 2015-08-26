@@ -115,7 +115,7 @@ router.post('/confirm/:rid', function(req, res) {
 		if (err) {
 			console.log('confirmupdatedayerror:' + err);
 		} else {
-			roomCollection.update({rid: rid, 'members.id': id}, {$set: {'members.$.confirm': bool}}, function(err, res) {
+			roomCollection.update({rid: rid, 'members.id': id.toString()}, {$set: {'members.$.confirm': bool}}, function(err, res) {
 				if (err) {
 					console.log('confirmerror:' + err);
 				} else {
@@ -242,7 +242,7 @@ router.post('/changeroom/:rid', function(req, res) {
 	var rid = req.params.rid;
 	if (req.body.title) {
 		var title = req.body.title;
-		roomCollection.update({id: rid}, {title: title}, function(err, result) {
+		roomCollection.update({id: rid}, {$set: {title: title}}, function(err, result) {
 			if (err) {
 				console.log('changeroomerror:' + err);
 			} else {
@@ -252,7 +252,7 @@ router.post('/changeroom/:rid', function(req, res) {
 		});
 	} else if (req.body.number) {
 		var number = req.body.number;
-		roomCollection.update({id: rid}, {number: number}, function(err, result) {
+		roomCollection.update({id: rid}, {$set: {number: number}}, function(err, result) {
 			if (err) {
 				console.log('changeroomerror:' + err);
 			} else {
