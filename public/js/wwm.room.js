@@ -338,7 +338,7 @@ wwm.room = (function(){
 		var timeList = [];
 		var allSelected = true;
 		for (var i = 0; i < 12; i++) {
-			if (arr[time][i].indexOf(stMap.myInfo.personColor) == -1) {
+			if (arr[time][i] == 0 || arr[time][i].indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
 			}
 			timeList.push([time, i]);
