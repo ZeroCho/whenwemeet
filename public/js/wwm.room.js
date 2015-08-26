@@ -274,7 +274,7 @@ wwm.room = (function(){
 	function changeTitle(e) {
 		var title = $(this).prev().val();
 		console.log('changeTitle', title);
-		var titlePromise = wwm.model.changeTitle(e.data.rid, title);
+		var titlePromise = wwm.model.changeTitle(stMap.rid, title);
 		titlePromise.done(function(res) {
 			stMap.title = title;
 			jqMap.$title.text(title);
@@ -291,7 +291,7 @@ wwm.room = (function(){
 			alert('현재 사람이 설정한 수보다 많습니다.');
 			return;
 		}
-		var limitPromise = wwm.model.changeLimit(e.data.rid, number);
+		var limitPromise = wwm.model.changeLimit(stMap, number);
 		limitPromise.done(function(res) {
 			changeTotalNumber(number);	
 		});
