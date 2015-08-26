@@ -426,13 +426,13 @@
 				</div>
 				<div id="day-exception">
 					<ul>
+						<li id="not-sun">일요일은 안 돼요</li>
 						<li id="not-mon">월요일은 안 돼요</li>
 						<li id="not-tue">화요일은 안 돼요</li>
 						<li id="not-wed">수요일은 안 돼요</li>
 						<li id="not-thu">목요일은 안 돼요</li>
 						<li id="not-fri">금요일은 안 돼요</li>
 						<li id="not-sat">토요일은 안 돼요</li>
-						<li id="not-sun">일요일은 안 돼요</li>
 					</ul>
 					<button id="day-exc-btn">요일 예외</button>
 				</div>

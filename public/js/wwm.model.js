@@ -75,7 +75,7 @@ wwm.model = (function () {
 	function confirm(data) {
 		var deferred = $.Deferred();
 		var rid = data.rid;
-		$.post('/confirm/' + rid, {day: data.day, night: data.night}).done(function(res) {
+		$.post('/confirm/' + rid, {day: data.day, night: data.night, id: data.id}).done(function(res) {
 			console.log(res);
 			deferred.resolve(res);
 		}).fail(function(err) {

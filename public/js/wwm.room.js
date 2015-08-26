@@ -337,8 +337,9 @@ wwm.room = (function(){
 		}
 		var timeList = [];
 		var allSelected = true;
-		for (var i = 0; i < 12; i++) {
-			if (arr[time][i] == 0 || arr[time][i].indexOf(stMap.myInfo.personColor) == -1) {
+		console.log(arr[time]);
+		for (var i = 0; i < 7; i++) {
+			if (arr[time][i].indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
 			}
 			timeList.push([time, i]);
@@ -441,7 +442,6 @@ wwm.room = (function(){
 	}
 	function excludeTime(e) {
 		// 해당 시간에 대한 어레이를 발송
-
 		var idx = $(this).index();
 		var time = $(this).find('input').val();
 		console.log('excludeTime', idx, time);
@@ -526,7 +526,7 @@ wwm.room = (function(){
 	function refresh(e) {
 		console.log('refresh', {rid: stMap.rid, id: stMap.myInfo.id});
 		socket.on('responseArr', function(data) {
-			console.log('socket responseArr');
+			console.log('socket responㅁseArr');
 			stMap.dayArray = data.day;
 			stMap.nightArray = data.night;
 		});

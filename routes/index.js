@@ -96,7 +96,7 @@ router.post('/confirm/:rid', function(req, res) {
 	var night = JSON.stringify(req.body.night);
 	var id = req.body.id;
 	var bool = req.body.bool;
-	roomCollection.update({rid: rid}, {day: day, night: night}, function(err, res) {
+	roomCollection.update({rid: rid}, {'$set': {day: day, night: night}}, function(err, res) {
 		if (err) {
 			console.log('confirmupdatedayerror:' + err);
 		} else {
