@@ -302,7 +302,7 @@ wwm.room = (function(){
 			console.log(err);
 		});
 	}
-	function onClickDay() {`
+	function onClickDay() {
 		console.log('onClickDay');
 		var day = this.cellIndex - 1;
 		var arr;
