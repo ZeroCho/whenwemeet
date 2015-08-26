@@ -258,6 +258,9 @@ svg .triangle-3 { fill: greenyellow; }
 	display: inline-block;
 	text-align: center;
 }
+#day {
+	background: crimson;
+}
 #room-main table {
 	width: 100%;
 	user-select: none;

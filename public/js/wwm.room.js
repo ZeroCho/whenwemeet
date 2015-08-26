@@ -327,8 +327,8 @@ wwm.room = (function(){
 		}
 	}
 	function onClickTime() {
-		console.log('onClickTime');
 		var time = this.parentNode.rowIndex - 1;
+		console.log('onClickTime',  time);
 		var arr;
 		if (stMap.now === 'day') {
 			arr = stMap.dayArray;
@@ -646,9 +646,6 @@ wwm.room = (function(){
 			}
 			wwm.shell.view.html(out);
 			setJqMap(wwm.shell.view);
-			jqMap.$day.css({
-				background: 'gray'
-			});
 			showMembers();
 			socket.on('out', function(id) {
 				console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
