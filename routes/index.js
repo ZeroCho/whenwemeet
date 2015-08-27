@@ -49,14 +49,15 @@ router.post('/join', function (req, res) {
 		$set: {name: name, picture: picture}, $setOnInsert: {id: id, roomcount: 0}
 	}, {
 		upsert: true
-	}, function(err, docs) {
+	}, function(err, r) {
 		if (err) {
 			console.log('joinerror:' + err);
 		} else {
 			process.env.MY_ID = id;
 			process.env.NAME = name;
-			console.log('join:' + res);
-			res.send(res);
+			console.log('join success:');
+			console.log(r);
+			res.send(r);
 		}
 	});
 });
