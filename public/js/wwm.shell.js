@@ -2,7 +2,8 @@ wwm.shell = (function () {
 	var cfMap = {
 		$con: $('#whenwemeet'),
 		$view: $('#view'),
-		$modal: $('#modal')
+		$modal: $('#modal'),
+		$logo: $('#logo')
 	};
 	function onPopstate(e) {
 		var state = e.originalEvent.state;
@@ -110,6 +111,7 @@ wwm.shell = (function () {
 		initModule: initModule,
 		view: cfMap.$view,
 		modal: cfMap.$modal,
+		logo: cfMap.$logo,
 		showSVGLogo: showSVGLogo,
 		showCanvasLogo: showCanvasLogo
 	};

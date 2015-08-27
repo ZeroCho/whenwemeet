@@ -86,17 +86,18 @@ wwm.login = (function () {
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
+			$wrapper: $con.find('#login-wrapper'),
 			$kakaoLogin: $con.find('#kakao-login-btn'),
 			$fbLogin: $con.find('#fb-login-btn'),
 			$localhost: $con.find('#localhost-login'),
-			$localhost2: $con.find('#localhost2-login'),
-			$logo: $con.find('#login-logo')
+			$localhost2: $con.find('#localhost2-login')
 		};
 	}
 	function initModule() {
-		wwm.shell.view.html($('#wwm-login').html());
+		wwm.shell.logo.animate({height: '70%'});
+		wwm.shell.logo.after($('#wwm-login').html());
 		setJqMap(wwm.shell.view);
-		wwm.shell.showSVGLogo(jqMap.$logo, 100);
+		jqMap.$wrapper.fadeIn('slow');
 		jqMap.$kakaoLogin.on({
 			click: kakaoLogin,
 			mouseover: function () {

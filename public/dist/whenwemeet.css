@@ -110,17 +110,14 @@ svg .triangle-1 { fill: cyan; }
 svg .triangle-2 { fill: magenta; }
 svg .triangle-3 { fill: greenyellow; }
 
-#login-logo {
-	height: 70%;
-	text-align: center;
-}
-
-#login {
+#login-wrapper {
+	display: hidden;
 	position: absolute;
 	height: 30%;
 	width: 100%;
 	text-align: center;
 }
+
 #fb-login-btn, #kakao-login-btn {
 	cursor: pointer;
 }

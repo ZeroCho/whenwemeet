@@ -199,6 +199,7 @@ wwm.lobby = (function (){
 		if (!window.userInfo) window.userInfo = JSON.parse(localStorage.login);
 		var src = $('#wwm-lobby').text();
 		var name =  userInfo.name;
+		var picture = userInfo.picture;
 		dust.render(dust.loadSource(dust.compile(src)), {
 			name: name,
 			picture: picture
@@ -207,7 +208,7 @@ wwm.lobby = (function (){
 				console.log(err);
 				alert('rendering error! 콘솔 확인');
 			} else {
-				wwm.shell.view.html(out);
+				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko_KR" style="margin: 0; padding: 0; height: 100%; box-sizing: border-box;">
+<html lang="ko_KR">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -8,15 +8,15 @@
 	<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css"/>
 	<link rel="stylesheet" href="/dist/whenwemeet.css"/>
 </head>
-<body style="height: 100%;">
-	<div id="whenwemeet" style="height: 100%">
-		<div id="view" style="height: 100%">
-			<div id="logo" style="text-align:center; height:100%;">
-				<svg viewbox="0 0 168 300" style="position: relative; top: 50%; transform: translateY(-50%); margin: 0 auto; width: 84px; height: 150px; display: inline-block;">
-					<polygon points="5,100 105,100 55,13.4" style="-webkit-filter:drop-shadow(5px 5px 3px #ccc);filter:drop-shadow(5px 5px 3px #ccc);fill:yellow"/>
-					<polygon points="0,110 100,110 50,196.6" style="-webkit-filter:drop-shadow(5px 5px 3px #ccc);filter:drop-shadow(5px 5px 3px #ccc);fill:cyan"/>
-					<polygon points="60,200 160,200 110,113.4" style="-webkit-filter:drop-shadow(5px 5px 3px #ccc);filter:drop-shadow(5px 5px 3px #ccc);fill:magenta"/>
-					<polygon points="55,210 155,210 105,296.6" style="-webkit-filter:drop-shadow(5px 5px 3px #ccc);filter:drop-shadow(5px 5px 3px #ccc);fill:greenyellow"/>
+<body>
+	<div id="whenwemeet">
+		<div id="view">
+			<div id="logo">
+				<svg viewbox="0 0 168 300">
+					<polygon points="5,100 105,100 55,13.4"/>
+					<polygon points="0,110 100,110 50,196.6"/>
+					<polygon points="60,200 160,200 110,113.4"/>
+					<polygon points="55,210 155,210 105,296.6"/>
 				</svg>
 			</div>
 		</div>
@@ -47,8 +47,7 @@
 		<canvas class="canvas-logo"></canvas>
 	</script>
 	<script type="text/html" id="wwm-login">
-		<div id="login-logo"></div>
-		<div id="login">
+		<div id="login-wrapper">
 			<div>
 				<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png"/>
 			</div>
