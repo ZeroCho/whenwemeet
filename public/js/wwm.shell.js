@@ -67,8 +67,6 @@ wwm.shell = (function () {
 		initModule: initModule,
 		view: cfMap.$view,
 		modal: cfMap.$modal,
-		logo: cfMap.$logo,
-		showSVGLogo: showSVGLogo,
-		showCanvasLogo: showCanvasLogo
+		logo: cfMap.$logo
 	};
 }());
