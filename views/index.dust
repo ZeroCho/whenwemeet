@@ -12,11 +12,11 @@
 	<div id="whenwemeet">
 		<div id="view">
 			<div id="logo">
-				<svg viewbox="0 0 168 300">
-					<polygon points="5,100 105,100 55,13.4"/>
-					<polygon points="0,110 100,110 50,196.6"/>
-					<polygon points="60,200 160,200 110,113.4"/>
-					<polygon points="55,210 155,210 105,296.6"/>
+				<svg class="svg-logo" viewbox="0 0 168 300">
+					<polygon class="triangle triangle-0" points="5,100 105,100 55,13.4"/>
+					<polygon class="triangle triangle-1" points="0,110 100,110 50,196.6"/>
+					<polygon class="triangle triangle-2" points="60,200 160,200 110,113.4"/>
+					<polygon class="triangle triangle-3" points="55,210 155,210 105,296.6"/>
 				</svg>
 			</div>
 		</div>
@@ -47,6 +47,7 @@
 		<canvas class="canvas-logo"></canvas>
 	</script>
 	<script type="text/html" id="wwm-login">
+		<div id="login-logo"></div>
 		<div id="login-wrapper">
 			<div>
 				<img id="kakao-login-btn" src="/kakao_account_login_btn_medium_narrow.png"/>
@@ -61,7 +62,7 @@
 	<script type="text/html" id="wwm-lobby">
 		<header id="lobby-header">
 			<img id="profile-picture" src="{~lb}picture{~rb}"/>
-			<p><span id="profile-name">{~lb}name{~rb}</span>님 안녕하세요!</p>
+			<span id="profile-name">{~lb}name{~rb}</span>님 안녕하세요!
 			<button id="refresh-profile"><i class="fa fa-refresh"></i></button>
 			<button id="logout-btn">로그아웃</button>
 		</header>

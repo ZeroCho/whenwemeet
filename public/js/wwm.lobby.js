@@ -114,7 +114,7 @@ wwm.lobby = (function (){
 		delete window.userInfo;
 		localStorage.removeItem('login');
 		localStorage.removeItem('loginType');
-		wwm.login.initModule(wwm.shell.view);
+		wwm.login.initModule();
 	}
 	function enterRoom() {
 		var $this = $(this);

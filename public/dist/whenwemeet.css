@@ -93,7 +93,7 @@ li {
 	height: 100%;
 }
 #logo svg {
-	width: 300px;
+	width: 100px;
 }
 svg {
 	position: relative;
@@ -109,7 +109,10 @@ svg .triangle-0 { fill: yellow; }
 svg .triangle-1 { fill: cyan; }
 svg .triangle-2 { fill: magenta; }
 svg .triangle-3 { fill: greenyellow; }
-
+#login-logo {
+	text-align: center;
+	height: 70%;
+}
 #login-wrapper {
 	display: hidden;
 	position: absolute;
@@ -127,7 +130,11 @@ svg .triangle-3 { fill: greenyellow; }
 	padding: 10px;
 	position: relative;
 }
-
+#refresh-profile {
+	position: absolute;
+	margin-right: 50px;
+	margin-top: 10px;
+}
 #logout-btn {
 	position: absolute;
 	right: 0;
