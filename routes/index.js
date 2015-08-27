@@ -21,14 +21,18 @@ router.get('/', function(req, res) {
 });
 router.get('/lobby/:id', function(req, res) {
 	var id = req.params.id;
-	res.render('error');
+	res.render('index', {
+		title: '우리언제만나'
+	});
 });
 router.get('/room/:rid', function(req, res) {
 	var rid = req.params.rid;
 	res.render('error');
 });
 router.get('/login', function(req, res) {
-	res.render('error');
+	res.render('index', {
+		title: '우리언제만나'
+	});
 });
 router.get('/confirm/:rid', function(req, res) {
 	var rid = req.params.rid;
@@ -37,7 +41,7 @@ router.get('/confirm/:rid', function(req, res) {
 router.post('/join', function (req, res) {
 	var id = req.body.id;
 	var name = req.body.name;
-	var picture = req.body.picture || null;
+	var picture = req.body.picture;
 	console.log('name: ' + name + ', id: '+ id + ', picture: ' + picture);
 	memberCollection.update({
 		id: id

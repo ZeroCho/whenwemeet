@@ -34,6 +34,7 @@ wwm.login = (function () {
 				Kakao.API.request({
 					url: '/v1/user/me',
 					success: function (res) {
+						console.log(JSON.stringify(res));
 						res.name = res.properties.nickname;
 						res.picture = res.properties.profile_image;
 						var joinPromise = wwm.model.join(res);
@@ -95,11 +96,11 @@ wwm.login = (function () {
 		};
 	}
 	function initModule() {
-		if (wwm.shell.logo.length) {
+		if (wwm.shell.logo.length) { // 처음 실행했을 때
 			wwm.shell.logo.animate({height: '70%'});
 			wwm.shell.logo.after($('#wwm-login').html());
 			setJqMap(wwm.shell.view);
-		} else {
+		} else { // 로비에서 로그아웃 했을 때
 			wwm.shell.view.html($('#wwm-login').html());
 			setJqMap(wwm.shell.view);
 			jqMap.$logo.showSVGLogo(100);

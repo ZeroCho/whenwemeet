@@ -110,6 +110,8 @@ svg .triangle-1 { fill: cyan; }
 svg .triangle-2 { fill: magenta; }
 svg .triangle-3 { fill: greenyellow; }
 #login-logo {
+	position: absolute;
+	z-index: 1;
 	text-align: center;
 	height: 70%;
 }
