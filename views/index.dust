@@ -62,7 +62,7 @@
 	<script type="text/html" id="wwm-lobby">
 		<header id="lobby-header">
 			<img id="profile-picture" src="{~lb}picture{~rb}"/>
-			<span id="profile-name">{~lb}name{~rb}</span>님 안녕하세요!
+			<span id="profile-name">{~lb}name{~rb}</span>
 			<button id="refresh-profile"><i class="fa fa-refresh"></i></button>
 			<button id="logout-btn">로그아웃</button>
 		</header>
@@ -70,7 +70,9 @@
 			<div id="room-list">
 				<div class="title sr-only">리스트</div>
 				<div id="rooms"></div>
-				<button id="refresh-list"><i class="fa fa-refresh"><span class="sr-only">새로고침</span></i></button>
+				<button id="refresh-list">
+					<i class="fa fa-refresh"><span class="sr-only">새로고침</span></i>
+				</button>
 			</div>
 		</main>
 		<footer id="lobby-footer">
@@ -78,7 +80,9 @@
 			<div id="search">
 				<form>
 					<input type="text" placeholder="방 제목"/>
-					<button id="searchroom-btn"><i class="fa fa-search"><span class="sr-only">검색</span></i></button>
+					<button id="searchroom-btn">
+						<i class="fa fa-search"><span class="sr-only">검색</span></i>
+					</button>
 				</form>
 			</div>
 		</footer>

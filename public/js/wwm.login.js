@@ -63,6 +63,7 @@ wwm.login = (function () {
 		FB.login(function (res) {
 			if (res.status === 'connected') {
 				FB.api('/me', function (res) {
+					console.log(JSON.stringify(res));
 					res.picture = '//graph.facebook.com/' + res.id + '/picture'
 					var joinPromise = wwm.model.join(res);
 					joinPromise.fail(function(err){

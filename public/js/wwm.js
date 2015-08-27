@@ -10,7 +10,7 @@ function onError(errorMsg, url, lineNumber, column, errorObj) {
 }
 $.fn.showSVGLogo = function(width) {
 	var $logo = $($('#wwm-svg-logo').html());
-	$logo.width(width);
+	$logo.width(width || '100%');
 	this.prepend($logo);
 	return this;
 };
@@ -50,7 +50,7 @@ $.fn.showCanvasLogo = function(width) {
 	drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');
 	drawEqTriangle(ctx, 50, canvas.width/2 - 16, canvas.height/2 - 49, 'yellow');
 	drawRevEqTriangle(ctx, 50, canvas.width/2 + 36, canvas.height/2 + 49, 'greenyellow');
-	$logo.width(width);
+	$logo.width(width || '100%');
 	this.prepend($logo);
 	return this;
 };

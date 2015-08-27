@@ -26,7 +26,7 @@ wwm.modal = (function (){
 		var number = jqMap.$number.val();
 		var password = jqMap.$password.val().trim();
 		var userInfo = JSON.parse(localStorage.login);
-		var maker = userInfo.id || userInfo._id;
+		var maker = userInfo.id;
 		if (!title) {
 			$(spinner.el).remove();
 			alert('제목을 입력하세요.');

@@ -200,7 +200,7 @@ wwm.lobby = (function (){
 		if (!window.userInfo) window.userInfo = JSON.parse(localStorage.login);
 		var src = $('#wwm-lobby').text();
 		var name =  userInfo.name;
-		var picture = userInfo.picture || null;
+		var picture = userInfo.picture;
 		dust.render(dust.loadSource(dust.compile(src)), {
 			name: name,
 			picture: picture
@@ -211,6 +211,9 @@ wwm.lobby = (function (){
 			} else {
 				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
+				if (picture === null) {
+					jqMap.$profilePicture.showCanvasLogo();
+				}
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);
