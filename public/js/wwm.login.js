@@ -102,9 +102,8 @@ wwm.login = (function () {
 		} else {
 			wwm.shell.view.html($('#wwm-login').html());
 			setJqMap(wwm.shell.view);
-			wwm.shell.showSVGLogo(jqMap.$logo, 100);
+			jqMap.$logo.showSVGLogo(100);
 		}
-		
 		jqMap.$wrapper.fadeIn('slow');
 		jqMap.$kakaoLogin.on({
 			click: kakaoLogin,

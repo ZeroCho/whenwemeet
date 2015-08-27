@@ -14,13 +14,13 @@ wwm.shell = (function () {
 				window.userInfo = state.data;
 				localStorage.login = JSON.stringify(state.data);
 				localStorage.loginType = state.type;
-				wwm.lobby.initModule(wwm.shell.view);
+				wwm.lobby.initModule();
 				break;
 			case 'directlogin':
-				wwm.login.initModule(wwm.shell.view);
+				wwm.login.initModule();
 				break;
 			case 'lobby':
-				wwm.lobby.initModule(wwm.shell.view);
+				wwm.lobby.initModule();
 				break;
 			case 'intro':
 				wwm.modal.initModule($('#wwm-intro').html());
@@ -32,7 +32,7 @@ wwm.shell = (function () {
 				delete window.userInfo;
 				localStorage.removeItem('login');
 				localStorage.removeItem('loginType');
-				wwm.login.initModule(wwm.shell.view);
+				wwm.login.initModule();
 				break;
 			case 'room':
 				wwm.room.initModule(state.data, 'enter');
@@ -42,50 +42,6 @@ wwm.shell = (function () {
 			default:
 				wwm.shell.initModule();
 		}
-	}
-	function drawEqTriangle(ctx, side, cx, cy, color){  
-		var h = side * (Math.sqrt(3)/2);    
-		ctx.fillStyle = color;
-		ctx.beginPath();
-		ctx.moveTo(cx, cy - h / 2);
-		ctx.lineTo(cx - side / 2, cy + h / 2);
-		ctx.lineTo(cx + side / 2, cy + h / 2);
-		ctx.lineTo(cx, cy - h / 2);
-		ctx.shadowOffsetX = 1;
-		ctx.shadowOffsetY = 3;
-		ctx.shadowBlur    = 1;
-		ctx.shadowColor   = 'rgb(204, 204, 204)';      
-		ctx.fill(); 
-	}
-	function drawRevEqTriangle(ctx, side, cx, cy, color){  
-		var h = side * (Math.sqrt(3)/2); 
-		ctx.fillStyle = color;
-		ctx.beginPath(); 
-		ctx.moveTo(cx, cy - h / 2);
-		ctx.lineTo(cx - side, cy - h / 2);
-		ctx.lineTo(cx - side / 2, cy + h / 2);
-		ctx.lineTo(cx, cy - h / 2);
-		ctx.shadowOffsetX = 1;
-		ctx.shadowOffsetY = 3;
-		ctx.shadowBlur    = 1;
-		ctx.shadowColor   = 'rgb(204, 204, 204)'; 
-		ctx.fill(); 
-	}
-	function showCanvasLogo($target, width) {
-		var $logo = $($('#wwm-canvas-logo').html());
-		var canvas = $logo[0];
-		var ctx = canvas.getContext('2d');
-		drawEqTriangle(ctx, 50, canvas.width/2 + 13, canvas.height/2, 'magenta');
-		drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');
-		drawEqTriangle(ctx, 50, canvas.width/2 - 16, canvas.height/2 - 49, 'yellow');
-		drawRevEqTriangle(ctx, 50, canvas.width/2 + 36, canvas.height/2 + 49, 'greenyellow');
-		$logo.width(width);
-		$target.prepend($logo);
-	}
-	function showSVGLogo($target, width) {
-		var $logo = $($('#wwm-svg-logo').html());
-		$logo.width(width);
-		$target.prepend($logo);
 	}
 
 	function initModule() {
