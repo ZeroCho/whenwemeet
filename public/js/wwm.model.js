@@ -30,7 +30,7 @@ wwm.model = (function () {
 	}
 	function getUser(id) {
 		var deferred = $.Deferred();
-		$.get('/members/' + id).done(function (res) {
+		$.get('/member/' + id).done(function (res) {
 			deferred.resolve(res);
 		}).fail(function(err) {
 			deferred.reject(err);
@@ -96,21 +96,21 @@ wwm.model = (function () {
 	}
 	function createRoom(data) {
 		var deferred = $.Deferred();
-		console.log('modeldata', data);
-		$.get('/member/' + data.maker).done(function(res) {
-			console.log(res);
-			if (res[0].roomcount >= 3) {
+		var userPromise = getUser(data.maker);
+		userPromise.done(function(res) {
+			if (res.roomcount >= 3) {
 				var msg = '방은 최대 세 개까지 만들 수 있습니다.';
 				deferred.reject(msg);
 			} else {
-				$.post('/addroom/' + data.rid, data).done(function () {
-					deferred.resolve(res);				
+				$.post('/addroom/' + data.rid, data).done(function (r) {
+					deferred.resolve(r);				
 				}).fail(function (err) {
 					console.log(err);
 					deferred.reject(err);
 				});
 			}
-		}).fail(function (err) {
+		});
+		userPromise.fail(function (err) {
 			console.log(err);
 			deferred.reject(err);
 		});

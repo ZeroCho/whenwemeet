@@ -119,23 +119,21 @@ router.post('/addroom/:rid', function (req, res) {
 	var maker = req.body.maker;
 	var title = req.body.title;
 	var members = JSON.parse(req.body.members);
-	console.log('addroom');
-	console.log(maker);
-	console.log(members);
 	process.env.MY_ID = maker;
 	process.env.NAME = members[0].name;
-	var number = req.body.number || 2;
-	var password = req.body.password || null;
+	var number = req.body.number;
+	var password = req.body.password;
 	memberCollection.update({'id': maker}, {'$inc': {'roomcount': 1}}, function(err, result) {
 		if (err) {
 			console.log('roomcounterror:' + err);
 		} else {
-			console.log(result);
-			roomCollection.insertOne({'rid': rid, 'maker': maker, 'password': password, 'title': title, 'members': members, 'number': number, 'day': null, 'night': null}, function(err, r){
+			roomCollection.insertOne({
+				'rid': rid, 'maker': maker, 'password': password, 'title': title, 'members': members, 'number': number, 'day': null, 'night': null
+			}, function(err, r){
 				if (err) {
 					console.log('addroomerror:' + err);
 				} else {
-					console.log(r);
+					console.log('addroom success');
 					res.send(r);
 				}
 			});
