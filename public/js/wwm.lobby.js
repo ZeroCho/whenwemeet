@@ -192,6 +192,7 @@ wwm.lobby = (function (){
 		};
 	}
 	function initModule() {
+		localStorage.clear();
 		if (!localStorage.login) {
 			history.pushState({mod: 'login'}, '', '/login');
 			wwm.login.initModule();
@@ -199,7 +200,7 @@ wwm.lobby = (function (){
 		if (!window.userInfo) window.userInfo = JSON.parse(localStorage.login);
 		var src = $('#wwm-lobby').text();
 		var name =  userInfo.name;
-		var picture = userInfo.picture;
+		var picture = userInfo.picture || null;
 		dust.render(dust.loadSource(dust.compile(src)), {
 			name: name,
 			picture: picture
