@@ -1,7 +1,4 @@
 wwm.modal = (function (){
-	var stMap = {
-		$modal: $('#modal')
-	};
 	var jqMap;
 	function setJqMap($con) {
 		jqMap = {
@@ -15,29 +12,27 @@ wwm.modal = (function (){
 	}
 	function onCloseModal(e) {
 		e.preventDefault();
-		stMap.$modal.hide();
+		wwm.shell.modal.hide();
 	}
 	function createRoom(e) {
 		e.preventDefault();
 		var spinner = new Spinner().spin();
 		jqMap.$con.append(spinner.el);
-		var data;
 		var title = jqMap.$title.val().trim();
 		var number = jqMap.$number.val();
-		var password = jqMap.$password.val().trim();
-		var userInfo = JSON.parse(localStorage.login);
-		var maker = userInfo.id;
+		var password = jqMap.$password.val().trim() || null;
+		var maker = userInfo.id.toString();
 		if (!title) {
 			$(spinner.el).remove();
 			alert('제목을 입력하세요.');
 			return;
 		}
-		data = {
+		var data = {
 			rid: new Date().getTime().toString(),
 			title: title,
-			maker: maker.toString(),
+			maker: maker,
 			number: number,
-			password: password || null,
+			password: password,
 			members: JSON.stringify([{id: userInfo.id, name: userInfo.name, confirm: false}])
 		};
 		console.log('createroom data', data);
@@ -57,10 +52,10 @@ wwm.modal = (function (){
 		});
 	}
 	function initModule($target) {
-		stMap.$modal.html($target);
-		setJqMap(stMap.$modal);
+		wwm.shell.modal.html($target);
+		setJqMap(wwm.shell.modal);
+		wwm.shell.modal.fadeIn('slow');
 		jqMap.$close.click(onCloseModal);
-		stMap.$modal.show();
 		jqMap.$createRoom.click(createRoom);
 	}
 	return {
