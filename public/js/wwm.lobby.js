@@ -175,19 +175,24 @@ wwm.lobby = (function (){
 			$result: $con.find('.result')
 		};
 	}
-	function initModule($con) {
+	function initModule() {
+		if (!localStorage.login) {
+			history.pushState({mod: 'login'}, '', '/login');
+			wwm.login.initModule();
+		}
 		if (!window.userInfo) window.userInfo = JSON.parse(localStorage.login);
 		var src = $('#wwm-lobby').text();
-		var name =  userInfo.name || userInfo.properties.nickname;
+		var name =  userInfo.name;
 		dust.render(dust.loadSource(dust.compile(src)), {
-			name: name
+			name: name,
+			picture: picture
 		}, function(err, out) {
 			if (err) {
 				console.log(err);
 				alert('rendering error! 콘솔 확인');
 			} else {
-				$con.html(out);
-				setJqMap($con);
+				wwm.shell.view.html(out);
+				setJqMap(wwm.shell.view);
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);

@@ -61,7 +61,9 @@
 	</script>
 	<script type="text/html" id="wwm-lobby">
 		<header id="lobby-header">
-			<p>{~lb}name{~rb}님 안녕하세요!</p>
+			<img id="profile-picture" src="{~lb}picture{~rb}"/>
+			<p><span id="profile-name">{~lb}name{~rb}</span>님 안녕하세요!</p>
+			<button id="refresh-profile"><i class="fa fa-refresh"></i></button>
 			<button id="logout-btn">로그아웃</button>
 		</header>
 		<main id="lobby-main">
@@ -466,15 +468,11 @@
 				<button id="room-back">목록으로</button>
 				<button id="quit">나가기</button>
 			</div>
-			<div id="my-info">
-				{~lb}name{~rb}
-			</div>
 			<div id="chat">
-				<form>
-					
-				<input id="chatbox" placeholder="채팅창	"/>
-				<button id="send-chat">전송</bu
-				</form>tton>
+				<form>				
+					<input id="chatbox" placeholder="채팅창"/>
+					<button id="send-chat">전송</button>
+				</form>
 			</div>
 		</footer>
 	</script>
@@ -492,6 +490,19 @@
 			<button id="to-lobby">로비</button>
 			<button id="to-room">방으로</button>
 		</footer>
+	</script>
+	<script type="text/html" id="wwm-room-list">
+		<div class="room" data-rid="{~lb}rid{~rb}" data-maker="{~lb}maker{~rb}" data-members="{~lb}members{~rb}">
+			<div class="picture"><img src="{~lb}picture{~rb}"/></div>
+			<div class="password">
+			{~lb}password{~rb}
+			</div>
+			<div class="title">{~lb}title{~rb}</div>
+			<div class="number">
+				<span class="current">{~lb}current{~rb}</span>/<span class="total">{~lb}total{~rb}</span>
+			</div>
+			<div class="result">{~lb}result{~rb}</div>
+		</div>
 	</script>
 	<script type="text/html" id="wwm-member-list">
 		<li data-id="{~lb}id{~rb}">

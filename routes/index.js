@@ -37,35 +37,22 @@ router.get('/confirm/:rid', function(req, res) {
 router.post('/join', function (req, res) {
 	var id = req.body.id;
 	var name = req.body.name;
-	console.log('name: ' + name + ', id: '+ id);
-	memberCollection.find({id: id}).toArray(function(err, docs) {
+	var picture = req.body.picture || null;
+	console.log('name: ' + name + ', id: '+ id + ', picture: ' + picture);
+	memberCollection.update({
+		id: id
+	}, {
+		$set: {name: name, picture, picture}, $setOnInsert: {id: id, roomcount: 0}
+	}, {
+		upsert: true
+	}, function(err, docs) {
 		if (err) {
-			console.log('findiderror:' + err);
+			console.log('joinerror:' + err);
 		} else {
-			console.log('Found the following records');
-			console.log(docs);
-			console.log(docs.length);
-			if (docs.length == 0) {
-				memberCollection.insert({
-					id: id,
-					name: name,
-					roomcount: 0
-				}, function(err, res) {
-					if (err) {
-						console.log('joinerror:' + err);
-					} else {
-						process.env.MY_ID = id;
-						process.env.NAME = name;
-						console.log('join:' + res);
-						res.send(res);
-					}
-				});
-			} else {
-				process.env.MY_ID = id;
-				process.env.NAME = name;
-				console.log(process.env.MY_ID);
-				res.send('already joined');
-			}
+			process.env.MY_ID = id;
+			process.env.NAME = name;
+			console.log('join:' + res);
+			res.send(res);
 		}
 	});
 });
@@ -111,17 +98,11 @@ router.post('/confirm/:rid', function(req, res) {
 	var night = JSON.stringify(req.body.night);
 	var id = req.body.id;
 	var bool = req.body.bool;
-	roomCollection.update({rid: rid}, {day: day, night: night}, function(err, res) {
+	roomCollection.update({rid: rid, 'members.id': id}, {$set: {day: day, night: night, 'members.$.confirm': bool}}, function(err, res) {
 		if (err) {
-			console.log('confirmupdatedayerror:' + err);
+			console.log('confirm error:' + err);
 		} else {
-			roomCollection.update({rid: rid, 'members.id': id.toString()}, {$set: {'members.$.confirm': bool}}, function(err, res) {
-				if (err) {
-					console.log('confirmerror:' + err);
-				} else {
-					res.send(res);
-				}
-			});
+			res.send(res);
 		}
 	});
 });

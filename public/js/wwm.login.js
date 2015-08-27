@@ -34,13 +34,9 @@ wwm.login = (function () {
 				Kakao.API.request({
 					url: '/v1/user/me',
 					success: function (res) {
-						var id = res.id;
-						var name = res.properties.nickname;
-						var data = {
-							name: name,
-							id: id
-						};
-						var joinPromise = wwm.model.join(data);
+						res.name = res.properties.nickname;
+						res.picture = res.properties.profile_image;
+						var joinPromise = wwm.model.join(res);
 						joinPromise.fail(function(err){
 							alert('가입 오류 발생!');
 							console.log(err.responseText);
@@ -66,13 +62,8 @@ wwm.login = (function () {
 		FB.login(function (res) {
 			if (res.status === 'connected') {
 				FB.api('/me', function (res) {
-					var id = res.id;
-					var name = res.name;
-					var data = {
-						name: name,
-						id: id
-					};
-					var joinPromise = wwm.model.join(data);
+					res.picture = '//graph.facebook.com/' + res.id + '/picture'
+					var joinPromise = wwm.model.join(res);
 					joinPromise.fail(function(err){
 						alert('가입 오류 발생!');
 						console.log(err.responseText);
@@ -102,9 +93,9 @@ wwm.login = (function () {
 			$logo: $con.find('#login-logo')
 		};
 	}
-	function initModule($con) {
-		$con.html($('#wwm-login').html());
-		setJqMap($con);
+	function initModule() {
+		wwm.shell.view.html($('#wwm-login').html());
+		setJqMap(wwm.shell.view);
 		wwm.shell.showSVGLogo(jqMap.$logo, 100);
 		jqMap.$kakaoLogin.on({
 			click: kakaoLogin,

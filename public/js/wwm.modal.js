@@ -38,7 +38,7 @@ wwm.modal = (function (){
 			maker: maker.toString(),
 			number: number,
 			password: password || null,
-			members: JSON.stringify([{id: userInfo.id, name: userInfo.name || userInfo.properties.nickname, confirm: false}])
+			members: JSON.stringify([{id: userInfo.id, name: userInfo.name, confirm: false}])
 		};
 		console.log('createroom data', data);
 		var createRoomPromise = wwm.model.createRoom(data);
