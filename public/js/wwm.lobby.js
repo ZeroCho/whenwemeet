@@ -160,6 +160,19 @@ wwm.lobby = (function (){
 		console.log('refreshlist');
 		getList();
 	}
+	function refreshProfile() {
+		var userPromise = wwm.model.getUser(userInfo.id);
+		userPromise.done(function(res) {
+			jqMap.$profilePicture.attr('src', res.picture);
+			jqMap.$profileName.text(res.name);
+			userInfo.picture = res.picture;
+			userInfo.name = res.name;
+			var json = JSON.parse(localStorage.login);
+			json.picture = res.picture;
+			json.name = res.name;
+			localStorage.login = JSON.stringify(json);
+		});
+	}
 	function showResult() {
 		history.pushState({mod: 'confirm'}, '', '/result');
 		wwm.confirm.initModule();
@@ -172,7 +185,10 @@ wwm.lobby = (function (){
 			$list: $con.find('#rooms'),
 			$logout: $con.find('#logout-btn'),
 			$refresh: $con.find('#refresh-list'),
-			$result: $con.find('.result')
+			$refreshProfile: $con.find('#refresh-profile'),
+			$result: $con.find('.result'),
+			$profilePicture: $con.find('#profile-picture'),
+			$profileName: $con.find('#profile-name')
 		};
 	}
 	function initModule() {
@@ -198,6 +214,7 @@ wwm.lobby = (function (){
 				jqMap.$searchroomBtn.click(onSearchRoom);
 				jqMap.$logout.click(logout);
 				jqMap.$refresh.click(refreshList);
+				jqMap.$refreshProfile.click(refreshProfile);
 				socket.on('titleChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {

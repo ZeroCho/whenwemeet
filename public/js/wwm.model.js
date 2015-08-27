@@ -20,9 +20,19 @@ wwm.model = (function () {
 		$.get('/rooms/' + id).done(function (res) {
 			if (res.length === 0) {
 				deferred.reject('no_room');
+			} else {
+				deferred.resolve(res);	
 			}
-			deferred.resolve(res);
 		}).fail(function (err) {
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	}
+	function getUser(id) {
+		var deferred = $.Deferred();
+		$.get('/members/' + id).done(function (res) {
+			deferred.resolve(res);
+		}).fail(function(err) {
 			deferred.reject(err);
 		});
 		return deferred.promise();
@@ -131,6 +141,7 @@ wwm.model = (function () {
 		initModule: initModule,
 		createRoom: createRoom,
 		getRoomList: getRoomList,
+		getUser: getUser,
 		deleteRoom: deleteRoom,
 		ban: ban,
 		changeTitle: changeTitle,

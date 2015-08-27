@@ -42,7 +42,7 @@ router.post('/join', function (req, res) {
 	memberCollection.update({
 		id: id
 	}, {
-		$set: {name: name, picture, picture}, $setOnInsert: {id: id, roomcount: 0}
+		$set: {name: name, picture: picture}, $setOnInsert: {id: id, roomcount: 0}
 	}, {
 		upsert: true
 	}, function(err, docs) {
@@ -60,11 +60,13 @@ router.get('/rooms/:pid', function (req, res) {
 	var pid = req.params.pid;
 	process.env.MY_ID = pid;
 	console.log('getroomlist of ' + pid);
-	roomCollection.find({$or: [{maker: pid},{members: {$elemMatch: {id: pid}}}]}).toArray(function(err, docs) {
+	roomCollection.find({
+		$or: [{maker: pid}, {members: {$elemMatch: {id: pid}}}]
+	}).toArray(function(err, docs) {
 		if (err) {
-			console.log('roomlisterror:' + err);
+			console.log('room list error:' + err);
 		} else {
-			console.log('roomlist:');
+			console.log('room list result:');
 			console.log(docs);
 			res.send(docs);
 		}
@@ -72,12 +74,12 @@ router.get('/rooms/:pid', function (req, res) {
 });
 router.get('/member/:pid', function (req, res) {
 	var pid = req.params.pid;
-	memberCollection.find({id: pid}).toArray(function(err, docs) {
+	memberCollection.findOne({id: pid}, function(err, doc) {
 		if (err) {
 			console.log('membererror:' + err);
 		} else {
-			console.log(docs);
-			res.send(docs);
+			console.log(doc);
+			res.send(doc);
 		}	
 	});
 });
