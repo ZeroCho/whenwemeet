@@ -12,38 +12,39 @@ wwm.lobby = (function (){
 		getListPromise.done(function (res) {
 			for (var i = 0; i < res.length; i++) {
 				var room = res[i];
-				var $title = $('<div/>').addClass('title').text(room.title);
-				var $current = $('<span/>').addClass('current').text(room.members.length);
-				var $total = $('<span/>').addClass('total').text(room.number);
-				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
-				var $result = $('<div/>').addClass('result');
-				var $room = $('<div/>')
-					.addClass('room')
-					.attr({
-						'data-rid': room.rid.toString(),
-						'data-maker': room.maker.toString(),
-						'data-members': JSON.stringify(room.members)
-					})
-					.append($title)
-					.append($number)
-					.append($result);
-				if (room.password) {
-					var $password = $('<div/>').addClass('locked').html('<i class="fa fa-lock"></i>');
+				var src = $('#wwm-room-list').html();
+				var tmpl = dust.loadSource(dust.compile(src));
+				var password = room.password || false;
+				var unlocked = false;
+				if (password) {
 					for (var j = 0; j < room.members.length; j++) {
 						if (room.members[j].id == userInfo.id) {
-							$password = $('<div/>').addClass('unlocked').html('<i class="fa fa-unlock"></i>');
+							unlocked = true;
 							break;
 						}
 					}
-					$room.prepend($password);
 				}
-				$frag.append($room);
+				var parser = {
+					rid: room.rid,
+					picture: room.picture,
+					title: room.title,
+					current: room.members.length,
+					limit: room.limit,
+					result: room.result,
+					password: password,
+					unlocked: unlocked
+				};
+				console.log('parser', parser, password);
+				dust.render(tmpl, parser, function(err, out) {
+					console.log(src, tmpl, out);
+					$frag.append(out);
+				});
 			}
 			jqMap.$list.html($frag);
 		});
 		getListPromise.fail(function (err) {
 			if (err === 'no_room') {
-				jqMap.$list.html('방이 없습니다. 방을 만들어보세요.');
+				jqMap.$list.html('<span class="info-message">방이 없습니다. 방을 만들어보세요.</span>');
 				return;
 			}
 			console.log(err);
@@ -55,7 +56,7 @@ wwm.lobby = (function (){
 	}
 	function onSearchRoom (e) {
 		e.preventDefault();
-		var query = $(this).prev().val().trim();
+		var query = $(this).parent().prev().val().trim();
 		console.log('query', query);
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
@@ -66,7 +67,7 @@ wwm.lobby = (function (){
 		});
 		searchPromise.fail(function (err) {
 			if (err === 'no_room') {
-				jqMap.$list.html('검색 결과가 없습니다.');
+				jqMap.$list.html('<span class="info-message">검색 결과가 없습니다.</span>');
 				return;
 			}
 			console.log(err);
@@ -80,32 +81,33 @@ wwm.lobby = (function (){
 		var $frag = $(document.createDocumentFragment());
 			for (var i = 0; i < res.length; i++) {
 				var room = res[i];
-				var $title = $('<div/>').addClass('title').text(room.title);
-				var $current = $('<span/>').addClass('current').text(room.members.length);
-				var $total = $('<span/>').addClass('total').text(room.number);
-				var $number = $('<div/>').addClass('number').append($current).append('<span>/</span>').append($total);
-				var $reseult = $('<div/>').addClass('result');
-				var $room = $('<div/>')
-					.addClass('room')
-					.attr({
-						'data-rid': room.rid,
-						'data-maker': room.maker,
-						'data-members': JSON.stringify(room.members)
-					})
-					.append($title)
-					.append($number)
-					.append($result);
-				if (room.password) {
-					var $password = $('<div/>').addClass('locked').html('<i class="fa fa-lock"></i>');
+				var src = $('#wwm-room-list').html();
+				var tmpl = dust.loadSource(dust.compile(src));
+				var password = room.password || false;
+				var unlocked = false;
+				if (password) {
 					for (var j = 0; j < room.members.length; j++) {
 						if (room.members[j].id == userInfo.id) {
-							$password = $('<div/>').addClass('unlocked').html('<i class="fa fa-unlock"></i>');
+							unlocked = true;
 							break;
 						}
 					}
-					$room.prepend($password);
 				}
-				$frag.append($room);
+				var parser = {
+					rid: room.rid,
+					picture: room.picture,
+					title: room.title,
+					current: room.members.length,
+					limit: room.limit,
+					result: room.result,
+					password: password,
+					unlocked: unlocked
+				};
+				console.log('parser', parser, password);
+				dust.render(tmpl, parser, function(err, out) {
+					console.log(src, tmpl, out);
+					$frag.append(out);
+				});
 			}
 			jqMap.$list.html($frag);
 	}
@@ -118,39 +120,37 @@ wwm.lobby = (function (){
 	}
 	function enterRoom() {
 		var $this = $(this);
-		console.log($this.data('members'));
-		var data = {
-			rid: $this.data('rid'),
-			title: $this.find('.title').text(),
-			current: $this.find('.current').text(),
-			number: $this.find('.total').text(),
-			maker: $this.data('maker'),
-			members: $this.data('members')
-		};
-		var pw = '';
-		var ajax;
+		var pw;
+		var rid = $(this).data('rid');
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
-		if ($this.has('.locked').length) {
-			pw = prompt('비밀번호', '');		
+		if ($(this).has('.locked').length) {
+			pw = prompt('비밀번호', '');
 			if (pw === null || pw.trim() === '') {
 				$(spinner.el).remove();
 				return;
 			}
-			ajax = $.post('/enterroom/' + data.rid, {pw: pw, pid: userInfo.id, name: userInfo.name});
-		} else {
-			ajax = $.post('/enterroommaster/' + data.rid, {pid: userInfo.id, name: userInfo.name});
 		}
+		var ajax = $.post('/enterroom/' + rid, {pw: pw, pid: userInfo.id, name: userInfo.name, picture: userInfo.picture});
 		ajax.done(function(res) {
-			console.log('enterroompostresult');
-			data.day = res.day || null;
-			data.night = res.night || null;
-			history.pushState({mod: 'room', data: data}, '', '/room/' + data.rid);
-			wwm.room.initModule(data, 'enter');
+			if (res === 'no_room') {
+				alert('방이 없습니다');
+				return;
+			} else if (res === 'wrong_password') {
+				alert('비밀번호가 틀렸습니다.');
+				return;
+			} else if (res === 'ban') {
+				alert('강퇴당한 방에는 들어갈 수 없습니다.');
+				return;
+			}
+			res.current = $this.find('.current').text();
+			console.log('enter room post result', res);
+			history.pushState({mod: 'room', data: res}, '', '/room/' + rid);
+			wwm.room.initModule(res, 'enter');
 		})
 		.fail(function(err) {
 			console.log(err.responseText);
-			alert('비밀번호가 틀렸습니다.');
+			alert('오류발생! 콘솔확인');
 		})
 		.always(function() {
 			$(spinner.el).remove();
@@ -192,12 +192,11 @@ wwm.lobby = (function (){
 		};
 	}
 	function initModule() {
-		localStorage.clear();
 		if (!localStorage.login) {
 			history.pushState({mod: 'login'}, '', '/login');
 			wwm.login.initModule();
 		}
-		if (!window.userInfo) window.userInfo = JSON.parse(localStorage.login);
+		if (!window.userInfo) {window.userInfo = JSON.parse(localStorage.login);}
 		var src = $('#wwm-lobby').text();
 		var name =  userInfo.name;
 		var picture = userInfo.picture;
@@ -212,7 +211,7 @@ wwm.lobby = (function (){
 				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
 				if (picture === null) {
-					jqMap.$profilePicture.showCanvasLogo();
+					jqMap.$profilePicture.replaceWith($('<div style="display:inline;"/>').showCanvasLogo(60));
 				}
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);

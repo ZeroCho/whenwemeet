@@ -18,7 +18,7 @@ wwm.confirm = (function() {
 		var dayArr = [], nightArr = [];
 		for (var i = 0; i < 12; i++) {
 			for (var j = 0; j < 7; j++) {
-				if (stMap.dayArray[i][j].length == 0) {
+				if (stMap.dayArray[i][j].length === 0) {
 					dayArr.push([i, j]);
 				} 
 			}

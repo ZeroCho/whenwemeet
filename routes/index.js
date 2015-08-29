@@ -22,12 +22,16 @@ router.get('/', function(req, res) {
 router.get('/lobby/:id', function(req, res) {
 	var id = req.params.id;
 	res.render('index', {
-		title: '우리언제만나'
+		title: '우리언제만나',
+		id: id
 	});
 });
 router.get('/room/:rid', function(req, res) {
 	var rid = req.params.rid;
-	res.render('error');
+	res.render('index', {
+		title: '우리언제만나',
+		rid: rid
+	});
 });
 router.get('/login', function(req, res) {
 	res.render('index', {
@@ -36,7 +40,10 @@ router.get('/login', function(req, res) {
 });
 router.get('/confirm/:rid', function(req, res) {
 	var rid = req.params.rid;
-	res.render('error');
+	res.render('index', {
+		title: '우리언제만나',
+		rid: rid
+	});
 });
 router.post('/join', function (req, res) {
 	var id = req.body.id;
@@ -56,7 +63,6 @@ router.post('/join', function (req, res) {
 			process.env.MY_ID = id;
 			process.env.NAME = name;
 			console.log('join success:');
-			console.log(r);
 			res.send(r);
 		}
 	});
@@ -91,25 +97,32 @@ router.get('/member/:pid', function (req, res) {
 router.post('/ban/:id', function(req, res) {
 	var id = req.params.id;
 	var rid = req.body.rid;
-	roomCollection.update({rid: rid}, {$pull: {members: {id: id}}}, function(err, res) {
+	roomCollection.update({rid: rid}, {$push: {ban: id}, $pull: {members: {id: id}}}, function(err, r) {
 		if (err) {
 			console.log('ban error:' + err);
 		} else {
-			res.send(res);
+			res.send(r);
 		}	
 	});
 });
 router.post('/confirm/:rid', function(req, res) {
 	var rid = req.params.rid;
-	var day = JSON.stringify(req.body.day);
-	var night = JSON.stringify(req.body.night);
+	var day = JSON.parse(req.body.day);
+	var night = JSON.parse(req.body.night);
 	var id = req.body.id;
 	var bool = req.body.bool;
-	roomCollection.update({rid: rid, 'members.id': id}, {$set: {day: day, night: night, 'members.$.confirm': bool}}, function(err, res) {
+	console.log('confirm ' + rid + ' ' + id + ' ' + bool);
+	console.log(day);
+	console.log(night);
+	roomCollection.update({
+		'rid': rid, 'members.id': id
+	}, {
+		$set: {'day': day, 'night': night, 'members.$.confirm': bool}
+	}, function(err, r) {
 		if (err) {
 			console.log('confirm error:' + err);
 		} else {
-			res.send(res);
+			res.send(r);
 		}
 	});
 });
@@ -121,14 +134,15 @@ router.post('/addroom/:rid', function (req, res) {
 	var members = JSON.parse(req.body.members);
 	process.env.MY_ID = maker;
 	process.env.NAME = members[0].name;
-	var number = req.body.number;
+	var limit = req.body.limit;
 	var password = req.body.password;
+	var picture = req.body.picture;
 	memberCollection.update({'id': maker}, {'$inc': {'roomcount': 1}}, function(err, result) {
 		if (err) {
 			console.log('roomcounterror:' + err);
 		} else {
 			roomCollection.insertOne({
-				'rid': rid, 'maker': maker, 'password': password, 'title': title, 'members': members, 'number': number, 'day': null, 'night': null
+				'rid': rid, 'maker': maker, 'picture': picture, 'password': password, 'title': title, 'members': members, 'limit': limit, 'day': null, 'night': null
 			}, function(err, r){
 				if (err) {
 					console.log('addroomerror:' + err);
@@ -145,68 +159,71 @@ router.post('/enterroom/:rid', function(req, res) {
 	var pw = req.body.pw || null;
 	var pid = req.body.pid;
 	var name = req.body.name;
+	var picture = req.body.picture;
 	var alreadyMember = false;
 	process.env.MY_ID = pid;
 	process.env.CURRENT_ROOM = rid;
 	console.log('rid: ' + rid + ', pw: ' + pw);
-	roomCollection.findOne({rid: rid, password: pw}, function (err, doc) {
+	roomCollection.findOne({rid: rid}, function(err, doc) {
 		if (err) {
-			console.log('enter room error: ' + err);
+			console.error('enterroom: find room error!');
+			console.log(err);
 		} else {
-			for (var i = 0; i < doc.members.length; i++) {
-				if (doc.members[i].id == pid) {
-					alreadyMember = true;
-					break;
+			if (doc.length === 0) {
+				res.send('no_room');
+				return;
+			}
+			if (Array.isArray(doc.ban)) {
+				for (var i = 0; i < doc.ban.length; i++) {
+					if (doc.ban[i] == pid) {
+						res.send('ban');
+						return;
+					}
 				}
 			}
-			if (alreadyMember) {
-				process.env.CURRENT_ROOM = rid;
-				console.log('enterroom result');
-				console.log(doc);
+			if (pw === null) {
 				res.send(doc);
-			} else {
-				roomCollection.update({rid: rid}, {$push: {members: {id: pid, name: name, confirm: false}}}, function(err, result) {
-					if (err) {
-						console.log('enterroomaddmembererror:' + err);
-					} else {
-						res.send(doc);
-					}
-				});
+				return;
 			}
-		}
-	});
-});
-router.post('/enterroommaster/:rid', function(req, res) {
-	var rid = req.params.rid;
-	var pid = req.body.pid;
-	var name = req.body.name;
-	var alreadyMember = false;
-	process.env.MY_ID = pid;
-	process.env.CURRENT_ROOM = rid;
-	roomCollection.findOne({rid: rid}, function (err, doc) {
-		if (err) {
-			console.log('enter room master error: ' + err);
-		} else {
-			for (var i = 0; i < doc.members.length; i++) {
-				if (doc.members[i].id == pid) {
-					alreadyMember = true;
-					break;
+			roomCollection.findOne({rid: rid, password: pw}, function (err, doc) {
+				if (err) {
+					console.log('enter room error: ' + err);
+				} else {
+					if (doc.length === 0) { // 비밀번호가 틀림
+						res.send('wrong_password');
+						return;
+					}
+					for (var i = 0; i < doc.members.length; i++) {
+						if (doc.members[i].id == pid) {
+							alreadyMember = true;
+							break;
+						}
+					}
+					if (alreadyMember) {
+						process.env.CURRENT_ROOM = rid;
+						console.log('enterroom result');
+						console.log(doc);
+						res.send(doc);
+					} else {
+						roomCollection.update({rid: rid}, {
+							$push: {
+								members: {
+									id: pid,
+									name: name,
+									picture: picture,
+									confirm: false
+								}
+							}
+						}, function (err, result) {
+							if (err) {
+								console.log('enterroomaddmembererror:' + err);
+							} else {
+								res.send(doc);
+							}
+						});
+					}
 				}
-			}
-			if (alreadyMember) {
-				process.env.CURRENT_ROOM = rid;
-				console.log('enterroom result');
-				console.log(doc);
-				res.send(doc);
-			} else {
-				roomCollection.update({rid: rid}, {$push: {members: {id: pid, name: name, confirm: false}}}, function(err, result) {
-					if (err) {
-						console.log('enterroomaddmembererror:' + err);
-					} else {
-						res.send(doc);
-					}
-				});
-			}
+			});
 		}
 	});
 });
@@ -236,9 +253,9 @@ router.post('/changeroom/:rid', function(req, res) {
 				res.send(result);
 			}
 		});
-	} else if (req.body.number) {
-		var number = req.body.number;
-		roomCollection.update({rid: rid}, {$set: {number: number}}, function(err, result) {
+	} else if (req.body.limit) {
+		var limit = req.body.limit;
+		roomCollection.update({rid: rid}, {$set: {limit: limit}}, function(err, result) {
 			if (err) {
 				console.log('changeroomerror:' + err);
 			} else {
@@ -251,21 +268,22 @@ router.post('/changeroom/:rid', function(req, res) {
 router.post('/deleteroom/:rid', function (req, res) {
 	var rid = req.params.id;
 	var maker = req.body.maker;
-	roomCollection.find({rid: rid, maker: maker}).toArray(function(err, docs) {
+	roomCollection.findOne({rid: rid, maker: maker}, function(err, doc) {
 		if (err) {
 			console.log('findroomerror:' + err);
-		} else if (docs.length == 0) {
+		} else if (doc.length === 0) {
 			res.send('no_room');
+			return;
 		} else {
-			memberCollection.update({id: maker}, {$inc: {roomcount: -1}}, function(err, docs) {
+			memberCollection.update({id: maker}, {$inc: {roomcount: -1}}, function(err, result) {
 				if (err) {
 					console.log('roomcounterror:' + err);
 				} else {
-					roomCollection.remove({rid: rid}, function(err, docs){
+					roomCollection.remove({rid: rid}, function(err, r){
 						if (err) {
 							console.log('addroomerror:' + err);
 						} else {
-							res.send(docs);
+							res.send(r);
 						}
 					});
 				}

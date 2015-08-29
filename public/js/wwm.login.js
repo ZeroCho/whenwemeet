@@ -1,34 +1,32 @@
 wwm.login = (function () {
 	var jqMap;
-	function localhostLogin() {
-		var res = {id: "123456789", name: '관리자'};
+	var adminLogin = function() {
+		var res = {id: "123456789", name: '관리자', picture: null};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');
 			console.log(err.responseText);
-			return;
 		});
 		history.pushState({mod: 'login', data: res, type: 'local'}, '', '/lobby/123456789');
 		window.userInfo = res;
 		localStorage.login = JSON.stringify(res);
 		localStorage.loginType = 'local';
 		wwm.lobby.initModule(wwm.shell.view);
-	}
-	function localhost2Login() {
-		var res = {id: "987654321", name: '테스터'};
+	};
+	var testLogin = function() {
+		var res = {id: "987654321", name: '테스터', picture: null};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');
 			console.log(err.responseText);
-			return;
 		});
 		history.pushState({mod: 'login', data: res, type: 'local2'}, '', '/lobby/987654321');
 		window.userInfo = res;
 		localStorage.login = JSON.stringify(res);
 		localStorage.loginType = 'local2';
 		wwm.lobby.initModule(wwm.shell.view);
-	}
-	function kakaoLogin() {
+	};
+	var kakaoLogin = function() {
 		Kakao.Auth.login({
 			success: function () {
 				Kakao.API.request({
@@ -41,7 +39,6 @@ wwm.login = (function () {
 						joinPromise.fail(function(err){
 							alert('가입 오류 발생!');
 							console.log(err.responseText);
-							return;
 						});
 						history.pushState({mod: 'login', data: res, type: 'kakao'}, '', '/lobby/' + res.id);
 						window.userInfo = res;
@@ -58,18 +55,17 @@ wwm.login = (function () {
 				alert(JSON.stringify(err));
 			}
 		});
-	}
-	function fbLogin() {
+	};
+	var fbLogin = function() {
 		FB.login(function (res) {
 			if (res.status === 'connected') {
 				FB.api('/me', function (res) {
 					console.log(JSON.stringify(res));
-					res.picture = '//graph.facebook.com/' + res.id + '/picture'
+					res.picture = '//graph.facebook.com/' + res.id + '/picture';
 					var joinPromise = wwm.model.join(res);
 					joinPromise.fail(function(err){
 						alert('가입 오류 발생!');
 						console.log(err.responseText);
-						return;
 					});
 					history.pushState({mod: 'login', data: res, type: 'facebook'}, '', '/lobby/' + res.id);
 					window.userInfo = res;
@@ -84,8 +80,8 @@ wwm.login = (function () {
 				alert('Please log into Facebook.');
 			}
 		});
-	}
-	function setJqMap($con) {
+	};
+	var setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
 			$logo: $con.find('#login-logo'),
@@ -95,17 +91,12 @@ wwm.login = (function () {
 			$localhost: $con.find('#localhost-login'),
 			$localhost2: $con.find('#localhost2-login')
 		};
-	}
-	function initModule() {
-		if (wwm.shell.logo.length) { // 처음 실행했을 때
-			wwm.shell.logo.animate({height: '70%'});
-			wwm.shell.logo.after($('#wwm-login').html());
-			setJqMap(wwm.shell.view);
-		} else { // 로비에서 로그아웃 했을 때
-			wwm.shell.view.html($('#wwm-login').html());
-			setJqMap(wwm.shell.view);
-			jqMap.$logo.showSVGLogo(100);
-		}
+	};
+	var initModule = function() {
+		wwm.shell.view.html($('#wwm-login').html());
+		setJqMap(wwm.shell.view);
+		jqMap.$logo.showSVGLogo(100);
+		jqMap.$logo.animate({height: '70%'});
 		jqMap.$wrapper.fadeIn('slow');
 		jqMap.$kakaoLogin.on({
 			click: kakaoLogin,
@@ -125,9 +116,9 @@ wwm.login = (function () {
 				this.src = '/facebook.png';
 			}
 		});
-		jqMap.$localhost.click(localhostLogin);
-		jqMap.$localhost2.click(localhost2Login);
-	}
+		jqMap.$localhost.click(adminLogin);
+		jqMap.$localhost2.click(testLogin);
+	};
 	return {
 		initModule: initModule
 	};

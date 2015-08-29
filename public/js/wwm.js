@@ -1,13 +1,12 @@
 /**
  * Created by Zero on 2015-07-25.
  */
-window.onerror = onError;
-function onError(errorMsg, url, lineNumber, column, errorObj) {
+window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
 	if (typeof errorMsg === 'string' && errorMsg.indexOf('Script error.') > -1) {
 		return;
 	}
 	console.log('Error: ', errorMsg, ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' + errorObj);
-}
+};
 $.fn.showSVGLogo = function(width) {
 	var $logo = $($('#wwm-svg-logo').html());
 	$logo.width(width || '100%');
@@ -60,7 +59,7 @@ var wwm = (function () {
 		wwm.shell.initModule();
 	}
 	return {
-		initModule: initModule,
+		initModule: initModule
 	};
 }());
 $(function () {

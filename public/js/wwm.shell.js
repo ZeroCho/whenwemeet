@@ -5,7 +5,7 @@ wwm.shell = (function () {
 		$modal: $('#modal'),
 		$logo: $('#logo')
 	};
-	function onPopstate(e) {
+	var onPopstate = function(e) {
 		var state = e.originalEvent.state;
 		var mod = state.mod;
 		console.log('onpopstate', mod);
@@ -42,9 +42,9 @@ wwm.shell = (function () {
 			default:
 				wwm.shell.initModule();
 		}
-	}
+	};
 
-	function initModule() {
+	var initModule = function() {
 		console.log('login', localStorage.login);
 		console.log('first', localStorage.first);
 		$(window).on('popstate', onPopstate);
@@ -56,12 +56,12 @@ wwm.shell = (function () {
 		}
 		if (logged) {
 			history.pushState({mode: 'lobby', id: userInfo.id}, '', '/lobby/' + userInfo.id);
-			wwm.lobby.initModule(wwm.shell.view);
+			wwm.lobby.initModule();
 		} else {
 			history.pushState({mode: 'directlogin'}, '', '/login');
-			wwm.login.initModule(wwm.shell.view);
+			wwm.login.initModule();
 		}
-	}
+	};
 
 	return {
 		initModule: initModule,

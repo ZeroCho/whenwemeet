@@ -30,7 +30,7 @@ var port = normalizePort(process.env.PORT || '4000');
 var httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer);
 io.on('connection', function (socket) {
-	console.log('a user connected');
+	console.log(socket.id + ' user connected');
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
 		io.in(process.env.CURRENT_ROOM).emit('out', process.env.MY_ID);
@@ -60,7 +60,7 @@ io.on('connection', function (socket) {
 		socket.broadcast.to(process.env.CURRENT_ROOM).emit('requestArr', data);
 	});
 	socket.on('responseArr', function(data) {
-		console.log('socket responseArr ' + data.id);
+		console.log('socket responseArr ' + data.sid);
 		io.sockets.connected[data.sid].emit('responseArr', data);
 	});
 	socket.on('ban', function(data) {
@@ -80,12 +80,14 @@ io.on('connection', function (socket) {
 				console.log('enter result:');
 				doc.id = data.id;
 				doc.name = data.name;
+				doc.color = data.color;
 				doc.socket = socket.id;
 				console.log(doc);
-				socket.broadcast.to(process.env.CURRENT_ROOM).emit('newMember', doc);
 				socket.on('uptodateArr', function(data) {
+					console.log('socket uptodate Arr ' + data.sid);
 					io.sockets.connected[data.sid].emit('uptodateArr', data);
 				});
+				socket.broadcast.to(process.env.CURRENT_ROOM).emit('newMember', doc);
 			}
 		});
 	});
@@ -110,6 +112,18 @@ io.on('connection', function (socket) {
 	socket.on('explode', function(rid) {
 		console.log('socket explode');
 		socket.broadcast.to(process.env.CURRENT_ROOM).emit('explode', rid);
+	});
+	socket.on('titleChanged', function(data) {
+		console.log('socket titleChanged');
+		socket.emit('titleChanged', data);
+	});
+	socket.on('currentChanged', function(data) {
+		console.log('current titleChanged');
+		socket.emit('currentChanged', data);
+	});
+	socket.on('totalChanged', function(data) {
+		console.log('total titleChanged');
+		socket.emit('totalChanged', data);
 	});
 });
 

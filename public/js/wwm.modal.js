@@ -5,7 +5,7 @@ wwm.modal = (function (){
 			$con: $con,
 			$close: $con.find('.modal-close'),
 			$title: $con.find('#room-title'),
-			$number: $con.find('#room-people-number'),
+			$limit: $con.find('#room-people-limit'),
 			$password: $con.find('#room-password'),
 			$createRoom: $con.find('#create-room-btn')
 		};
@@ -19,9 +19,10 @@ wwm.modal = (function (){
 		var spinner = new Spinner().spin();
 		jqMap.$con.append(spinner.el);
 		var title = jqMap.$title.val().trim();
-		var number = jqMap.$number.val();
+		var limit = jqMap.$limit.val();
 		var password = jqMap.$password.val().trim() || null;
 		var maker = userInfo.id.toString();
+		var picture = userInfo.picture;
 		if (!title) {
 			$(spinner.el).remove();
 			alert('제목을 입력하세요.');
@@ -31,9 +32,10 @@ wwm.modal = (function (){
 			rid: new Date().getTime().toString(),
 			title: title,
 			maker: maker,
-			number: number,
+			limit: limit,
+			picture: picture,
 			password: password,
-			members: JSON.stringify([{id: userInfo.id, name: userInfo.name, confirm: false}])
+			members: JSON.stringify([{id: userInfo.id, name: userInfo.name, picture: userInfo.picture, confirm: false}])
 		};
 		console.log('createroom data', data);
 		var createRoomPromise = wwm.model.createRoom(data);
@@ -41,7 +43,7 @@ wwm.modal = (function (){
 			console.log(result);
 			data.current = 1;
 			wwm.room.initModule(data, 'create');
-			stMap.$modal.hide();
+			wwm.shell.modal.hide();
 		});
 		createRoomPromise.fail(function (err) {
 			console.log(err);

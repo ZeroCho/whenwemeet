@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<title>우리 언제 만나</title>
+	<title>{title}</title>
 	<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css"/>
 	<link rel="stylesheet" href="/dist/whenwemeet.css"/>
 </head>
@@ -37,6 +37,15 @@
 	<script src="/js/wwm.confirm.js"></script>
 	<script type="text/html" id="wwm-svg-logo">
 		<svg class="svg-logo" viewbox="0 0 168 300">
+			<filter id="dropshadow" height="130%">
+				<feGaussianBlur in="SourceAlpha" stdDeviation="2"/> <!-- stdDeviation is how much to blur -->
+				<feOffset dx="5" dy="7" result="offsetblur"/> <!-- how much to offset -->
+				<feComposite in2="offsetblur" operator="in"/>
+				<feMerge>
+					<feMergeNode/> <!-- this contains the offset blurred image -->
+					<feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
+				</feMerge>
+			</filter>
 			<polygon class="triangle triangle-0" points="5,100 105,100 55,13.4"/>
 			<polygon class="triangle triangle-1" points="0,110 100,110 50,196.6"/>
 			<polygon class="triangle triangle-2" points="60,200 160,200 110,113.4"/>
@@ -73,16 +82,19 @@
 				<button id="refresh-list">
 					<i class="fa fa-refresh"><span class="sr-only">새로고침</span></i>
 				</button>
+				<button id="show-createroom-modal"><i class="fa fa-plus"></i><span class="sr-only">방 만들기</span></button>
 			</div>
 		</main>
 		<footer id="lobby-footer">
-			<button id="show-createroom-modal">방 만들기</button>
+
 			<div id="search">
-				<form>
+				<form class="input-group">
 					<input type="text" placeholder="방 제목"/>
-					<button id="searchroom-btn">
-						<i class="fa fa-search"><span class="sr-only">검색</span></i>
-					</button>
+					<span class="input-group-btn">
+						<button id="searchroom-btn">
+							<i class="fa fa-search"><span class="sr-only">검색</span></i>
+						</button>
+					</span>
 				</form>
 			</div>
 		</footer>
@@ -91,13 +103,13 @@
 		<header id="createroom-header"><h1>방생성</h1></header>
 		<form>
 			<main id="createroom-main">
-				<div class="input-group">
+				<div class="form-group">
 					<label for="room-title">방제목</label>
 					<input id="room-title"/>
 				</div>
-				<div class="input-group">
-					<label for="room-people-number">인원수</label>
-					<select id="room-people-number">
+				<div class="form-group">
+					<label for="room-people-limit">인원수</label>
+					<select id="room-people-limit">
 						<option value="2">2</option>
 						<option value="3">3</option>
 						<option value="4">4</option>
@@ -107,7 +119,7 @@
 						<option value="8">8</option>
 					</select>
 				</div>
-				<div class="input-group">
+				<div class="form-group">
 					<label for="room-password">비밀번호</label>
 					<input id="room-password" placeholder="빈칸이면 공개방">
 				</div>
@@ -122,7 +134,7 @@
 		<header id="room-header">
 			<b id="title">{~lb}title{~rb}</b>&nbsp;
 			<div id="room-people-info"><span><b id="current-number">{~lb}current{~rb}</b>명</span>
-			<span>/<b id="total-number">{~lb}total{~rb}</b>명</span></div>
+			<span>/<b id="limit-number">{~lb}limit{~rb}</b>명</span></div>
 		</header>
 		<main id="room-main">
 			<div>
@@ -398,7 +410,7 @@
 				</ul>
 			</div>
 			<div id="chat-list"></div>
-			<button id="confirm-calendar">확정!</button>
+			<button id="confirm-calendar"><span><i class="fa fa-check"></i></span>확정!</button>
 			<button id="refresh-calendar"><i class="fa fa-refresh"><span class="sr-only">새로고침</span></i></button>
 			<button id="all-confirmed">결과보기</button>
 		</main>
@@ -420,28 +432,29 @@
 						</li>
 						<li>
 							<form>
+								<label for="current-room-title" class="sr-only">현재 방 제목</label>
 								<input id="current-room-title" value="{~lb}title{~rb}"/>
-								<button id="change-room-title">변경</button></li>
+								<button id="change-room-title">변경</button>
 							</form>
 						<li>
 							<form>
-								<span>인원수 조정 </span>
-								<input id="current-people-number" value="{~lb}number{~rb}"/>
-								<button id="change-number-btn">변경</button>
+								<label for="current-people-limit">인원수 조정 </label>
+								<input id="current-people-limit" value="{~lb}limit{~rb}"/>
+								<button id="change-limit-btn">변경</button>
 							</form>
 						</li>
 						<li id="explode-room">방 폭파</li>
 						{~lb}/admin{~rb}
 						<li id="invite">
-							초대장 보내기
+							<span>초대장 보내기</span>
 							<img src="/kakaolink_btn_medium.png" height="30" id="kakao-invite"/>
-							<i class="fa fa-facebook"></i>
+							<img src="/facebook_invite.png" height="30" id="fb-invite"/>
 						</li>
 					</ul>
 					{~lb}?admin{~rb}
 					<button id="manage-btn">관리자 메뉴</button>
 					{~lb}:else{~rb}
-					<button id="manage-btn">초대</button>
+					<button id="invite-btn">초대</button>
 					{~lb}/admin{~rb}
 				</div>
 				<div id="day-exception">
@@ -473,9 +486,11 @@
 				<button id="quit">나가기</button>
 			</div>
 			<div id="chat">
-				<form>				
+				<form class="input-group">
 					<input id="chatbox" placeholder="채팅창"/>
-					<button id="send-chat">전송</button>
+					<span class="input-group-btn">
+						<button id="send-chat"><i class="fa fa-paper-plane"></i><span class="sr-only">전송</span></button>
+					</span>
 				</form>
 			</div>
 		</footer>
@@ -496,14 +511,19 @@
 		</footer>
 	</script>
 	<script type="text/html" id="wwm-room-list">
-		<div class="room" data-rid="{~lb}rid{~rb}" data-maker="{~lb}maker{~rb}" data-members="{~lb}members{~rb}">
-			<div class="picture"><img src="{~lb}picture{~rb}"/></div>
-			<div class="password">
-			{~lb}password{~rb}
-			</div>
+		<div class="room" data-rid="{~lb}rid{~rb}">
+			<div class="picture"><img src="{~lb}picture{~rb}" height="20"/></div>
+			{~lb}?password{~rb}
+				{~lb}?unlocked{~rb}
+				<div class="unlocked"><i class="fa fa-unlock"></i></div>
+				{~lb}:else{~rb}
+				<div class="locked"><i class="fa fa-lock"></i></div>
+				{~lb}/unlocked{~rb}
+			{~lb}:else{~rb}
+			{~lb}/password{~rb}
 			<div class="title">{~lb}title{~rb}</div>
 			<div class="number">
-				<span class="current">{~lb}current{~rb}</span>/<span class="total">{~lb}total{~rb}</span>
+				<span class="current">{~lb}current{~rb}</span>/<span class="limit">{~lb}limit{~rb}</span>
 			</div>
 			<div class="result">{~lb}result{~rb}</div>
 		</div>
@@ -511,6 +531,7 @@
 	<script type="text/html" id="wwm-member-list">
 		<li data-id="{~lb}id{~rb}">
 			<span class="offline"><i class="fa fa-circle"></i></span>
+			<span class="profile-picture"><img src="{~lb}picture{~rb}" height="20"/></span>
 			&nbsp;
 			<span class="{~lb}color{~rb}-text">{~lb}name{~rb}</span>
 			&nbsp;

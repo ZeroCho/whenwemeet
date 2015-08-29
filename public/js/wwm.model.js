@@ -2,7 +2,7 @@
  * Created by Zero on 2015-07-25.
  */
 wwm.model = (function () {
-	function join(data) {
+	var join = function(data) {
 		var deferred = $.Deferred();
 		$.ajax('/join', {
 			data: data,
@@ -14,8 +14,8 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function getRoomList(id) {
+	};
+	var getRoomList = function(id) {
 		var deferred = $.Deferred();
 		$.get('/rooms/' + id).done(function (res) {
 			if (res.length === 0) {
@@ -27,8 +27,8 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function getUser(id) {
+	};
+	var getUser = function(id) {
 		var deferred = $.Deferred();
 		$.get('/member/' + id).done(function (res) {
 			deferred.resolve(res);
@@ -36,8 +36,8 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function searchList(query) {
+	};
+	var searchList = function(query) {
 		var deferred = $.Deferred();
 		$.get('/search/' + query).done(function (res) {
 			if (res.length === 0) {
@@ -48,8 +48,8 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function ban(id, rid) {
+	};
+	var banPerson = function(id, rid) {
 		var deferred = $.Deferred();
 		$.post('/ban/' + id, {rid: rid}).done(function(res) {
 			console.log(res);
@@ -59,8 +59,11 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function changeTitle(rid, title) {
+	};
+	var enterRoom = function() {
+
+	};
+	var changeTitle = function(rid, title) {
 		var deferred = $.Deferred();
 		$.post('/changeroom/' + rid, {title: title}).done(function(res) {
 			console.log(res);
@@ -70,10 +73,10 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function changeLimit(rid, number) {
+	};
+	var changeLimit = function(rid, limit) {
 		var deferred = $.Deferred();
-		$.post('/changeroom/' + rid, {number: number}).done(function(res) {
+		$.post('/changeroom/' + rid, {limit: limit}).done(function(res) {
 			console.log(res);
 			deferred.resolve(res);
 		}).fail(function(err) {
@@ -81,11 +84,13 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function confirm(data) {
+	};
+	var confirm = function(data) {
 		var deferred = $.Deferred();
 		var rid = data.rid;
-		$.post('/confirm/' + rid, {day: data.day, night: data.night, id: data.id}).done(function(res) {
+		data.day = JSON.stringify(data.day);
+		data.night = JSON.stringify(data.night);
+		$.post('/confirm/' + rid, data).done(function(res) {
 			console.log(res);
 			deferred.resolve(res);
 		}).fail(function(err) {
@@ -93,8 +98,8 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function createRoom(data) {
+	};
+	var createRoom = function(data) {
 		var deferred = $.Deferred();
 		var userPromise = getUser(data.maker);
 		userPromise.done(function(res) {
@@ -115,8 +120,8 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function deleteRoom(id, maker) {
+	};
+	var deleteRoom = function(id, maker) {
 		var deferred = $.Deferred();
 		$.post('/deleteroom/' + id, {maker: maker}).done(function (res) {
 			console.log(res);
@@ -129,21 +134,22 @@ wwm.model = (function () {
 			deferred.reject(err);
 		});
 		return deferred.promise();
-	}
-	function initModule() {
+	};
+	var initModule = function() {
 		if (localStorage.login) {
 			window.userInfo = JSON.parse(localStorage.login);
 		} else {
 			window.userInfo = {};
 		}
-	}
+	};
 	return {
 		initModule: initModule,
 		createRoom: createRoom,
 		getRoomList: getRoomList,
 		getUser: getUser,
+		enterRoom: enterRoom,
 		deleteRoom: deleteRoom,
-		ban: ban,
+		ban: banPerson,
 		changeTitle: changeTitle,
 		changeLimit: changeLimit,
 		searchList: searchList,
