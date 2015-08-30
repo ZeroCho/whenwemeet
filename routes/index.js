@@ -26,22 +26,22 @@ router.get('/lobby/:id', function(req, res) {
 		id: id
 	});
 });
-router.get('/room/:rid', function(req, res) {
-	var rid = req.params.rid;
-	res.render('index', {
-		title: '우리언제만나',
-		rid: rid
-	});
-});
 router.get('/login', function(req, res) {
 	res.render('index', {
 		title: '우리언제만나'
 	});
 });
-router.get('/confirm/:rid', function(req, res) {
+router.get('/room/:rid', function(req, res) {
 	var rid = req.params.rid;
-	res.render('index', {
-		title: '우리언제만나',
+	res.render('room', {
+		title: '우리언제만나::Room#' + rid,
+		rid: rid
+	});
+});
+router.get('/result/:rid', function(req, res) {
+	var rid = req.params.rid;
+	res.render('result', {
+		title: '우리언제만나::Result#' + rid,
 		rid: rid
 	});
 });
@@ -106,11 +106,11 @@ router.post('/ban/:id', function(req, res) {
 	});
 });
 router.post('/confirm/:rid', function(req, res) {
-	var rid = req.params.rid;
+	var rid = String(req.params.rid);
 	var day = JSON.parse(req.body.day);
 	var night = JSON.parse(req.body.night);
-	var id = req.body.id;
-	var bool = req.body.bool;
+	var id = String(req.body.id);
+	var bool = JSON.parse(req.body.bool);
 	console.log('confirm ' + rid + ' ' + id + ' ' + bool);
 	console.log(day);
 	console.log(night);
@@ -169,7 +169,7 @@ router.post('/enterroom/:rid', function(req, res) {
 			console.error('enterroom: find room error!');
 			console.log(err);
 		} else {
-			if (doc.length === 0) {
+			if (doc === null) {
 				res.send('no_room');
 				return;
 			}
@@ -189,7 +189,7 @@ router.post('/enterroom/:rid', function(req, res) {
 				if (err) {
 					console.log('enter room error: ' + err);
 				} else {
-					if (doc.length === 0) { // 비밀번호가 틀림
+					if (doc === null) { // 비밀번호가 틀림
 						res.send('wrong_password');
 						return;
 					}
@@ -234,6 +234,10 @@ router.post('/roominfo/:rid', function(req, res) {
 		if (err) {
 			console.log('roominfoerror:' + err);
 		} else {
+			if (doc === null) {
+				res.send('no_room');
+				return;
+			}
 			process.env.CURRENT_ROOM = rid;
 			console.log('roominfo result');
 			console.log(doc);
@@ -266,14 +270,13 @@ router.post('/changeroom/:rid', function(req, res) {
 	}
 });
 router.post('/deleteroom/:rid', function (req, res) {
-	var rid = req.params.id;
+	var rid = req.params.rid;
 	var maker = req.body.maker;
 	roomCollection.findOne({rid: rid, maker: maker}, function(err, doc) {
 		if (err) {
 			console.log('findroomerror:' + err);
-		} else if (doc.length === 0) {
+		} else if (doc === null) {
 			res.send('no_room');
-			return;
 		} else {
 			memberCollection.update({id: maker}, {$inc: {roomcount: -1}}, function(err, result) {
 				if (err) {

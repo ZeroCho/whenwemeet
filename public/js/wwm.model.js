@@ -89,7 +89,8 @@ wwm.model = (function () {
 		var deferred = $.Deferred();
 		var rid = data.rid;
 		data.day = JSON.stringify(data.day);
-		data.night = JSON.stringify(data.night);
+		data.night = JSON.stringify(data.night)
+		console.log('confirm model', data);
 		$.post('/confirm/' + rid, data).done(function(res) {
 			console.log(res);
 			deferred.resolve(res);
@@ -121,9 +122,23 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
-	var deleteRoom = function(id, maker) {
+	var deleteRoom = function(rid, maker) {
 		var deferred = $.Deferred();
-		$.post('/deleteroom/' + id, {maker: maker}).done(function (res) {
+		$.post('/deleteroom/' + rid, {maker: maker}).done(function (res) {
+			console.log(res);
+			if (res === 'no_room') {
+				var msg = '심각한 오류! 방장이 아닙니다.';
+				deferred.reject(msg);
+			}
+			deferred.resolve(res);
+		}).fail(function(err){
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	};
+	var getRoomInfo = function(rid) {
+		var deferred = $.Deferred();
+		$.post('/roominfo/' + rid).done(function (res) {
 			console.log(res);
 			if (res === 'no_room') {
 				var msg = '심각한 오류! 방장이 아닙니다.';
@@ -154,6 +169,7 @@ wwm.model = (function () {
 		changeLimit: changeLimit,
 		searchList: searchList,
 		confirm: confirm,
-		join: join
+		join: join,
+		getRoomInfo: getRoomInfo
 	};
 }());

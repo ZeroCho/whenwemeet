@@ -1,7 +1,7 @@
 wwm.login = (function () {
 	var jqMap;
 	var adminLogin = function() {
-		var res = {id: "123456789", name: '관리자', picture: null};
+		var res = {id: "123456789", name: '관리자', picture: '//graph.facebook.com/874512615962577/picture'};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');
@@ -14,7 +14,7 @@ wwm.login = (function () {
 		wwm.lobby.initModule(wwm.shell.view);
 	};
 	var testLogin = function() {
-		var res = {id: "987654321", name: '테스터', picture: null};
+		var res = {id: "987654321", name: '테스터', picture: '//graph.facebook.com/874512615962577/picture'};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');

@@ -62,19 +62,6 @@ var wwm = (function () {
 		initModule: initModule
 	};
 }());
-$(function () {
-	var KAKAO_KEY = 'a35623411563ec424430d3bd5dc7a93e';
-	$.ajaxSetup({cache: true});
-	$.getScript('//connect.facebook.net/ko_KR/sdk.js', function () {
-		FB.init({
-			appId: '1617440885181938',
-			xfbml: true,
-			version: 'v2.4'
-		});
-	});
-	Kakao.init(KAKAO_KEY);
-	wwm.initModule();
-});
 /**
  * Created by Zero on 2015-07-25.
  */
@@ -166,7 +153,8 @@ wwm.model = (function () {
 		var deferred = $.Deferred();
 		var rid = data.rid;
 		data.day = JSON.stringify(data.day);
-		data.night = JSON.stringify(data.night);
+		data.night = JSON.stringify(data.night)
+		console.log('confirm model', data);
 		$.post('/confirm/' + rid, data).done(function(res) {
 			console.log(res);
 			deferred.resolve(res);
@@ -198,9 +186,23 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
-	var deleteRoom = function(id, maker) {
+	var deleteRoom = function(rid, maker) {
 		var deferred = $.Deferred();
-		$.post('/deleteroom/' + id, {maker: maker}).done(function (res) {
+		$.post('/deleteroom/' + rid, {maker: maker}).done(function (res) {
+			console.log(res);
+			if (res === 'no_room') {
+				var msg = '심각한 오류! 방장이 아닙니다.';
+				deferred.reject(msg);
+			}
+			deferred.resolve(res);
+		}).fail(function(err){
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	};
+	var getRoomInfo = function(rid) {
+		var deferred = $.Deferred();
+		$.post('/roominfo/' + rid).done(function (res) {
 			console.log(res);
 			if (res === 'no_room') {
 				var msg = '심각한 오류! 방장이 아닙니다.';
@@ -231,7 +233,8 @@ wwm.model = (function () {
 		changeLimit: changeLimit,
 		searchList: searchList,
 		confirm: confirm,
-		join: join
+		join: join,
+		getRoomInfo: getRoomInfo
 	};
 }());
 wwm.shell = (function () {
@@ -308,9 +311,6 @@ wwm.shell = (function () {
 }());
 wwm.confirm = (function() {
 	var jqMap;
-	var cfMap = {
-		$con: $('#modal')
-	};
 	var stMap = {};
 	function setJqMap($con) {
 		jqMap = {
@@ -323,49 +323,139 @@ wwm.confirm = (function() {
 		};
 	}
 	function gatherResult() {
-		var dayArr = [], nightArr = [];
-		for (var i = 0; i < 12; i++) {
-			for (var j = 0; j < 7; j++) {
-				if (stMap.dayArray[i][j].length === 0) {
-					dayArr.push([i, j]);
-				} 
+		var sun = [[null, null]];
+		var mon = [[null, null]];
+		var tue = [[null, null]];
+		var wed = [[null, null]];
+		var thu = [[null, null]];
+		var fri = [[null, null]];
+		var sat = [[null, null]];
+		var week = [sun, mon, tue, wed, thu, fri, sat];
+		var i, j;
+		for (i = 0; i < 7; i++) {
+			var temp = 0;
+			for (j = 0; j < 12; j++) {
+				console.log(j, stMap.dayArray[j][i].length === 0);
+				if (stMap.dayArray[j][i].length === 0) {
+					console.log(week[i][temp][0] === null);
+					if (week[i][temp][0] === null) { // 처음이면
+						week[i][temp][0] = j;
+						week[i][temp][1] = week[i][temp][0] + 1;
+					} else {
+						console.log(week[i][temp][1] === j);
+						if (week[i][temp][1] === j) { // 연속된 시간 array
+							week[i][temp][1] = j + 1;
+						} else { // 새로운 시간 array
+							week[i][++temp] = [j, j + 1];
+						}
+					}
+				}
+				console.log(week[i], temp);
+			}
+			for (j = 0; j < 12; j++) {
+				if (stMap.nightArray[j][i].length === 0) {
+					if (week[i][temp][0] === null) { // 처음이면
+						week[i][temp][0] = j + 12;
+						week[i][temp][1] = week[i][temp][0] + 1;
+					} else {
+						if (week[i][temp][1] === j + 12) { // 연속된 시간 array
+							week[i][temp][1] = j + 13;
+						} else { // 새로운 시간 array
+							week[i][++temp] = [j + 12, j + 13];
+						}
+					}
+				}
+				console.log(week[i], temp);
 			}
 		}
-		return [dayArr, nightArr];
+		return week;
 	}
-	function calculateResult(arr) {
-	
-	}
-	function showResult() {
-		var str = '가능한 시간은' + '입니다.';
+	var showResult = function(week) {
+		var str = '가능한 시간은<br>';
+		var dayList = ['일', '월', '화', '수', '목', '금', '토'];
+		for (var i = 0; i < 7; i++) {
+			str += dayList[i] + '요일:<br>';
+			for (var j = 0; j < week[i].length; j++) {
+				var prefix = '';
+				if (week[i][j][0] < 12) {
+					prefix = '오전'
+				} else if (week[i][j][0] === 12) {
+					prefix = '오후';
+				} else if (week[i][j][0] === 24) {
+					prefix = '밤';
+					week[i][j][0] -= 12;
+				} else {
+					prefix = '오후';
+					week[i][j][0] -= 12;
+				}
+				str += prefix + ' ' + week[i][j][0] + '시부터 ~ ';
+				if (week[i][j][1] < 12) {
+					prefix = '오전'
+				} else if (week[i][j][1] === 12) {
+					prefix = '오후';
+				} else if (week[i][j][1] === 24) {
+					prefix = '밤';
+					week[i][j][1] -= 12;
+				} else {
+					prefix = '오후';
+					week[i][j][1] -= 12;
+				}
+				str += prefix + ' ' + week[i][j][1] + '시까지<br>';
+			}
+		}
+		str += '입니다.';
 		jqMap.$result.html(str);
-	}
-	function toLobby() {
-		jqMap.$con.hide();
+	};
+	var toLobby = function() {
+		jqMap.$con.fadeOut('slow');
+		history.pushState({mod: 'lobby'}, '', '/lobby/' + stMap.myInfo.id);
 		wwm.lobby.initModule(jqMap.$con);
-	}
-	function toRoom() {
-		jqMap.$con.hide();
-	}
-	function toKakao() {}
-	function toFacebook() {}
-	function initModule(data) {
-		stMap = data;
+	};
+	var toRoom = function() {
+		history.pushState({mod: 'room'}, '', '/room/' + stMap.rid);
+		jqMap.$con.fadeOut('slow');
+	};
+	var toKakao = function() {};
+	var toFacebook = function() {
+		FB.ui({
+			method: 'send',
+			link: 'http%3A%2F%2Fwww.nytimes.com%2F2011%2F06%2F15%2Farts%2Fpeople-argue-just-to-win-scholars-assert.html'
+		});
+	};
+	var initModule = function(data) {
+		stMap = $.extend(stMap, data);
+		console.log(data, stMap);
 		var src = $('#wwm-confirm').html();
-		cfMap.$con.html(src);
-		setJqMap(cfMap.$con);
+		wwm.shell.modal.html(src);
+		setJqMap(wwm.shell.modal);
 		var arr = gatherResult();
-		calculateResult(arr);
-		showResult();
+		showResult(arr);
 		jqMap.$toLobby.click(toLobby);
 		jqMap.$toRoom.click(toRoom);
-		jqMap.$toKakao.click(toKakao);
-		jqMap.$toFacebook.click(toFacebook);
-		jqMap.$con.show();
-	}
+		jqMap.$toKakao.on({
+			click:toKakao,
+			mouseover: function() {
+				this.src = '/kakaolink_btn_medium_ov.png';
+			},
+			mouseout: function() {
+				this.src = '/kakaolink_btn_medium.png';
+			}
+		});
+		jqMap.$toFacebook.on({
+			click: toFacebook,
+			mouseover: function() {
+				this.src = '/facebook_invite_ov.png';
+			},
+			mouseout: function() {
+				this.src = '/facebook_invite.png';
+			}
+		});
+		jqMap.$con.fadeIn('slow');
+	};
 	return {
-		initModule: initModule
-	}
+		initModule: initModule,
+		info: stMap
+	};
 }());
 wwm.lobby = (function (){
 	var jqMap;
@@ -403,9 +493,7 @@ wwm.lobby = (function (){
 					password: password,
 					unlocked: unlocked
 				};
-				console.log('parser', parser, password);
 				dust.render(tmpl, parser, function(err, out) {
-					console.log(src, tmpl, out);
 					$frag.append(out);
 				});
 			}
@@ -487,17 +575,21 @@ wwm.lobby = (function (){
 		localStorage.removeItem('loginType');
 		wwm.login.initModule();
 	}
-	function enterRoom() {
+	function enterRoom(rid) {
 		var $this = $(this);
 		var pw;
-		var rid = $(this).data('rid');
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
-		if ($(this).has('.locked').length) {
-			pw = prompt('비밀번호', '');
-			if (pw === null || pw.trim() === '') {
-				$(spinner.el).remove();
-				return;
+		console.log(rid);
+		if (typeof rid !== 'string') {
+			rid = $(this).data('rid');
+			if ($(this).has('.locked').length) {
+				pw = prompt('비밀번호', '');
+				console.log(pw);
+				if (pw === null || pw.trim() === '') {
+					$(spinner.el).remove();
+					return;
+				}
 			}
 		}
 		var ajax = $.post('/enterroom/' + rid, {pw: pw, pid: userInfo.id, name: userInfo.name, picture: userInfo.picture});
@@ -542,13 +634,35 @@ wwm.lobby = (function (){
 			localStorage.login = JSON.stringify(json);
 		});
 	}
-	function showResult() {
-		history.pushState({mod: 'confirm'}, '', '/result');
-		wwm.confirm.initModule();
+	function showResult(rid) {
+		if (rid) {
+			$.post('/roominfo/' + rid)
+				.done(function (doc) {
+					if (doc === 'no_room') {
+						alert('방이 없습니다');
+						return;
+					} else {
+						history.pushState({mod: 'confirm'}, '', '/result/' + rid);
+						var data = {};
+						data.dayArray = doc.day;
+						data.nightArray = doc.night;
+						data.rid = doc.rid;
+						wwm.confirm.initModule(data);
+					}
+				})
+				.fail(function (err) {
+					console.error(err);
+				});
+		} else {
+			rid = $(this).parent().data('rid');
+			history.pushState({mod: 'confirm'}, '', '/result/' + rid);
+			wwm.confirm.initModule(data);
+		}
 	}
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
+			$logo: $con.find('#lobby-logo'),
 			$showCreateroom: $con.find('#show-createroom-modal'),
 			$searchroomBtn: $con.find('#searchroom-btn'),
 			$list: $con.find('#rooms'),
@@ -579,9 +693,6 @@ wwm.lobby = (function (){
 			} else {
 				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
-				if (picture === null) {
-					jqMap.$profilePicture.replaceWith($('<div style="display:inline;"/>').showCanvasLogo(60));
-				}
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);
@@ -631,13 +742,15 @@ wwm.lobby = (function (){
 	}
 	return {
 		initModule: initModule,
-		showSearchResult: showSearchResult
+		showSearchResult: showSearchResult,
+		enterRoom: enterRoom,
+		showResult: showResult
 	};
 }());
 wwm.login = (function () {
 	var jqMap;
 	var adminLogin = function() {
-		var res = {id: "123456789", name: '관리자', picture: null};
+		var res = {id: "123456789", name: '관리자', picture: '//graph.facebook.com/874512615962577/picture'};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');
@@ -650,7 +763,7 @@ wwm.login = (function () {
 		wwm.lobby.initModule(wwm.shell.view);
 	};
 	var testLogin = function() {
-		var res = {id: "987654321", name: '테스터', picture: null};
+		var res = {id: "987654321", name: '테스터', picture: '//graph.facebook.com/874512615962577/picture'};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');
@@ -846,22 +959,20 @@ wwm.room = (function(){
 		current: 0
 	};
 	var cfMap = {
-		$con: $('#view'),
 		colorList: ['red', 'orange', 'yellow', 'yellowgreen', 'skyblue', 'purple', 'violet', 'pink']
 	};
 	var socket = io();
-	function setJqMap($con) {
+	var setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
 			$calendar: $con.find('table'),
 			$dayTable: $con.find('#day-table'),
 			$nightTable: $con.find('#night-table'),
-			$thDay: $con.find('table').find('tr').eq(0).find('th'),
-			$thTime: $con.find('table').find('tr').find('th:first-child'),
+			$thDay: $con.find('#day-table, #night-table').find('tr').eq(0).find('th'),
+			$thTime: $con.find('#day-table, #night-table').find('tr').find('th:first-child'),
 			$memberList: $con.find('#member-list'),
-			$day: $con.find('#day'),
-			$night: $con.find('#night'),
-			$back: $con.find('#room-back'),
+			$toggleCalendar: $con.find('#toggle-table'),
+			$toLobby: $con.find('#back-to-lobby'),
 			$quit: $con.find('#quit'),
 			$myMenu: $con.find('#my-menu'),
 			$admin: $con.find('#manage-btn, #invite-btn'),
@@ -883,10 +994,12 @@ wwm.room = (function(){
 			$refresh: $con.find('#refresh-calendar'),
 			$allConfirmed: $con.find('#all-confirmed'),
 			$kakaoInvite: $con.find('#kakao-invite'),
-			$fbInvite: $con.find('#fb-invite')
+			$fbInvite: $con.find('#fb-invite'),
+			$aside: $con.find('#room-aside'),
+			$toggleAside: $con.find('#show-aside, #close-aside')
 		};
-	}
-	function createArray(length) {
+	};
+	var createArray = function(length) {
 		var arr = new Array(length || 0);
 		var i = length, j = 0;
 		if (arguments.length > 1) {
@@ -899,8 +1012,8 @@ wwm.room = (function(){
 			}
 		}
 		return arr;
-	}
-	function tableToArray(cellList) { // cell을 선택했을 때 array로 바꾼다
+	};
+	var tableToArray = function(cellList) { // cell을 선택했을 때 array로 바꾼다
 		console.log('tableToArray');
 		var arrList = [];
 		for (var i = 0; i < cellList.length; i++) {
@@ -910,8 +1023,8 @@ wwm.room = (function(){
 		}
 		console.log('tableToArray', arrList);
 		return arrList;
-	}
-	function arrayToTable(cellList, sid, cur, busy) { // array를 table로 만든다.
+	};
+	var arrayToTable = function(cellList, sid, cur, busy) { // array를 table로 만든다.
 		console.log('arrayTotable', cellList, sid, cur, busy);
 		var i, k, cell, number, $cell, $box, index;
 		if (cur === 'day') {
@@ -976,8 +1089,8 @@ wwm.room = (function(){
 			}
 			console.log('arrToTable:night', stMap.dayArray, stMap.nightArray);
 		}
-	}
-	function renderTable() {
+	};
+	var renderTable = function() {
 		var i, j, k, $cell, number, $box;
 		for (i = 0; i < 12; i++) {
 			for (j = 0; j < 7; j++) {
@@ -985,6 +1098,7 @@ wwm.room = (function(){
 				var dayCell = stMap.dayArray[i][j];
 				number = dayCell.length;
 				$cell.find('div').remove();
+				console.log($cell, dayCell, number);
 				if (number > 0) {
 					$box = $('<div/>').addClass('box-' + number);
 					for (k = 0; k < number; k++) {
@@ -1009,14 +1123,14 @@ wwm.room = (function(){
 				}
 			}
 		}
-	}
-	function showMembers() {
+	};
+	var showMembers = function() {
 		console.log('showMembers', stMap.memberList);
 		jqMap.$memberList.find('ul').empty();
 		var src = $('#wwm-member-list').html();
 		for (var i = 0; i < stMap.memberList.length; i++) {
 			var member = stMap.memberList[i];
-			dust.render(dust.loadSource(dust.compile(src)), {id: member.id, color: cfMap.colorList[i], name: member.name}, function(err, out){
+			dust.render(dust.loadSource(dust.compile(src)), {id: member.id, color: cfMap.colorList[i], name: member.name, picture: member.picture}, function(err, out){
 				if (err) {
 					jqMap.$memberList.find('ul').html(err);
 				} else {
@@ -1025,13 +1139,13 @@ wwm.room = (function(){
 			});
 		}
 		showOnline();
-	}
-	function newMember(doc) {
+	};
+	var newMember = function(doc) {
 		console.log('newMember', doc, doc.id, stMap.memberList);
 		var src = $('#wwm-member-list').html();
 		stMap.memberList.push({id: doc.id, name: doc.name, picture: doc.picture, confirm: false});
 		jqMap.$banList.append('<option value="' + doc.id + '">' + findInfo(doc.id).name + '</option>');
-		dust.render(dust.loadSource(dust.compile(src)), {id: doc.id, color: findInfo(id).color, name: doc.name}, function(err, out) {
+		dust.render(dust.loadSource(dust.compile(src)), {id: doc.id, color: findInfo(id).color, name: doc.name, picture: doc.picture}, function(err, out) {
 			if (err) {
 				jqMap.$memberList.find('ul').html(err);
 			} else {
@@ -1039,8 +1153,8 @@ wwm.room = (function(){
 			}
 		});
 		showOnline();
-	}
-	function showOnline() {
+	};
+	var showOnline = function() {
 		console.log('showOnline onlineList', stMap.onlineList);
 		for (var i = 0; i < stMap.memberList.length; i++) {
 		 	var $list = jqMap.$memberList.find('li').eq(i);
@@ -1054,8 +1168,8 @@ wwm.room = (function(){
 				 }
 			}
 		}
-	}
-	function findInfo(id) {
+	};
+	var findInfo = function(id) {
 		console.log('findInfo', id);
 		var info = {};
 		for (var i = 0; i < stMap.memberList.length; i++) {
@@ -1066,8 +1180,8 @@ wwm.room = (function(){
 			}
 		}
 		return info;
-	}
-	function banPerson(e) {
+	};
+	var banPerson = function(e) {
 		e.preventDefault();
 		var banned = $(this).prev().val();
 		console.log('ban', banned);
@@ -1083,8 +1197,8 @@ wwm.room = (function(){
 			console.log(err);
 			alert('퇴장당하지 않으려고 버티는중! 다시 시도하세요.');
 		});
-	}
-	function changeTitle(e) {
+	};
+	var changeTitle = function(e) {
 		e.preventDefault();
 		var title = $(this).prev().val();
 		console.log('changeTitle', title);
@@ -1097,16 +1211,20 @@ wwm.room = (function(){
 			alert('제목 바꾸기 실패!');
 			console.log(err);
 		});
-	}
-	function changeLimit(e) {
+	};
+	var changeLimit = function(e) {
 		e.preventDefault();
-		var number = $(this).prev().val();
+		var number = Number($(this).prev().val());
+		if (number !== number) {
+			alert('숫자를 입력해야 합니다.');
+			return;
+		}
 		console.log('changeLiimit', number);
 		if (number < stMap.current) {
 			alert('현재 사람이 설정한 수보다 많습니다.');
 			return;
 		}
-		var limitPromise = wwm.model.changeLimit(stMap, number);
+		var limitPromise = wwm.model.changeLimit(stMap.rid, number);
 		limitPromise.done(function() {
 			changeLimitNumber(number);
 		});
@@ -1114,8 +1232,8 @@ wwm.room = (function(){
 			alert('인원수 바꾸기 실패!');
 			console.log(err);
 		});
-	}
-	function onClickDay() {
+	};
+	var onClickDay = function() {
 		checkConfirmed();
 		console.log('onClickDay');
 		var day = this.cellIndex - 1;
@@ -1130,19 +1248,23 @@ wwm.room = (function(){
 		for (var i = 0; i < 12; i++) {
 			if (arr[i][day].indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
+				dayList.push([i, day]);
 			}
-			dayList.push([i, day]);
 		}
 		
 		if (allSelected) {
+			dayList = [];
+			for (i = 0; i < 12; i++) {
+				dayList.push([i, day]);
+			}
 			$(this).removeClass('selected');
 			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: dayList});
 		} else {
 			$(this).addClass('selected');
 			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: dayList});
 		}
-	}
-	function onClickTime() {
+	};
+	var onClickTime = function() {
 		checkConfirmed();
 		var time = this.parentNode.rowIndex - 1;
 		console.log('onClickTime',  time);
@@ -1158,57 +1280,55 @@ wwm.room = (function(){
 		for (var i = 0; i < 7; i++) {
 			if (arr[time][i].indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
+				timeList.push([time, i]);
 			}
-			timeList.push([time, i]);
 		}
 		if (allSelected) {
+			timeList = [];
+			for (i = 0; i < 7; i++) {
+				timeList.push([time, i]);
+			}
 			$(this).removeClass('selected');
 			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
 		} else {
 			$(this).addClass('selected');
 			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
 		}
-	}
-	function showAdminMenu(e) {
+	};
+	var showAdminMenu = function(e) {
 		e.stopPropagation();
 		console.log('showAdminMenu');
 		var $this = $(this);
-		jqMap.$myMenu.find('ul').hide();
-		if ($this.hasClass('opened')) {				
-			$this.removeClass('opened');
-			$this.prev('ul').hide();
+		if ($this.parent().hasClass('opened')) {
+			$this.parent().removeClass('opened');
 		} else {
-			$this.addClass('opened');
-			$this.prev('ul').show();
+			$('.opened').removeClass('opened');
+			$this.parent().addClass('opened');
 		}
-	}
-	function showDayException(e) {
+	};
+	var showDayException = function(e) {
 		e.stopPropagation();		
 		console.log('showDayException');
 		var $this = $(this);
-		jqMap.$myMenu.find('ul').hide();
-		if ($this.hasClass('opened')) {				
-			$this.removeClass('opened');
-			$this.prev('ul').hide();
+		if ($this.parent().hasClass('opened')) {
+			$this.parent().removeClass('opened');
 		} else {
-			$this.addClass('opened');
-			$this.prev('ul').show();
+			$('.opened').removeClass('opened');
+			$this.parent().addClass('opened');
 		}
-	}
-	function showTimeException(e) {
+	};
+	var showTimeException = function(e) {
 		e.stopPropagation();		
 		console.log('showTimeexception');
 		var $this = $(this);
-		jqMap.$myMenu.find('ul').hide();
-		if ($this.hasClass('opened')) {
-			$this.removeClass('opened');
-			$this.prev('ul').hide();
+		if ($this.parent().hasClass('opened')) {
+			$this.parent().removeClass('opened');
 		} else {
-			$this.addClass('opened');
-			$this.prev('ul').show();
+			$('.opened').removeClass('opened');
+			$this.parent().addClass('opened');
 		}
-	}
-	function deleteRoom(e) {
+	};
+	var deleteRoom = function(e) {
 		console.log('deleteRoom', e.data.rid);
 		var rid = e.data.rid;
 		var deletePromise = wwm.model.deleteRoom(rid, userInfo.id);
@@ -1221,17 +1341,17 @@ wwm.room = (function(){
 			console.log(err);
 			alert('방 지우기 오류발생');
 		});
-	}
-	function checkConfirmed() {
+	};
+	var checkConfirmed = function() {
 		if (jqMap.$confirm.hasClass('confirmed')) {
 			alert('확정 상태가 해제됩니다.');
 			jqMap.$confirm.removeClass('confirmed');
 			stMap.myInfo.confirm = false;
 			socket.emit('confirmed', {id: stMap.myInfo.id, bool: false});
 		}
-	}
-	function onClickCell() {
-		console.log('onclickCell');
+	};
+	var onClickCell = function() {
+		console.log('onclickCell', stMap.dayArray);
 		checkConfirmed();
 		// 어레이를 발송
 		var arr, cell;
@@ -1241,9 +1361,9 @@ wwm.room = (function(){
 			arr = stMap.nightArray;
 		}
 		cell = arr[this.parentNode.rowIndex - 1][this.cellIndex - 1];
-		console.log('not-busy', cell, cell.length, stMap.myInfo.personColor);
+		console.log(this.parentNode.rowIndex - 1, this.cellIndex - 1, cell, cell.length, stMap.myInfo.personColor);
 		if (cell) {
-			console.log(cell.indexOf(stMap.myInfo.personColor) > -1);
+			console.log(cell.length, cell.indexOf(stMap.myInfo.personColor) > -1);
 			if (cell.length && cell.indexOf(stMap.myInfo.personColor) > -1) {
 				socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: tableToArray([this], false)});
 			} else {
@@ -1252,8 +1372,8 @@ wwm.room = (function(){
 		} else {
 			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: tableToArray([this], true)});
 		}
-	}
-	function excludeDay() {
+	};
+	var excludeDay = function() {
 		checkConfirmed();
 		// 해당일에 대한 어레이를 발송
 		var idx = $(this).index();
@@ -1271,8 +1391,8 @@ wwm.room = (function(){
 			socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 			$(this).addClass('selected');
 		}
-	}
-	function excludeTime() {
+	};
+	var excludeTime = function() {
 		// 해당 시간에 대한 어레이를 발송
 		checkConfirmed();
 		var idx = $(this).index();
@@ -1317,16 +1437,22 @@ wwm.room = (function(){
 				$(this).addClass('selected');
 			}
 		} // not after
-	}
-	function toLobby(e) {
+	};
+	var toLobby = function(e) {
 		console.log('toLobby', e.data.rid);
-		if (confirm('확정 버튼을 누르지 않고 나가면 저장되지 않은 사항은 사라집니다.')) {
+		if (jqMap.$confirm.hasClass('confirmed')) {
 			history.pushState({mod: 'lobby'}, '', '/lobby/' + stMap.myInfo.id);
 			socket.emit('out', {id: stMap.myInfo.id, rid: e.data.rid});
 			wwm.lobby.initModule(jqMap.$con);
+		} else {
+			if (confirm('확정 버튼을 누르지 않고 나가면 저장되지 않은 사항은 사라집니다.')) {
+				history.pushState({mod: 'lobby'}, '', '/lobby/' + stMap.myInfo.id);
+				socket.emit('out', {id: stMap.myInfo.id, rid: e.data.rid});
+				wwm.lobby.initModule(jqMap.$con);
+			}
 		}
-	}
-	function quit(e) {
+	};
+	var quit = function(e) {
 		console.log('quit', e.data.rid);
 		if (stMap.current === 1) {
 			if (confirm('혼자 있을 때 방을 나가면 방이 사라집니다.그래도 나가시겠습니까?')) {
@@ -1339,19 +1465,19 @@ wwm.room = (function(){
 			socket.emit('quit', {id: stMap.myInfo.id, rid: e.data.rid});
 			wwm.lobby.initModule(jqMap.$con);
 		}
-	}
-	function changeCurrentNumber(gap) {
+	};
+	var changeCurrentNumber = function(gap) {
 		console.log('changeCurrentNumber', gap);
 		stMap.current += gap;
 		jqMap.$current.text(stMap.current);
 		$('#current-people-limit').val(stMap.current);
-	}
-	function changeLimitNumber(num) {
+	};
+	var changeLimitNumber = function(num) {
 		console.log('changeLimitNumber', num);
 		stMap.limit = num;
 		jqMap.$limit.text(num);
-	}
-	function sendChat(e) {
+	};
+	var sendChat = function(e) {
 		e.preventDefault();
 		var text = $(this).parent().prev().val();
 		console.log('sendChat', stMap.myInfo.id, text);		
@@ -1360,58 +1486,59 @@ wwm.room = (function(){
 			name: stMap.myInfo.name,
 			text: text
 		});
-	}
-	function refresh() {
+	};
+	var refresh = function() {
 		console.log('refresh', {rid: stMap.rid, id: stMap.myInfo.id});
 		socket.on('responseArr', function(data) {
 			console.log('socket responseArr');
 			stMap.dayArray = data.day;
 			stMap.nightArray = data.night;
+			renderTable();
 		});
 		socket.emit('requestArr', {rid: stMap.rid, id: stMap.myInfo.id});
-	}
-	function confirmCalendar(e) {
+	};
+	var confirmCalendar = function(e) {
 		console.log('confirm', e.data);
 		var data = e.data;
 		data.bool = !stMap.myInfo.confirm;
-		console.log(data);
-		if (jqMap.$confirm.hasClass('confirmed')) {
-			jqMap.$confirm.removeClass('confirmed');
-			stMap.myInfo.confirm = false;
-		} else {
-			var confirmPromise = wwm.model.confirm(data);
-			confirmPromise.done(function() {
-				stMap.myInfo.confirm = true;
+		data.day = stMap.dayArray;
+		data.night = stMap.nightArray;
+		console.log('change confirm to', data.bool, stMap.dayArray, data.day, stMap.dayArray===data.day);
+		var confirmPromise = wwm.model.confirm(data);
+		confirmPromise.done(function() {
+			if (jqMap.$confirm.hasClass('confirmed')) {
+				jqMap.$confirm.removeClass('confirmed');
+			} else {
 				jqMap.$confirm.addClass('confirmed');
-			});
-			confirmPromise.fail(function(err) {
-				console.log(err);
-				alert('confirm error!');
-			});
+			}
+			stMap.myInfo.confirm = data.bool;
+			socket.emit('confirmed', {id: stMap.myInfo.id, bool: data.bool});
+			console.log(stMap.dayArray);
+		});
+		confirmPromise.fail(function(err) {
+			console.log(err);
+			alert('confirm error!');
+		});
+
+	};
+	var toggleCalendar = function() {
+		if (stMap.now === 'day') {
+			stMap.now = 'night';
+			jqMap.$dayTable.hide();
+			jqMap.$nightTable.show();
+		} else {
+			stMap.now = 'day';
+			jqMap.$dayTable.show();
+			jqMap.$nightTable.hide();
 		}
-		socket.emit('confirmed', {id: stMap.myInfo.id, bool: data.bool});
-	}
-	function toDay() {
-		console.log('toDay', stMap.now);
-		stMap.now = 'day';
-		jqMap.$night.css('background', 'white');
-		jqMap.$day.css('background', 'crimson');
-		jqMap.$dayTable.show();
-		jqMap.$nightTable.hide();
-	}
-	function toNight() {
-		console.log('toNight', stMap.now);
-		stMap.now = 'night';
-		jqMap.$day.css('background', 'white');
-		jqMap.$night.css('background', 'crimson');
-		jqMap.$dayTable.hide();
-		jqMap.$nightTable.show();
-	}
-	function toConfirmPage() {
+		$(this).find('div').toggleClass('tapped');
+	};
+	var toConfirmPage = function() {
 		console.log('toConfirmPage', stMap);
+		history.pushState({mod: 'confirm'}, '', '/result/' + stMap.rid);
 		wwm.confirm.initModule(stMap);
-	}
-	function kakaoInvite() {
+	};
+	var kakaoInvite = function() {
 		Kakao.Link.createTalkLinkButton({
 			container: '#kakao-invite',
 			label: '카카오링크 샘플에 오신 것을 환영합니다.',
@@ -1428,14 +1555,25 @@ wwm.room = (function(){
 				alert('KakaoLink is currently only supported in iOS and Android platforms.');
 			}
 		});
-	}
-	function fbInvite() {
+	};
+	var fbInvite = function() {
 		FB.ui({
 			method: 'send',
 			link: 'http%3A%2F%2Fwww.nytimes.com%2F2011%2F06%2F15%2Farts%2Fpeople-argue-just-to-win-scholars-assert.html',
 		});
-	}
-	function initModule(doc, status) {
+	};
+	var toggleAside = function() {
+		console.log('toggleAside', jqMap.$aside.hasClass('opened'));
+		if (jqMap.$aside.hasClass('opened')) { // 닫는다.
+			jqMap.$aside.removeClass('opened');
+			jqMap.$aside.css('left', '-100%');
+		} else { // 연다.
+			jqMap.$aside.addClass('opened');
+			jqMap.$aside.css('left', '0');
+
+		}
+	};
+	var initModule = function(doc, status) {
 		console.log('room initModule', status);
 		// docs 정보를 방 모듈에 입력.
 		stMap.title = doc.title;
@@ -1491,8 +1629,22 @@ wwm.room = (function(){
 			}
 			wwm.shell.view.html(out);
 			setJqMap(wwm.shell.view);
+			renderTable();
 			if (stMap.myInfo.confirm) {
 				jqMap.$confirm.addClass('confirmed');
+			}
+			var confirmCount = 0;
+			for (var i = 0; i < stMap.memberList.length; i++) {
+				console.log(stMap.memberList[i].confirm === true, stMap.memberList[i].confirm);
+				if (stMap.memberList[i].confirm === true) {
+					confirmCount++;
+				}
+			}
+			console.log(confirmCount === stMap.memberList.length, confirmCount, stMap.memberList.length);
+			if (confirmCount === stMap.memberList.length) {
+				jqMap.$allConfirmed.show();
+			} else {
+				jqMap.$allConfirmed.hide();
 			}
 			showMembers();
 			socket.on('out', function(id) {
@@ -1540,7 +1692,7 @@ wwm.room = (function(){
 			});
 			socket.on('chat', function(data) {
 				console.log('socket chat', data.id, data.text);
-				jqMap.$memberList.find('li').eq(findInfo(data.id).personColor).find('.chat').text(data.text);
+				jqMap.$chatList.append('<p>' + data.name + ': ' + data.text + '</p>');
 			});
 			socket.on('busy', function(data) {
 				console.log('socketbusy:', data.arr, data.sid, data.cur);
@@ -1556,7 +1708,7 @@ wwm.room = (function(){
 			});
 			socket.on('ban', function(data) {
 				// 강퇴당한 경우.
-				if (stMap.myInfo.personColor == data.id) {
+				if (stMap.myInfo.personColor == data.order) {
 					alert('강퇴당하셨습니다...');
 					wwm.lobby.initModule(jqMap.$con);
 					return;
@@ -1567,7 +1719,7 @@ wwm.room = (function(){
 				}
 				alert(findInfo(id).name + '님이 강제퇴장 되었습니다. 잘가요!');
 				for (var i = 0; i < stMap.memberList.length; i++) {
-					if (banned == stMap.memberList[i].id) {
+					if (data.id == stMap.memberList[i].id) {
 						stMap.memberList.splice(i, 1);
 						stMap.onlineList.splice(i, 1);
 						break;
@@ -1602,9 +1754,8 @@ wwm.room = (function(){
 			});
 			jqMap.$calendar.find('td').click(onClickCell);
 			jqMap.$explode.click({id: stMap.rid}, deleteRoom);
-			jqMap.$back.click({rid: stMap.rid}, toLobby);
-			jqMap.$day.click(toDay);
-			jqMap.$night.click(toNight);
+			jqMap.$toLobby.click({rid: stMap.rid}, toLobby);
+			jqMap.$toggleCalendar.click(toggleCalendar);
 			jqMap.$admin.click(showAdminMenu);
 			jqMap.$dayExp.click(showDayException);
 			jqMap.$timeExp.click(showTimeException);
@@ -1616,10 +1767,11 @@ wwm.room = (function(){
 			jqMap.$notTime.click(excludeTime);
 			jqMap.$thDay.click(onClickDay);
 			jqMap.$thTime.click(onClickTime);
-			jqMap.$confirm.click({id: stMap.myInfo.id, rid: stMap.rid, day: stMap.dayArray, night: stMap.nightArray}, confirmCalendar);
+			jqMap.$confirm.click({id: stMap.myInfo.id, rid: stMap.rid}, confirmCalendar);
 			jqMap.$refresh.click(refresh);
 			jqMap.$allConfirmed.click(toConfirmPage);
 			jqMap.$quit.click({id: stMap.myInfo.id, rid: stMap.rid}, quit);
+			jqMap.$toggleAside.click(toggleAside);
 			jqMap.$kakaoInvite.on({
 				click: kakaoInvite,
 				mouseover: function() {
@@ -1639,7 +1791,7 @@ wwm.room = (function(){
 				}
 			});
 		});
-	}
+	};
 	
 	return {
 		initModule: initModule,

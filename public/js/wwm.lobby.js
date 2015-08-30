@@ -34,9 +34,7 @@ wwm.lobby = (function (){
 					password: password,
 					unlocked: unlocked
 				};
-				console.log('parser', parser, password);
 				dust.render(tmpl, parser, function(err, out) {
-					console.log(src, tmpl, out);
 					$frag.append(out);
 				});
 			}
@@ -118,17 +116,21 @@ wwm.lobby = (function (){
 		localStorage.removeItem('loginType');
 		wwm.login.initModule();
 	}
-	function enterRoom() {
+	function enterRoom(rid) {
 		var $this = $(this);
 		var pw;
-		var rid = $(this).data('rid');
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
-		if ($(this).has('.locked').length) {
-			pw = prompt('비밀번호', '');
-			if (pw === null || pw.trim() === '') {
-				$(spinner.el).remove();
-				return;
+		console.log(rid);
+		if (typeof rid !== 'string') {
+			rid = $(this).data('rid');
+			if ($(this).has('.locked').length) {
+				pw = prompt('비밀번호', '');
+				console.log(pw);
+				if (pw === null || pw.trim() === '') {
+					$(spinner.el).remove();
+					return;
+				}
 			}
 		}
 		var ajax = $.post('/enterroom/' + rid, {pw: pw, pid: userInfo.id, name: userInfo.name, picture: userInfo.picture});
@@ -173,13 +175,35 @@ wwm.lobby = (function (){
 			localStorage.login = JSON.stringify(json);
 		});
 	}
-	function showResult() {
-		history.pushState({mod: 'confirm'}, '', '/result');
-		wwm.confirm.initModule();
+	function showResult(rid) {
+		if (rid) {
+			$.post('/roominfo/' + rid)
+				.done(function (doc) {
+					if (doc === 'no_room') {
+						alert('방이 없습니다');
+						return;
+					} else {
+						history.pushState({mod: 'confirm'}, '', '/result/' + rid);
+						var data = {};
+						data.dayArray = doc.day;
+						data.nightArray = doc.night;
+						data.rid = doc.rid;
+						wwm.confirm.initModule(data);
+					}
+				})
+				.fail(function (err) {
+					console.error(err);
+				});
+		} else {
+			rid = $(this).parent().data('rid');
+			history.pushState({mod: 'confirm'}, '', '/result/' + rid);
+			wwm.confirm.initModule(data);
+		}
 	}
 	function setJqMap($con) {
 		jqMap = {
 			$con: $con,
+			$logo: $con.find('#lobby-logo'),
 			$showCreateroom: $con.find('#show-createroom-modal'),
 			$searchroomBtn: $con.find('#searchroom-btn'),
 			$list: $con.find('#rooms'),
@@ -210,9 +234,6 @@ wwm.lobby = (function (){
 			} else {
 				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
-				if (picture === null) {
-					jqMap.$profilePicture.replaceWith($('<div style="display:inline;"/>').showCanvasLogo(60));
-				}
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);
@@ -262,6 +283,8 @@ wwm.lobby = (function (){
 	}
 	return {
 		initModule: initModule,
-		showSearchResult: showSearchResult
+		showSearchResult: showSearchResult,
+		enterRoom: enterRoom,
+		showResult: showResult
 	};
 }());

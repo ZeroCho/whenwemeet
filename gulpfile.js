@@ -38,7 +38,7 @@ var	dir = {
 };
 	
 gulp.task('default', ['product']);
-gulp.task('build', ['clean', 'styles', 'scripts', 'dust']);
+gulp.task('build', ['clean', 'styles', 'scripts']);
 gulp.task('product', ['build', 'serve', 'watch']);
 gulp.task('watch', ['clean'], function () {
 	livereload.listen();

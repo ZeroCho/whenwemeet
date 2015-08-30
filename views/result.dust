@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko_KR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>{title}</title>
+	<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css"/>
+	<link rel="stylesheet" href="/dist/whenwemeet.css"/>
+</head>
+<body>
+<div id="whenwemeet">
+	<div id="view">
+		<div id="logo">
+			<svg class="svg-logo" viewbox="0 0 168 300">
+				<polygon class="triangle triangle-0" points="5,100 105,100 55,13.4"/>
+				<polygon class="triangle triangle-1" points="0,110 100,110 50,196.6"/>
+				<polygon class="triangle triangle-2" points="60,200 160,200 110,113.4"/>
+				<polygon class="triangle triangle-3" points="55,210 155,210 105,296.6"/>
+			</svg>
+		</div>
+	</div>
+	<div id="modal"></div>
+</div>
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script src="/bower_components/spin.js/spin.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/wwm.js"></script>
+<script src="/js/wwm.model.js"></script>
+<script src="/js/wwm.shell.js"></script>
+<script src="/js/wwm.login.js"></script>
+<script src="/js/wwm.lobby.js"></script>
+<script src="/js/wwm.modal.js"></script>
+<script src="/js/wwm.room.js"></script>
+<script src="/js/wwm.confirm.js"></script>
+<script>
+	$(function () {
+		var KAKAO_KEY = 'a35623411563ec424430d3bd5dc7a93e';
+		$.ajaxSetup({cache: true});
+		$.getScript('//connect.facebook.net/ko_KR/sdk.js', function () {
+			FB.init({
+				appId: '1617440885181938',
+				xfbml: true,
+				version: 'v2.4'
+			});
+		});
+		Kakao.cleanup();
+		Kakao.init(KAKAO_KEY);
+		wwm.initModule();
+		wwm.lobby.enterRoom('{rid}');
+		wwm.lobby.showResult('{rid}');
+	});
+</script>
+{>"_partial"/}
+</body>
+</html>
