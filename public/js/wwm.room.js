@@ -619,7 +619,7 @@ wwm.room = (function(){
 	var fbInvite = function() {
 		FB.ui({
 			method: 'send',
-			link: 'http%3A%2F%2Fwww.nytimes.com%2F2011%2F06%2F15%2Farts%2Fpeople-argue-just-to-win-scholars-assert.html',
+			link: 'http%3A%2F%2Fwww.nytimes.com%2F2011%2F06%2F15%2Farts%2Fpeople-argue-just-to-win-scholars-assert.html'
 		});
 	};
 	var toggleAside = function() {

@@ -30,11 +30,12 @@ wwm.login = (function () {
 		Kakao.Auth.login({
 			success: function () {
 				Kakao.API.request({
-					url: '/v1/user/me',
+					url: '/v1/api/talk/profile',
 					success: function (res) {
 						console.log(JSON.stringify(res));
-						res.name = res.properties.nickname;
-						res.picture = res.properties.profile_image;
+						res.name = res.nickName;
+						res.picture = res.profileImageURL;
+						res.thumb = res.thumbnailURL;
 						var joinPromise = wwm.model.join(res);
 						joinPromise.fail(function(err){
 							alert('가입 오류 발생!');
