@@ -48,9 +48,9 @@ gulp.task('watch', ['clean'], function () {
 	gulp.watch(dir.sass.src, ['styles'], function (e) {
 		console.log('watch sass', e, e.path);
 	});
-	gulp.watch(dir.dust.src, ['dust'], function (e) {
-		console.log('watch dust', e, e.path);
-	});
+	//gulp.watch(dir.dust.src, ['dust'], function (e) {
+	//	console.log('watch dust', e, e.path);
+	//});
 	gulp.watch([dir.dist.css, dir.dist.js], function (event) {
 		gulp.src(event.path)
 			.pipe(plumber())

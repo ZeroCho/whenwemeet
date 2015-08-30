@@ -103,7 +103,7 @@ wwm.model = (function () {
 	};
 	var searchList = function(query) {
 		var deferred = $.Deferred();
-		$.get('/search/' + query).done(function (res) {
+		$.post('/search/' + query).done(function (res) {
 			if (res.length === 0) {
 				deferred.reject('no_room');
 			}
@@ -466,38 +466,9 @@ wwm.lobby = (function (){
 	function getList() {
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
-		var $frag = $(document.createDocumentFragment());
 		var getListPromise = wwm.model.getRoomList(userInfo.id);
 		getListPromise.done(function (res) {
-			for (var i = 0; i < res.length; i++) {
-				var room = res[i];
-				var src = $('#wwm-room-list').html();
-				var tmpl = dust.loadSource(dust.compile(src));
-				var password = room.password || false;
-				var unlocked = false;
-				if (password) {
-					for (var j = 0; j < room.members.length; j++) {
-						if (room.members[j].id == userInfo.id) {
-							unlocked = true;
-							break;
-						}
-					}
-				}
-				var parser = {
-					rid: room.rid,
-					picture: room.picture,
-					title: room.title,
-					current: room.members.length,
-					limit: room.limit,
-					result: room.result,
-					password: password,
-					unlocked: unlocked
-				};
-				dust.render(tmpl, parser, function(err, out) {
-					$frag.append(out);
-				});
-			}
-			jqMap.$list.html($frag);
+			showRooms(res);
 		});
 		getListPromise.fail(function (err) {
 			if (err === 'no_room') {
@@ -513,14 +484,17 @@ wwm.lobby = (function (){
 	}
 	function onSearchRoom (e) {
 		e.preventDefault();
-		var query = $(this).parent().prev().val().trim();
+		var query = e;
+		if (typeof e !== string) {
+			query = $(this).parent().prev().val().trim();
+		}
 		console.log('query', query);
 		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
+		history.pushState({mod: 'search', data: res}, '', '/search/' + query);
 		var searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
-			history.pushState({mod: 'search', data: res}, '', '/search/' + query);
-			showSearchResult(res);
+			showRooms(res);
 		});
 		searchPromise.fail(function (err) {
 			if (err === 'no_room') {
@@ -534,39 +508,37 @@ wwm.lobby = (function (){
 			$(spinner.el).remove();
 		});
 	}
-	function showSearchResult(res) {
+	function showRooms(res) {
 		var $frag = $(document.createDocumentFragment());
-			for (var i = 0; i < res.length; i++) {
-				var room = res[i];
-				var src = $('#wwm-room-list').html();
-				var tmpl = dust.loadSource(dust.compile(src));
-				var password = room.password || false;
-				var unlocked = false;
-				if (password) {
-					for (var j = 0; j < room.members.length; j++) {
-						if (room.members[j].id == userInfo.id) {
-							unlocked = true;
-							break;
-						}
+		for (var i = 0; i < res.length; i++) {
+			var room = res[i];
+			var src = $('#wwm-room-list').html();
+			var tmpl = dust.loadSource(dust.compile(src));
+			var password = room.password || false;
+			var unlocked = false;
+			if (password) {
+				for (var j = 0; j < room.members.length; j++) {
+					if (room.members[j].id == userInfo.id) {
+						unlocked = true;
+						break;
 					}
 				}
-				var parser = {
-					rid: room.rid,
-					picture: room.picture,
-					title: room.title,
-					current: room.members.length,
-					limit: room.limit,
-					result: room.result,
-					password: password,
-					unlocked: unlocked
-				};
-				console.log('parser', parser, password);
-				dust.render(tmpl, parser, function(err, out) {
-					console.log(src, tmpl, out);
-					$frag.append(out);
-				});
 			}
-			jqMap.$list.html($frag);
+			var parser = {
+				rid: room.rid,
+				picture: room.picture,
+				title: room.title,
+				current: room.members.length,
+				limit: room.limit,
+				result: room.result,
+				password: password,
+				unlocked: unlocked
+			};
+			dust.render(tmpl, parser, function(err, out) {
+				$frag.append(out);
+			});
+		}
+		jqMap.$list.html($frag);
 	}
 	function logout() {
 		history.pushState({mod: 'logout'}, '', '/');
@@ -640,7 +612,6 @@ wwm.lobby = (function (){
 				.done(function (doc) {
 					if (doc === 'no_room') {
 						alert('방이 없습니다');
-						return;
 					} else {
 						history.pushState({mod: 'confirm'}, '', '/result/' + rid);
 						var data = {};
@@ -742,9 +713,9 @@ wwm.lobby = (function (){
 	}
 	return {
 		initModule: initModule,
-		showSearchResult: showSearchResult,
 		enterRoom: enterRoom,
-		showResult: showResult
+		showResult: showResult,
+		searchRoom: onSearchRoom
 	};
 }());
 wwm.login = (function () {
@@ -778,7 +749,8 @@ wwm.login = (function () {
 	var kakaoLogin = function() {
 		Kakao.Auth.login({
 			success: function () {
-				Kakao.API.request({
+				Kakao.API.
+				Kakao.API.request({ // TODO: 카카오 프로필 업데이트에 대비한 상황 (update_profile)
 					url: '/v1/api/talk/profile',
 					success: function (res) {
 						console.log(JSON.stringify(res));

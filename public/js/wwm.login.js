@@ -29,7 +29,8 @@ wwm.login = (function () {
 	var kakaoLogin = function() {
 		Kakao.Auth.login({
 			success: function () {
-				Kakao.API.request({
+				Kakao.API.
+				Kakao.API.request({ // TODO: 카카오 프로필 업데이트에 대비한 상황 (update_profile)
 					url: '/v1/api/talk/profile',
 					success: function (res) {
 						console.log(JSON.stringify(res));

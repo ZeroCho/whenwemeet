@@ -39,7 +39,7 @@ wwm.model = (function () {
 	};
 	var searchList = function(query) {
 		var deferred = $.Deferred();
-		$.get('/search/' + query).done(function (res) {
+		$.post('/search/' + query).done(function (res) {
 			if (res.length === 0) {
 				deferred.reject('no_room');
 			}

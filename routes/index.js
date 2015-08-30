@@ -31,6 +31,13 @@ router.get('/login', function(req, res) {
 		title: '우리언제만나'
 	});
 });
+router.get('/search/:query', function(req, res) {
+	var query = req.params.query;
+	res.render('search', {
+		title: '우리언제만나::검색?' + query,
+		query: query
+	});
+});
 router.get('/room/:rid', function(req, res) {
 	var rid = req.params.rid;
 	res.render('room', {
@@ -297,7 +304,7 @@ router.post('/deleteroom/:rid', function (req, res) {
 });
 
 
-router.get('/search/:query', function (req, res) {
+router.post('/search/:query', function (req, res) {
 	var query = req.params.query;
 	roomCollection.find({title: {$regex: query}}).toArray(function(err, docs) {
 		if (err) {
