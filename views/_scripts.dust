@@ -522,20 +522,19 @@ wwm.lobby = (function (){
 	};
 	showRooms = function(res) {
 		var $frag = $(document.createDocumentFragment());
-		var i, j, room, src, tmpl, password, unlocked, parser;
-		for (i = 0; i < res.length; i++) {
-			room = res[i];
-			src = $('#wwm-room-list').html();
+		var i, j, room, tmpl, password, unlocked, parser;
+		var src = $('#wwm-room-list').html();
+		res.forEach(function(room) {
 			tmpl = dust.loadSource(dust.compile(src));
 			password = room.password || false;
 			unlocked = false;
 			if (password) {
-				for (j = 0; j < room.members.length; j++) {
-					if (room.members[j].id == userInfo.id) {
-						unlocked = true;
-						break;
+				room.members.some(function(member) {
+					if (member.id == userInfo.id) {
+						return unlocked = true;
 					}
-				}
+					return false;
+				});
 			}
 			parser = {
 				rid: room.rid,
@@ -550,7 +549,7 @@ wwm.lobby = (function (){
 			dust.render(tmpl, parser, function(err, out) {
 				$frag.append(out);
 			});
-		}
+		});
 		jqMap.$list.html($frag);
 	};
 	logout = function() {
@@ -697,36 +696,39 @@ wwm.lobby = (function (){
 					var rid = $rooms.map(function(idx, item) {
 						$(item).data('rid');
 					}).get();
-					for (var i = 0; i < rid.length; i++) {
-						if (data.rid === rid[i]) {
+					rid.every(function(room, i) {
+						if (data.rid === room) {
 							$rooms.eq(i).find('.title').text(data.title);
-							break;
+							return false;
 						}
-					}
+						return true;
+					});
 				});
 				socket.on('currentChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
 						$(item).data('rid');
 					}).get();
-					for (var i = 0; i < rid.length; i++) {
-						if (data.rid === rid[i]) {
+					rid.every(function(room, i) {
+						if (data.rid === room) {
 							$rooms.eq(i).find('.current').text(data.number);
-							break;
+							return false;
 						}
-					}	
+						return true;
+					});
 				});
 				socket.on('limitChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
 						$(item).data('rid');
 					}).get();
-					for (var i = 0; i < rid.length; i++) {
-						if (data.rid === rid[i]) {
+					rid.every(function(room, i) {
+						if (data.rid === room) {
 							$rooms.eq(i).find('.total').text(data.number);
-							break;
+							return false;
 						}
-					}
+						return true;
+					});
 				});
 				$(document).on('click', '.room', enterRoom);
 				$(document).on('click', '.result', showResult);
@@ -879,16 +881,16 @@ wwm.room = (function(){
 	};
 	createArray = function(length) {
 		var arr = new Array(length || 0);
-		var i, j;
-		var args = Array.prototype.slice.call(arguments, 1);
+		var i;
+		var args = [].slice.call(arguments, 1);
 		if (arguments.length > 1) {
-			for (i = length; i > 0; i--) {
-				arr[length - i] = createArray.apply(this, args);
+			for (i = 0; i < length; i++) {
+				arr[i] = createArray.apply(this, args);
 			}
 		} else if (arguments.length == 1) {
-			for (j = 0; j < arr.length; j++) {
-				arr[j] = [];
-			}
+			arr.forEach(function(el) {
+				el = [];
+			});
 		}
 		return arr;
 	};
@@ -896,122 +898,75 @@ wwm.room = (function(){
 		var i, cell, arr;
 		var arrList = [];
 		console.log('tableToArray');
-		for (i = 0; i < cellList.length; i++) {
-			cell = cellList[i];
+		cellList.forEach(function(cell) {
 			arr = [cell.parentNode.rowIndex - 1, cell.cellIndex - 1];
 			arrList.push(arr);
-		}
+		});
 		console.log('tableToArray', arrList);
 		return arrList;
 	};
-	arrayToTable = function(cellList, sid, cur, busy) { /* array를 table로 만든다. */
-		var i, k, cell, number, $cell, $box, index, dayCell, nightCell;
-		console.log('arrayToTable', cellList, sid, cur, busy);
+	arrayToTable = function(coordList, sid, cur, busy) { /* array를 table로 만든다. */
+		var i, k, stMapArray, $cell, $table, index, oneCell, addBox;
+		console.log('arrayToTable', coordList, sid, cur, busy);
 		if (cur === 'day') {
-			for (i = 0; i < cellList.length; i++) {
-				cell = cellList[i];
-				$cell = jqMap.$dayTable.find('tr').eq(cell[0] + 1).find('td').eq(cell[1]);
-				dayCell = stMap.dayArray[cell[0]][cell[1]];
-				if (busy) {
-					dayCell.push(sid);
-					number = dayCell.length;
-					$cell.find('div').remove();
-					$box = $('<div/>').addClass('box-' + number);
-					for (k = 0; k < number; k++) {
-						$box.append($('<div/>', {class: cfMap.colorList[dayCell[k]]}));
-					}
-					$box.appendTo($cell);
-				} else {
-					index = dayCell.indexOf(sid);
-					if (index > -1) {
-						dayCell.splice(index, 1);
-					}
-					number = dayCell.length;
-					$cell.find('div').remove();
-					$box = $('<div/>').addClass('box-' + number);
-					for (k = 0; k < number; k++) {
-						console.log(cfMap.colorList[dayCell[k]]);
-						$box.append($('<div/>', {class: cfMap.colorList[dayCell[k]]}));
-					}
-					$box.appendTo($cell);
-				}
-				stMap.dayArray[cell[0]][cell[1]] = dayCell;
-			}
-			console.log('arrToTable:day', stMap.dayArray);
-		} else if (cur === 'night') {
-			for (i = 0; i < cellList.length; i++) {
-				cell = cellList[i];
-				$cell = jqMap.$nightTable.find('tr').eq(cell[0] + 1).find('td').eq(cell[1]);
-				nightCell = stMap.nightArray[cell[0]][cell[1]];		
-				if (busy) {
-					nightCell.push(sid);
-					number = nightCell.length;
-					$cell.find('div').remove();
-					$box = $('<div/>').addClass('box-' + number);
-					for (k = 0; k < number; k++) {
-						$box.append($('<div/>', {class: cfMap.colorList[nightCell[k]]}));
-					}
-					$box.appendTo($cell);
-				} else {
-					index = nightCell.indexOf(sid);
-					if (index > -1) {
-						nightCell.splice(index, 1);
-					}
-					number = nightCell.length;
-					$cell.find('div').remove();
-					$box = $('<div/>').addClass('box-' + number);
-					for (k = 0; k < number; k++) {
-						$box.append($('<div/>', {class: cfMap.colorList[nightCell[k]]}));
-					}
-					$box.appendTo($cell);
-				}
-				stMap.nightArray[cell[0]][cell[1]] = nightCell;
-			}
-			console.log('arrToTable:night', stMap.nightArray);
+			$table = jqMap.$dayTable;
+			stMapArray = stMap.dayArray;
+		} else {
+			$table = jqMap.$nightTable;
+			stMapArray = stMap.nightArray;
 		}
+		addBox = function($cell) {
+			var $box = $('<div/>').addClass('box-' + number);
+			var number = oneCell.length;
+			$cell.find('div').remove();
+			oneCell.forEach(function(index) {
+				$box.append($('<div/>', {class: cfMap.colorList[index]}));
+			});
+			$box.appendTo($cell);
+		};
+		coordList.forEach(function(coord) {
+			$cell = $table.find('tr').eq(coord[0] + 1).find('td').eq(coord[1]);
+			oneCell = stMapArray[coord[0]][coord[1]];
+			if (busy) {
+				oneCell.push(sid);
+				addBox($cell);
+			} else {
+				index = oneCell.indexOf(sid);
+				if (index > -1) {
+					oneCell.splice(index, 1);
+				}				
+				addBox($cell);
+			}
+			stMapArray[coord[0]][coord[1]] = oneCell;
+		});
+		console.log('arrToTable:', cur, stMapArray);
 	};
 	renderTable = function() {
-		var i, j, k, $cell, number, $box, dayCell, nightCell;
+		var i, j, k, $cell, $box, oneCell;
+		var stMapArrayList = [stMap.dayArray, stMap.nightArray];
 		console.log('renderTable', stMap.dayArray, stMap.nightArray);
-		for (i = 0; i < 12; i++) {
-			for (j = 0; j < 7; j++) {
-				$cell = jqMap.$dayTable.find('tr').eq(i + 1).find('td').eq(j);
-				dayCell = stMap.dayArray[i][j];
-				number = dayCell.length;
-				$cell.find('div').remove();
-				console.log($cell, dayCell, number, i, j);
-				if (number > 0) {
-					$box = $('<div/>').addClass('box-' + number);
-					for (k = 0; k < number; k++) {
-						$box.append($('<div/>', {class: cfMap.colorList[dayCell[k]]}));
+		stMapArrayList.forEach(function(stMapArray) {
+			stMapArray.forEach(function(tr, i) {
+				tr.forEach(function(target, j) {
+					$cell = jqMap.$dayTable.find('tr').eq(i + 1).find('td').eq(j);
+					$cell.find('div').remove();
+					if (target.length > 0) {
+						$box = $('<div/>').addClass('box-' + target.length);
+						target.forEach(function(index) {
+							$box.append($('<div/>', {class: cfMap.colorList[index]}));
+						});
+						$box.appendTo($cell);
 					}
-					$box.appendTo($cell);
-				}
-			}
-		}
-		for (i = 0; i < 12; i++) {
-			for (j = 0; j < 7; j++) {
-				$cell = jqMap.$nightTable.find('tr').eq(i + 1).find('td').eq(j);
-				nightCell = stMap.nightArray[i][j];
-				number = nightCell.length;
-				$cell.find('div').remove();
-				if (number > 0) {
-					$box = $('<div/>').addClass('box-' + number);
-					for (k = 0; k < number; k++) {
-						$box.append($('<div/>', {class: cfMap.colorList[nightCell[k]]}));
-					}
-					$box.appendTo($cell);
-				}
-			}
-		}
+				});
+			});
+		});
 	};
 	showMembers = function() {
 		var src = $('#wwm-member-list').html();
 		var i, member;
 		console.log('showMembers', stMap.memberList);
 		jqMap.$memberList.find('ul').empty();
-		for (i = 0; i < stMap.memberList.length; i++) {
-			member = stMap.memberList[i];
+		stMap.memberList.forEach(function(member) {
 			dust.render(dust.loadSource(dust.compile(src)), {id: member.id, color: cfMap.colorList[i], name: member.name, picture: member.picture}, function(err, out){
 				if (err) {
 					jqMap.$memberList.find('ul').html(err);
@@ -1019,7 +974,7 @@ wwm.room = (function(){
 					jqMap.$memberList.find('ul').append(out);
 				}
 			});
-		}
+		});
 		showOnline();
 	};
 	newMember = function(doc) {
@@ -1039,7 +994,7 @@ wwm.room = (function(){
 	showOnline = function() {
 		var $list, i;
 		console.log('showOnline onlineList', stMap.onlineList);
-		for (i = 0; i < stMap.memberList.length; i++) {
+		stMap.memberList.forEach(function(member, i) {
 		 	$list = jqMap.$memberList.find('li').eq(i);
 			if (stMap.onlineList[i]) {
 				if ($list.has('.offline').length !== 0) {
@@ -1050,18 +1005,18 @@ wwm.room = (function(){
 					 $list.find('.online').toggleClass('online offline');
 				 }
 			}
-		}
+		});
 	};
 	findInfo = function(id) {
 		var info = {}, i;
 		console.log('findInfo', id);
-		for (i = 0; i < stMap.memberList.length; i++) {
-			if (id == stMap.memberList[i].id) {
+		stMap.memberList.forEach(function(member) {
+			if (id == member.id) {
 				info.personColor = i;
-				info.name = stMap.memberList[i].name;
+				info.name = member.name;
 				info.color = cfMap.colorList[i];
 			}
-		}
+		});
 		return info;
 	};
 	banPerson = function(e) {	
@@ -1195,18 +1150,17 @@ wwm.room = (function(){
 		} else {
 			arr = stMap.nightArray;
 		}
-		for (i = 0; i < 12; i++) {
-			if (arr[i][day].indexOf(stMap.myInfo.personColor) == -1) {
+		arr.forEach(function(tr, i) {
+			if (tr[day].indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
 				dayList.push([i, day]);
 			}
-		}
-		
+		});		
 		if (allSelected) {
 			dayList = [];
-			for (i = 0; i < 12; i++) {
+			arr.forEach(function(tr, i) {
 				dayList.push([i, day]);
-			}
+			});
 			$(this).removeClass('selected');
 			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: dayList});
 		} else {
@@ -1219,26 +1173,24 @@ wwm.room = (function(){
 		var arr, timeList = [], i;
 		var allSelected = true;
 		checkConfirmed();
-		console.log('onClickTime',  time);
-		
+		console.log('onClickTime',  time);		
 		if (stMap.now === 'day') {
 			arr = stMap.dayArray;
 		} else {
 			arr = stMap.nightArray;
 		}
-		
 		console.log(arr[time]);
-		for (i = 0; i < 7; i++) {
-			if (arr[time][i].indexOf(stMap.myInfo.personColor) == -1) {
+		arr[time].forEach(function(target, i) {
+			if (target.indexOf(stMap.myInfo.personColor) == -1) {
 				allSelected = false;
 				timeList.push([time, i]);
 			}
-		}
+		});
 		if (allSelected) {
 			timeList = [];
-			for (i = 0; i < 7; i++) {
+			arr[time].forEach(function(target, i) {
 				timeList.push([time, i]);
-			}
+			});
 			$(this).removeClass('selected');
 			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
 		} else {
@@ -1288,8 +1240,7 @@ wwm.room = (function(){
 		}
 	};
 	excludeTime = function() {
-		/* 해당 시간에 대한 어레이를 발송 */
-		
+		/* 해당 시간에 대한 어레이를 발송 */		
 		var idx = $(this).index();
 		var time = $(this).find('input').val();
 		var i, j, arr = [];
@@ -1456,32 +1407,28 @@ wwm.room = (function(){
 
 		}
 	};
-	initModule = function(doc, status) {
+	initModule = function(doc) {
 		var parser, i;
 		var src = $('#wwm-room').text();
-		console.log('room initModule', status, stMap.rid);
+		console.log('room initModule', stMap.rid);
 		stMap.title = doc.title;
 		stMap.limit = Number(doc.limit);
 		stMap.rid = doc.rid.toString();
 		stMap.maker = doc.maker.toString();
-		if (status === 'create') { 
-			stMap.dayArray = createArray(12,7);
-			stMap.nightArray = createArray(12,7);
-		} else if (status === 'enter') {
-			stMap.dayArray = doc.day || createArray(12,7);
-			stMap.nightArray = doc.night || createArray(12,7);
-		}
+		stMap.dayArray = doc.day || createArray(12,7);
+		stMap.nightArray = doc.night || createArray(12,7);
 		stMap.memberList = Array.isArray(doc.members) ? doc.members : JSON.parse(doc.members);
 		stMap.current = stMap.memberList.length;
 		stMap.myInfo.id = userInfo.id.toString();
 		stMap.myInfo.name = userInfo.name;
-		for (i = 0; i < stMap.memberList.length; i++) {
-			if (stMap.memberList[i].id == userInfo.id) {
+		stMap.memberList.every(function(member) {
+			if (member.id == userInfo.id) {
 				stMap.myInfo.personColor = i;
-				stMap.myInfo.confirm = stMap.memberList[i].confirm;
-				break;
+				stMap.myInfo.confirm = member.confirm;
+				return false;
 			}
-		}
+			return true;
+		});
 		stMap.onlineList[stMap.myInfo.personColor] = true;
 		socket.emit('enter', {
 			'id': stMap.myInfo.id,
@@ -1509,15 +1456,16 @@ wwm.room = (function(){
 			wwm.shell.view.html(out);
 			setJqMap(wwm.shell.view);
 			renderTable();
+
 			if (stMap.myInfo.confirm) {
 				jqMap.$confirm.addClass('confirmed');
 			}
-			for (i = 0; i < stMap.memberList.length; i++) {
-				console.log(stMap.memberList[i].confirm === true, stMap.memberList[i].confirm);
-				if (stMap.memberList[i].confirm === true) {
+			stMap.memberList.forEach(function(member) {
+				console.log(member.confirm === true, member.confirm);
+				if (member.confirm === true) {
 					confirmCount++;
 				}
-			}
+			});
 			if (confirmCount === stMap.memberList.length) {
 				jqMap.$allConfirmed.show();
 			} else {
@@ -1527,24 +1475,26 @@ wwm.room = (function(){
 			socket.on('out', function(id) {
 				var i;
 				console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
-				for (i = 0; i < stMap.memberList.length; i++) {
-					if (stMap.memberList[i].id == id) {
+				stMap.memberList.every(function(member) {
+					if (member.id == id) {
 						stMap.onlineList[i] = false;
-						break;
+						return false;
 					}
-				}
+					return true;
+				});
 				showOnline();
 				console.log('socketout', stMap.onlineList, stMap.memberList);
 			});
 			socket.on('quit', function(id) {
 				var i;
-				for (i = 0; i < stMap.memberList.length; i++) {
-					if (stMap.memberList[i].id == id) {
+				stMap.memberList.forEach(function(member) {
+					if (member.id == id) {
 						stMap.onlineList.splice(i, 1);
 						stMap.memberList.splice(i, 1);
-						break;
+						return false;
 					}
-				}
+					return true;
+				});
 				console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
 				jqMap.$banList.find('[value=' + id + ']').remove();
 				changeCurrentNumber(-1);
@@ -1600,28 +1550,29 @@ wwm.room = (function(){
 					stMap.myInfo.personColor--;
 				}
 				alert(findInfo(id).name + '님이 강제퇴장 되었습니다. 잘가요!');
-				for (i = 0; i < stMap.memberList.length; i++) {
-					if (data.id == stMap.memberList[i].id) {
+				stMap.memberList.every(function(member) {
+					if (data.id == member.id) {
 						stMap.memberList.splice(i, 1);
 						stMap.onlineList.splice(i, 1);
-						break;
+						return false;
 					}
-				}
+					return true;
+				});
 				changeCurrentNumber(-1);
 				jqMap.$banList.find('option').eq(data.order).remove();
 				showMembers();
 				console.log('socket ban');
 			});
 			socket.on('confirmed', function(data) {
-				var confirmCount = 0, i;
-				for (i = 0; i < stMap.memberList.length; i++) {
-					if (stMap.memberList[i].id == data.id) {
-						stMap.memberList[i].confirm = data.bool;
+				var confirmCount = 0;
+				stMap.memberList.forEach(function(member) {
+					if (member.id == data.id) {
+						member.confirm = data.bool;
 					}
-					if (stMap.memberList[i].confirm === true) {
+					if (member.confirm === true) {
 						confirmCount++;
 					}
-				}
+				});
 				if (confirmCount == stMap.memberList.length) {
 					jqMap.$allConfirmed.show();
 				} else {
@@ -1706,77 +1657,74 @@ wwm.confirm = (function() {
 		var sat = [[null, null]];
 		var week = [sun, mon, tue, wed, thu, fri, sat];
 		var i, j, temp;
-		for (i = 0; i < 7; i++) {
+		week.forEach(function(day, i) {
 			temp = 0;
 			for (j = 0; j < 12; j++) {
 				console.log(j, stMap.dayArray[j][i].length === 0);
 				if (stMap.dayArray[j][i].length === 0) {
-					console.log(week[i][temp][0] === null);
-					if (week[i][temp][0] === null) { /* 처음이면 */
-						week[i][temp][0] = j;
-						week[i][temp][1] = week[i][temp][0] + 1;
+					console.log(day[temp][0] === null);
+					if (day[temp][0] === null) { /* 처음이면 */
+						day[temp][0] = j;
+						day[temp][1] = day[temp][0] + 1;
 					} else {
-						console.log(week[i][temp][1] === j);
-						if (week[i][temp][1] === j) { /* 연속된 시간 array */
-							week[i][temp][1] = j + 1;
+						console.log(day[temp][1] === j);
+						if (day[temp][1] === j) { /* 연속된 시간 array */
+							day[temp][1] = j + 1;
 						} else { /* 새로운 시간 array */
-							week[i][++temp] = [j, j + 1];
+							day[++temp] = [j, j + 1];
 						}
 					}
 				}
-				console.log(week[i], temp);
+				console.log(day, temp);
 			}
-			for (j = 0; j < 12; j++) {
+			for (j = 12; j < 24; j++) {
 				if (stMap.nightArray[j][i].length === 0) {
-					if (week[i][temp][0] === null) { /* 처음이면 */
-						week[i][temp][0] = j + 12;
-						week[i][temp][1] = week[i][temp][0] + 1;
+					if (day[temp][0] === null) { /* 처음이면 */
+						day[temp][0] = j;
+						day[temp][1] = day[temp][0] + 1;
 					} else {
-						if (week[i][temp][1] === j + 12) { /* 연속된 시간 array */
-							week[i][temp][1] = j + 13;
+						if (day[temp][1] === j) { /* 연속된 시간 array */
+							day[temp][1] = j + 1;
 						} else { /* 새로운 시간 array */
-							week[i][++temp] = [j + 12, j + 13];
+							day[++temp] = [j, j + 1];
 						}
 					}
 				}
-				console.log(week[i], temp);
+				console.log(day, temp);
 			}
-		}
+		});
 		return week;
 	}
-	showResult = function(week) {
+	showResult = function(rangeList) {
 		var str = '가능한 시간은<br>';
 		var dayList = ['일', '월', '화', '수', '목', '금', '토'];
-		var i, j, prefix = '';
-		for (i = 0; i < 7; i++) {
-			str += dayList[i] + '요일:<br>';
-			for (j = 0; j < week[i].length; j++) {
-				if (week[i][j][0] < 12) {
+		var i, prefix = '';
+		dayList.forEach(function(day, i) {
+			str += day + '요일:<br>';
+			rangeList[i].forEach(function(range) {
+				if (range[0] < 12) {
 					prefix = '오전'
-				} else if (week[i][j][0] === 12) {
+				} else if (range[0] === 12) {
 					prefix = '오후';
-				} else if (week[i][j][0] === 24) {
-					prefix = '밤';
-					week[i][j][0] -= 12;
 				} else {
 					prefix = '오후';
-					week[i][j][0] -= 12;
+					range[0] -= 12;
 				}
-				str += prefix + ' ' + week[i][j][0] + '시부터 ~ ';
-				if (week[i][j][1] < 12) {
+				str += prefix + ' ' + range[0] + '시부터 ~ ';
+				if (range[1] < 12) {
 					prefix = '오전'
-				} else if (week[i][j][1] === 12) {
+				} else if (range[1] === 12) {
 					prefix = '오후';
-				} else if (week[i][j][1] === 24) {
+				} else if (range[1] === 24) {
 					prefix = '밤';
-					week[i][j][1] -= 12;
+					range[1] -= 12;
 				} else {
 					prefix = '오후';
-					week[i][j][1] -= 12;
+					range[1] -= 12;
 				}
-				str += prefix + ' ' + week[i][j][1] + '시까지<br>';
-			}
-		}
+				str += prefix + ' ' + range[1] + '시까지<br>';
+			});
+		});
 		str += '입니다.';
 		jqMap.$result.html(str);
 	};
