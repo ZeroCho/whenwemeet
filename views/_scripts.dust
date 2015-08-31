@@ -1748,7 +1748,7 @@ wwm.confirm = (function() {
 		var str = '가능한 시간은<br>';
 		var dayList = ['일', '월', '화', '수', '목', '금', '토'];
 		var i, j, prefix = '';
-		for (vi = 0; i < 7; i++) {
+		for (i = 0; i < 7; i++) {
 			str += dayList[i] + '요일:<br>';
 			for (j = 0; j < week[i].length; j++) {
 				if (week[i][j][0] < 12) {
