@@ -16,7 +16,7 @@
 	</svg>
 </script>
 <script type="text/html" id="wwm-canvas-logo">
-	<canvas class="canvas-logo"></canvas>
+	<canvas class="canvas-logo" width="150" height="150"></canvas>
 </script>
 <script type="text/html" id="wwm-login">
 	<div id="login-logo"></div>
