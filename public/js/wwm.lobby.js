@@ -1,13 +1,15 @@
 wwm.lobby = (function (){
+	'use strict';
 	var jqMap;
 	var socket = io();
-	function showCreateroom() {
+	var getList, onSearchRoom, showRooms, showCreateroom, logout, enterRoom, refreshList, refreshProfile, showResult, setJqMap, initModule;
+	showCreateroom = function() {
 		wwm.modal.initModule($('#wwm-createroom-modal').html());
-	}
-	function getList() {
+	};
+	getList = function() {
 		var spinner = new Spinner().spin();
-		jqMap.$list.append(spinner.el);
 		var getListPromise = wwm.model.getRoomList(userInfo.id);
+		jqMap.$list.append(spinner.el);
 		getListPromise.done(function (res) {
 			showRooms(res);
 		});
@@ -22,18 +24,19 @@ wwm.lobby = (function (){
 		getListPromise.always(function() {
 			$(spinner.el).remove();
 		});
-	}
-	function onSearchRoom (e) {
-		e.preventDefault();
+	};
+	onSearchRoom = function(e) {
 		var query = e;
+		var spinner = new Spinner().spin();
+		var searchPromise;
+		e.preventDefault();
 		if (typeof e !== string) {
 			query = $(this).parent().prev().val().trim();
 		}
 		console.log('query', query);
-		var spinner = new Spinner().spin();
 		jqMap.$list.append(spinner.el);
 		history.pushState({mod: 'search', data: res}, '', '/search/' + query);
-		var searchPromise = wwm.model.searchList(query);
+		searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
 			showRooms(res);
 		});
@@ -48,24 +51,25 @@ wwm.lobby = (function (){
 		searchPromise.always(function() {
 			$(spinner.el).remove();
 		});
-	}
-	function showRooms(res) {
+	};
+	showRooms = function(res) {
 		var $frag = $(document.createDocumentFragment());
-		for (var i = 0; i < res.length; i++) {
-			var room = res[i];
-			var src = $('#wwm-room-list').html();
-			var tmpl = dust.loadSource(dust.compile(src));
-			var password = room.password || false;
-			var unlocked = false;
+		var i, j, room, src, tmpl, password, unlocked, parser;
+		for (i = 0; i < res.length; i++) {
+			room = res[i];
+			src = $('#wwm-room-list').html();
+			tmpl = dust.loadSource(dust.compile(src));
+			password = room.password || false;
+			unlocked = false;
 			if (password) {
-				for (var j = 0; j < room.members.length; j++) {
+				for (j = 0; j < room.members.length; j++) {
 					if (room.members[j].id == userInfo.id) {
 						unlocked = true;
 						break;
 					}
 				}
 			}
-			var parser = {
+			parser = {
 				rid: room.rid,
 				picture: room.picture,
 				title: room.title,
@@ -80,20 +84,20 @@ wwm.lobby = (function (){
 			});
 		}
 		jqMap.$list.html($frag);
-	}
-	function logout() {
+	};
+	logout = function() {
 		history.pushState({mod: 'logout'}, '', '/');
 		delete window.userInfo;
 		localStorage.removeItem('login');
 		localStorage.removeItem('loginType');
 		wwm.login.initModule();
-	}
-	function enterRoom(rid) {
+	};
+	enterRoom = function(rid) {
 		var $this = $(this);
-		var pw;
 		var spinner = new Spinner().spin();
+		var enterRoomPromise, data, pw;
 		jqMap.$list.append(spinner.el);
-		console.log(rid);
+		
 		if (typeof rid !== 'string') {
 			rid = $(this).data('rid');
 			if ($(this).has('.locked').length) {
@@ -105,8 +109,16 @@ wwm.lobby = (function (){
 				}
 			}
 		}
-		var ajax = $.post('/enterroom/' + rid, {pw: pw, pid: userInfo.id, name: userInfo.name, picture: userInfo.picture});
-		ajax.done(function(res) {
+		console.log(rid);
+		data = {
+			rid: rid,
+			pw: pw,
+			pid: userInfo.id,
+			name: userInfo.name,
+			picture: userInfo.picture
+		};
+		enterRoomPromise = wwm.model.enterRoom(data);
+		enterRoomPromise.done(function(res) {
 			if (res === 'no_room') {
 				alert('방이 없습니다');
 				return;
@@ -121,20 +133,20 @@ wwm.lobby = (function (){
 			console.log('enter room post result', res);
 			history.pushState({mod: 'room', data: res}, '', '/room/' + rid);
 			wwm.room.initModule(res, 'enter');
-		})
-		.fail(function(err) {
+		});
+		enterRoomPromise.fail(function(err) {
 			console.log(err.responseText);
 			alert('오류발생! 콘솔확인');
-		})
-		.always(function() {
+		});
+		enterRoomPromise.always(function() {
 			$(spinner.el).remove();
 		});
-	}
-	function refreshList() {
+	};
+	refreshList = function() {
 		console.log('refreshlist');
 		getList();
-	}
-	function refreshProfile() {
+	};
+	refreshProfile = function() {
 		var userPromise = wwm.model.getUser(userInfo.id);
 		userPromise.done(function(res) {
 			jqMap.$profilePicture.attr('src', res.picture);
@@ -146,32 +158,33 @@ wwm.lobby = (function (){
 			json.name = res.name;
 			localStorage.login = JSON.stringify(json);
 		});
-	}
-	function showResult(rid) {
+	};
+	showResult = function(rid) {
+		var resultPromise;
 		if (rid) {
-			$.post('/roominfo/' + rid)
-				.done(function (doc) {
-					if (doc === 'no_room') {
-						alert('방이 없습니다');
-					} else {
-						history.pushState({mod: 'confirm'}, '', '/result/' + rid);
-						var data = {};
-						data.dayArray = doc.day;
-						data.nightArray = doc.night;
-						data.rid = doc.rid;
-						wwm.confirm.initModule(data);
-					}
-				})
-				.fail(function (err) {
-					console.error(err);
-				});
+			resultPromise = wwm.model.getRoomInfo(rid);
+			resultPromise.done(function(doc) {
+				if (doc === 'no_room') {
+					alert('방이 없습니다');
+				} else {
+					history.pushState({mod: 'confirm'}, '', '/result/' + rid);
+					var data = {};
+					data.dayArray = doc.day;
+					data.nightArray = doc.night;
+					data.rid = doc.rid;
+					wwm.confirm.initModule(data);
+				}
+			});
+			resultPromise.fail(function(err) {
+				console.error(err);
+			});
 		} else {
 			rid = $(this).parent().data('rid');
 			history.pushState({mod: 'confirm'}, '', '/result/' + rid);
 			wwm.confirm.initModule(data);
 		}
-	}
-	function setJqMap($con) {
+	};
+	setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
 			$logo: $con.find('#lobby-logo'),
@@ -185,8 +198,8 @@ wwm.lobby = (function (){
 			$profilePicture: $con.find('#profile-picture'),
 			$profileName: $con.find('#profile-name')
 		};
-	}
-	function initModule() {
+	};
+	initModule = function() {
 		if (!localStorage.login) {
 			history.pushState({mod: 'login'}, '', '/login');
 			wwm.login.initModule();
@@ -251,11 +264,11 @@ wwm.lobby = (function (){
 				$(document).on('click', '.result', showResult);
 			}
 		});
-	}
+	};
 	return {
 		initModule: initModule,
 		enterRoom: enterRoom,
 		showResult: showResult,
 		searchRoom: onSearchRoom
 	};
-}());
+}());	
