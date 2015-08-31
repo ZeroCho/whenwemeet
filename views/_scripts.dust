@@ -906,7 +906,7 @@ wwm.room = (function(){
 		return arrList;
 	};
 	arrayToTable = function(coordList, sid, cur, busy) { /* array를 table로 만든다. */
-		var i, k, stMapArray, $cell, $table, index, oneCell, addBox;
+		var stMapArray, $table, $cell, $target, index, oneCell;
 		console.log('arrayToTable', coordList, sid, cur, busy);
 		if (cur === 'day') {
 			$table = jqMap.$dayTable;
@@ -915,27 +915,22 @@ wwm.room = (function(){
 			$table = jqMap.$nightTable;
 			stMapArray = stMap.nightArray;
 		}
-		addBox = function($cell) {
-			var $box = $('<div/>').addClass('box-' + number);
-			var number = oneCell.length;
-			$cell.find('div').remove();
-			oneCell.forEach(function(index) {
-				$box.append($('<div/>', {class: cfMap.colorList[index]}));
-			});
-			$box.appendTo($cell);
-		};
 		coordList.forEach(function(coord) {
 			$cell = $table.find('tr').eq(coord[0] + 1).find('td').eq(coord[1]);
 			oneCell = stMapArray[coord[0]][coord[1]];
 			if (busy) {
 				oneCell.push(sid);
-				addBox($cell);
+				$target = $cell.find('div').eq(sid);
+				$target.addClass(cfMap.colorList[sid]);
+				$cell.addClass('busy');
 			} else {
 				index = oneCell.indexOf(sid);
 				if (index > -1) {
 					oneCell.splice(index, 1);
 				}				
-				addBox($cell);
+				$target = $cell.find('div').eq(sid);
+				$target.removeClass(cfMap.colorList[sid]);
+				$cell.removeClass('busy');
 			}
 			stMapArray[coord[0]][coord[1]] = oneCell;
 		});
@@ -949,14 +944,9 @@ wwm.room = (function(){
 			stMapArray.forEach(function(tr, i) {
 				tr.forEach(function(target, j) {
 					$cell = jqMap.$dayTable.find('tr').eq(i + 1).find('td').eq(j);
-					$cell.find('div').remove();
-					if (target.length > 0) {
-						$box = $('<div/>').addClass('box-' + target.length);
-						target.forEach(function(index) {
-							$box.append($('<div/>', {class: cfMap.colorList[index]}));
-						});
-						$box.appendTo($cell);
-					}
+					$target = $cell.find('div').eq(j);
+					$target.addClass(cfMap.colorList[j]);
+					$cell.addClass('busy');
 				});
 			});
 		});
