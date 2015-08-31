@@ -22,7 +22,7 @@ wwm.room = (function(){
 	var cfMap = {
 		colorList: ['red', 'orange', 'yellow', 'yellowgreen', 'skyblue', 'purple', 'violet', 'pink']
 	};
-	var socket = {}; //io();
+	var socket = io();
 	var setJqMap, createArray, tableToArray, arrayToTable, renderTable, showMembers, newMember, showOnline, findInfo, banPerson, changeTitle, changeLimit, onClickDay, onClickTime, onClickCell, excludeDay, excludeTime, showAdminMenu, showDayException, showTimeException, deleteRoom, checkConfirmed, toLobby, quit, toggleCalendar, changeCurrentNumber, changeLimitNumber, sendChat, refresh, confirmCalendar, toConfirmPage, kakaoInvite, fbInvite, toggleAside, initModule;
 	setJqMap = function($con) {
 		jqMap = {
