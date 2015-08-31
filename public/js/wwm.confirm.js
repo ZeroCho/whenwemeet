@@ -1,7 +1,9 @@
 wwm.confirm = (function() {
+	'use strict';
 	var jqMap;
 	var stMap = {};
-	function setJqMap($con) {
+	var setJqMap, gatherResult, showResult, toLobby, toRoom, toKakao, toFacebook, initModule;
+	setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
 			$toLobby: $con.find('#to-lobby'),
@@ -11,7 +13,7 @@ wwm.confirm = (function() {
 			$result: $con.find('#result')
 		};
 	}
-	function gatherResult() {
+	gatherResult = function() {
 		var sun = [[null, null]];
 		var mon = [[null, null]];
 		var tue = [[null, null]];
@@ -20,9 +22,9 @@ wwm.confirm = (function() {
 		var fri = [[null, null]];
 		var sat = [[null, null]];
 		var week = [sun, mon, tue, wed, thu, fri, sat];
-		var i, j;
+		var i, j, temp;
 		for (i = 0; i < 7; i++) {
-			var temp = 0;
+			temp = 0;
 			for (j = 0; j < 12; j++) {
 				console.log(j, stMap.dayArray[j][i].length === 0);
 				if (stMap.dayArray[j][i].length === 0) {
@@ -59,13 +61,13 @@ wwm.confirm = (function() {
 		}
 		return week;
 	}
-	var showResult = function(week) {
+	showResult = function(week) {
 		var str = '가능한 시간은<br>';
 		var dayList = ['일', '월', '화', '수', '목', '금', '토'];
-		for (var i = 0; i < 7; i++) {
+		var i, j, prefix = '';
+		for (vi = 0; i < 7; i++) {
 			str += dayList[i] + '요일:<br>';
-			for (var j = 0; j < week[i].length; j++) {
-				var prefix = '';
+			for (j = 0; j < week[i].length; j++) {
 				if (week[i][j][0] < 12) {
 					prefix = '오전'
 				} else if (week[i][j][0] === 12) {
@@ -95,23 +97,23 @@ wwm.confirm = (function() {
 		str += '입니다.';
 		jqMap.$result.html(str);
 	};
-	var toLobby = function() {
+	toLobby = function() {
 		jqMap.$con.fadeOut('slow');
 		history.pushState({mod: 'lobby'}, '', '/lobby/' + stMap.myInfo.id);
 		wwm.lobby.initModule(jqMap.$con);
 	};
-	var toRoom = function() {
+	toRoom = function() {
 		history.pushState({mod: 'room'}, '', '/room/' + stMap.rid);
 		jqMap.$con.fadeOut('slow');
 	};
-	var toKakao = function() {};
-	var toFacebook = function() {
+	toKakao = function() {};
+	toFacebook = function() {
 		FB.ui({
 			method: 'send',
 			link: 'http%3A%2F%2Fwww.nytimes.com%2F2011%2F06%2F15%2Farts%2Fpeople-argue-just-to-win-scholars-assert.html'
 		});
 	};
-	var initModule = function(data) {
+	initModule = function(data) {
 		stMap = $.extend(stMap, data);
 		console.log(data, stMap);
 		var src = $('#wwm-confirm').html();
