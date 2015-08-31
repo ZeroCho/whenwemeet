@@ -364,7 +364,7 @@ wwm.login = (function () {
 	kakaoLogin = function() {
 		Kakao.Auth.login({
 			success: function () {
-				Kakao.API.request({ // TODO: 카카오 프로필 업데이트에 대비한 상황 (update_profile)
+				Kakao.API.request({ /* TODO: 카카오 프로필 업데이트에 대비한 상황 (update_profile) */
 					url: '/v1/api/talk/profile',
 					success: kakaoCallback,
 					fail: function (error) {
@@ -399,7 +399,7 @@ wwm.login = (function () {
 			if (res.status === 'connected') {
 				FB.api('/me', fbCallback);
 			} else if (res.status === 'not_authorized') {
-				// The person is logged into Facebook, but not your app.
+				/* The person is logged into Facebook, but not your app. */
 				alert('Please log log into this app.');
 			} else {
 				alert('Please log into Facebook.');
@@ -468,7 +468,7 @@ wwm.login = (function () {
 wwm.lobby = (function (){
 	'use strict';
 	var jqMap;
-	var socket = {}; // io();
+	var socket = io();
 	var getList, onSearchRoom, showRooms, showCreateroom, logout, enterRoom, refreshList, refreshProfile, showResult, setJqMap, initModule;
 	showCreateroom = function() {
 		wwm.modal.initModule($('#wwm-createroom-modal').html());
@@ -836,7 +836,7 @@ wwm.room = (function(){
 	var cfMap = {
 		colorList: ['red', 'orange', 'yellow', 'yellowgreen', 'skyblue', 'purple', 'violet', 'pink']
 	};
-	var socket = {}; //io();
+	var socket = io();
 	var setJqMap, createArray, tableToArray, arrayToTable, renderTable, showMembers, newMember, showOnline, findInfo, banPerson, changeTitle, changeLimit, onClickDay, onClickTime, onClickCell, excludeDay, excludeTime, showAdminMenu, showDayException, showTimeException, deleteRoom, checkConfirmed, toLobby, quit, toggleCalendar, changeCurrentNumber, changeLimitNumber, sendChat, refresh, confirmCalendar, toConfirmPage, kakaoInvite, fbInvite, toggleAside, initModule;
 	setJqMap = function($con) {
 		jqMap = {
@@ -890,7 +890,7 @@ wwm.room = (function(){
 		}
 		return arr;
 	};
-	tableToArray = function(cellList) { // cell을 선택했을 때 array로 바꾼다
+	tableToArray = function(cellList) { /* cell을 선택했을 때 array로 바꾼다 */
 		var i, cell, arr;
 		var arrList = [];
 		console.log('tableToArray');
@@ -902,7 +902,7 @@ wwm.room = (function(){
 		console.log('tableToArray', arrList);
 		return arrList;
 	};
-	arrayToTable = function(cellList, sid, cur, busy) { // array를 table로 만든다.
+	arrayToTable = function(cellList, sid, cur, busy) { /* array를 table로 만든다. */
 		var i, k, cell, number, $cell, $box, index, dayCell, nightCell;
 		console.log('arrayToTable', cellList, sid, cur, busy);
 		if (cur === 'day') {
@@ -1247,7 +1247,7 @@ wwm.room = (function(){
 	onClickCell = function() {
 		var arr, cell;
 		checkConfirmed();
-		// 어레이를 발송
+		/* 어레이를 발송 */
 		if (stMap.now === 'day') {
 			arr = stMap.dayArray;
 		} else {
@@ -1267,7 +1267,7 @@ wwm.room = (function(){
 		}
 	};
 	excludeDay = function() {
-		// 해당일에 대한 어레이를 발송
+		/* 해당일에 대한 어레이를 발송 */
 		var idx = $(this).index();
 		var arr = [], i;
 		checkConfirmed();
@@ -1286,7 +1286,7 @@ wwm.room = (function(){
 		}
 	};
 	excludeTime = function() {
-		// 해당 시간에 대한 어레이를 발송
+		/* 해당 시간에 대한 어레이를 발송 */
 		
 		var idx = $(this).index();
 		var time = $(this).find('input').val();
@@ -1296,7 +1296,7 @@ wwm.room = (function(){
 		if (!time) {
 			return;
 		}
-		if (idx === 0) { // not before
+		if (idx === 0) { /* not before */
 			for (i = 0; i < time; i++) {
 				for (j = 0; j < 7; j++) {
 					arr.push([time, j]);
@@ -1307,12 +1307,12 @@ wwm.room = (function(){
 				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
 				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 				$(this).removeClass('selected');
-			} else { // no selected
+			} else { /* no selected */
 				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
 				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 				$(this).addClass('selected');
-			} // not before
-		} else { // not after
+			} /* not before */
+		} else { /* not after */
 			for (i = time - 1; i < 12; i++) {
 				for (j = 0; j < 7; j++) {
 					console.log(arr);
@@ -1324,12 +1324,12 @@ wwm.room = (function(){
 				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
 				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 				$(this).removeClass('selected');
-			} else { // no selected
+			} else { /* no selected */
 				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
 				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
 				$(this).addClass('selected');
 			}
-		} // not after
+		} /* not after */
 	};
 	toLobby = function(e) {
 		console.log('toLobby', e.data.rid);
@@ -1430,7 +1430,7 @@ wwm.room = (function(){
 			},
 			webButton: {
 				text: '우리 언제 만나',
-				url: 'http://whenwemeet.herokuapp.com' // The URLs domain should be configured in app settings.
+				url: 'http://whenwemeet.herokuapp.com' /* The URLs domain should be configured in app settings. */
 			},
 			fail: function() {
 				alert('KakaoLink is currently only supported in iOS and Android platforms.');
@@ -1445,10 +1445,10 @@ wwm.room = (function(){
 	};
 	toggleAside = function() {
 		console.log('toggleAside', jqMap.$aside.hasClass('opened'));
-		if (jqMap.$aside.hasClass('opened')) { // 닫는다.
+		if (jqMap.$aside.hasClass('opened')) {
 			jqMap.$aside.removeClass('opened');
 			jqMap.$aside.css('left', '-100%');
-		} else { // 연다.
+		} else {
 			jqMap.$aside.addClass('opened');
 			jqMap.$aside.css('left', '0');
 
@@ -1458,19 +1458,17 @@ wwm.room = (function(){
 		var parser, i;
 		var src = $('#wwm-room').text();
 		console.log('room initModule', status, stMap.rid);
-		// docs 정보를 방 모듈에 입력.
 		stMap.title = doc.title;
 		stMap.limit = Number(doc.limit);
 		stMap.rid = doc.rid.toString();
 		stMap.maker = doc.maker.toString();
-		if (status === 'create') { // dayArray와 nightArray를 설정.
+		if (status === 'create') { 
 			stMap.dayArray = createArray(12,7);
 			stMap.nightArray = createArray(12,7);
 		} else if (status === 'enter') {
 			stMap.dayArray = doc.day || createArray(12,7);
 			stMap.nightArray = doc.night || createArray(12,7);
 		}
-		// 내 정보를 입력.
 		stMap.memberList = Array.isArray(doc.members) ? doc.members : JSON.parse(doc.members);
 		stMap.current = stMap.memberList.length;
 		stMap.myInfo.id = userInfo.id.toString();
@@ -1491,10 +1489,10 @@ wwm.room = (function(){
 			'picture': userInfo.picture
 		});
 		parser = {
-			name: stMap.myInfo.name, //유저네임
-			title: stMap.title, //타이틀
-			current: stMap.current, //현재원
-			limit: stMap.limit, //총원
+			name: stMap.myInfo.name,
+			title: stMap.title,
+			current: stMap.current,
+			limit: stMap.limit,
 			members: stMap.memberList
 		};
 		if (stMap.myInfo.id == stMap.maker) {
@@ -1555,7 +1553,7 @@ wwm.room = (function(){
 				console.log('socket newmember', data);
 				stMap.onlineList[data.color] = true;
 				socket.emit('uptodateArr', {sid: data.socket, day: stMap.dayArray, night: stMap.nightArray, online: stMap.onlineList});
-				if (data.color >= stMap.current) { // 신규멤버면,
+				if (data.color >= stMap.current) {
 					changeCurrentNumber(1);
 					newMember(data);
 				}
@@ -1587,13 +1585,13 @@ wwm.room = (function(){
 			});
 			socket.on('ban', function(data) {
 				var i;
-				// 강퇴당한 경우.
+				/* 강퇴당한 경우. */
 				if (stMap.myInfo.personColor == data.order) {
 					alert('강퇴당하셨습니다...');
 					wwm.lobby.initModule(jqMap.$con);
 					return;
 				}
-				// 다른 사람이 강퇴당한 경우.
+				/* 다른 사람이 강퇴당한 경우. */
 				if (stMap.myInfo.personColor > data.order) {
 					stMap.myInfo.personColor--;
 				}
@@ -1710,14 +1708,14 @@ wwm.confirm = (function() {
 				console.log(j, stMap.dayArray[j][i].length === 0);
 				if (stMap.dayArray[j][i].length === 0) {
 					console.log(week[i][temp][0] === null);
-					if (week[i][temp][0] === null) { // 처음이면
+					if (week[i][temp][0] === null) { /* 처음이면 */
 						week[i][temp][0] = j;
 						week[i][temp][1] = week[i][temp][0] + 1;
 					} else {
 						console.log(week[i][temp][1] === j);
-						if (week[i][temp][1] === j) { // 연속된 시간 array
+						if (week[i][temp][1] === j) { /* 연속된 시간 array */
 							week[i][temp][1] = j + 1;
-						} else { // 새로운 시간 array
+						} else { /* 새로운 시간 array */
 							week[i][++temp] = [j, j + 1];
 						}
 					}
@@ -1726,13 +1724,13 @@ wwm.confirm = (function() {
 			}
 			for (j = 0; j < 12; j++) {
 				if (stMap.nightArray[j][i].length === 0) {
-					if (week[i][temp][0] === null) { // 처음이면
+					if (week[i][temp][0] === null) { /* 처음이면 */
 						week[i][temp][0] = j + 12;
 						week[i][temp][1] = week[i][temp][0] + 1;
 					} else {
-						if (week[i][temp][1] === j + 12) { // 연속된 시간 array
+						if (week[i][temp][1] === j + 12) { /* 연속된 시간 array */
 							week[i][temp][1] = j + 13;
-						} else { // 새로운 시간 array
+						} else { /* 새로운 시간 array */
 							week[i][++temp] = [j + 12, j + 13];
 						}
 					}
