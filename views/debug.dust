@@ -407,7 +407,13 @@
 		height: 20px;
 		border: 1px solid silver;
 	}
-	
+	#room-main table td div {
+		width: 12.5%;
+		height: 100%;
+	}
+	#room-main table td div.busy {
+		background: lightgray;
+	}
 	#calendar-menu {
 		position: absolute;
 		right: 10px;
