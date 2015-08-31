@@ -937,16 +937,16 @@ wwm.room = (function(){
 		console.log('arrToTable:', cur, stMapArray);
 	};
 	renderTable = function() {
-		var i, j, k, $cell, $box, oneCell, $target;
+		var i, j, k, $cell, $box, oneCell;
 		var stMapArrayList = [stMap.dayArray, stMap.nightArray];
 		console.log('renderTable', stMap.dayArray, stMap.nightArray);
 		stMapArrayList.forEach(function(stMapArray) {
 			stMapArray.forEach(function(tr, i) {
 				tr.forEach(function(target, j) {
-					$cell = jqMap.$dayTable.find('tr').eq(i + 1).find('td').eq(j);
-					$target = $cell.find('div').eq(j);
-					$target.addClass(cfMap.colorList[j]);
-					$cell.addClass('busy');
+					target.forEach(function(index) {
+						$cell = jqMap.$dayTable.find('tr').eq(i + 1).find('td').eq(j).addClass('busy');
+						$target = $cell.find('div').eq(index).addClass(cfMap.colorList[index]);
+					});
 				});
 			});
 		});
