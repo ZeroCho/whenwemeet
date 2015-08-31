@@ -978,7 +978,7 @@ wwm.room = (function(){
 				dayCell = stMap.dayArray[i][j];
 				number = dayCell.length;
 				$cell.find('div').remove();
-				console.log($cell, dayCell, number);
+				console.log($cell, dayCell, number, i, j);
 				if (number > 0) {
 					$box = $('<div/>').addClass('box-' + number);
 					for (k = 0; k < number; k++) {
