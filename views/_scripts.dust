@@ -866,6 +866,7 @@ wwm.room = (function(){
 			$current: $con.find('#current-number'),
 			$limit: $con.find('#limit-number'),
 			$sendChat: $con.find('#send-chat'),
+			$chatbox: $con.find('#chatbox'),
 			$chatList: $con.find('#chat-list'),
 			$confirm: $con.find('#confirm-calendar'),
 			$refresh: $con.find('#refresh-calendar'),
@@ -1571,6 +1572,7 @@ wwm.room = (function(){
 			socket.on('chat', function(data) {
 				console.log('socket chat', data.id, data.text);
 				jqMap.$chatList.append('<p>' + data.name + ': ' + data.text + '</p>');
+				jqMap.$chatbox.val('').focus();
 				jqMap.$chatList.animate({ scrollTop: jqMap.$chatList[0].scrollHeight }, "slow");
 			});
 			socket.on('busy', function(data) {
