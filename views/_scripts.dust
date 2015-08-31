@@ -882,7 +882,7 @@ wwm.room = (function(){
 		var args = Array.prototype.slice.call(arguments, 1);
 		if (arguments.length > 1) {
 			for (i = length; i > 0; i--) {
-				arr[length - 1 - i] = createArray.apply(this, args);
+				arr[length - i] = createArray.apply(this, args);
 			}
 		} else if (arguments.length == 1) {
 			for (j = 0; j < arr.length; j++) {
