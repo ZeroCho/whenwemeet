@@ -54,7 +54,9 @@ $.fn.showCanvasLogo = function(width) {
 	return this;
 };
 var wwm = (function () {
-	function initModule() {
+	'use strict';
+	var initModule;
+	initModule = function() {
 		wwm.model.initModule();
 		wwm.shell.initModule();
 	}
