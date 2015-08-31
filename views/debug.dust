@@ -426,7 +426,7 @@
 		position: absolute;
 		bottom: 0px;
 		max-height: 100px;
-		overflow: scroll;
+		overflow-y: scroll;
 	}
 	#room-footer {
 		background: #006666;
