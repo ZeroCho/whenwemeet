@@ -768,7 +768,7 @@ wwm.modal = (function (){
 		var maker = userInfo.id.toString();
 		var picture = userInfo.picture;
 		var data = {
-			rid: new Date().getTime().toString(),
+			rid: new Date().getTime().toString().slice(-4),
 			title: title,
 			maker: maker,
 			limit: limit,
