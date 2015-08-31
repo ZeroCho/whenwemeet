@@ -971,7 +971,7 @@ wwm.room = (function(){
 	};
 	renderTable = function() {
 		var i, j, k, $cell, number, $box, dayCell, nightCell;
-		console.log('renderTable');
+		console.log('renderTable', stMap.dayArray, stMap.nightArray);
 		for (i = 0; i < 12; i++) {
 			for (j = 0; j < 7; j++) {
 				$cell = jqMap.$dayTable.find('tr').eq(i + 1).find('td').eq(j);
