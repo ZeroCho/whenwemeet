@@ -1668,7 +1668,7 @@ wwm.confirm = (function() {
 				console.log(day, temp);
 			}
 			for (j = 12; j < 24; j++) {
-				if (stMap.nightArray[j][i].length === 0) {
+				if (stMap.nightArray[j - 12][i].length === 0) {
 					if (day[temp][0] === null) { /* 처음이면 */
 						day[temp][0] = j;
 						day[temp][1] = day[temp][0] + 1;
