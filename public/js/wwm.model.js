@@ -2,7 +2,10 @@
  * Created by Zero on 2015-07-25.
  */
 wwm.model = (function () {
-	var join = function(data) {
+	'use strict';
+	var join, getRoomList, getRoomInfo, getUser, searchList, createRoom, enterRoom,
+	banPerson, changeTitle, changeLimit, confirm, deleteRoom, initModule;
+	join = function(data) {
 		var deferred = $.Deferred();
 		$.ajax('/join', {
 			data: data,
@@ -15,7 +18,7 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
-	var getRoomList = function(id) {
+	getRoomList = function(id) {
 		var deferred = $.Deferred();
 		$.get('/rooms/' + id).done(function (res) {
 			if (res.length === 0) {
@@ -28,7 +31,7 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
-	var getUser = function(id) {
+	getUser = function(id) {
 		var deferred = $.Deferred();
 		$.get('/member/' + id).done(function (res) {
 			deferred.resolve(res);
@@ -37,7 +40,7 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
-	var searchList = function(query) {
+	searchList = function(query) {
 		var deferred = $.Deferred();
 		$.post('/search/' + query).done(function (res) {
 			if (res.length === 0) {
@@ -49,58 +52,7 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
-	var banPerson = function(id, rid) {
-		var deferred = $.Deferred();
-		$.post('/ban/' + id, {rid: rid}).done(function(res) {
-			console.log(res);
-			deferred.resolve(res);
-		}).fail(function(err) {
-			console.log(err);
-			deferred.reject(err);
-		});
-		return deferred.promise();
-	};
-	var enterRoom = function() {
-
-	};
-	var changeTitle = function(rid, title) {
-		var deferred = $.Deferred();
-		$.post('/changeroom/' + rid, {title: title}).done(function(res) {
-			console.log(res);
-			deferred.resolve(res);
-		}).fail(function(err) {
-			console.log(err);
-			deferred.reject(err);
-		});
-		return deferred.promise();
-	};
-	var changeLimit = function(rid, limit) {
-		var deferred = $.Deferred();
-		$.post('/changeroom/' + rid, {limit: limit}).done(function(res) {
-			console.log(res);
-			deferred.resolve(res);
-		}).fail(function(err) {
-			console.log(err);
-			deferred.reject(err);
-		});
-		return deferred.promise();
-	};
-	var confirm = function(data) {
-		var deferred = $.Deferred();
-		var rid = data.rid;
-		data.day = JSON.stringify(data.day);
-		data.night = JSON.stringify(data.night)
-		console.log('confirm model', data);
-		$.post('/confirm/' + rid, data).done(function(res) {
-			console.log(res);
-			deferred.resolve(res);
-		}).fail(function(err) {
-			console.log('confirmerror', err);
-			deferred.reject(err);
-		});
-		return deferred.promise();
-	};
-	var createRoom = function(data) {
+	createRoom = function(data) {
 		var deferred = $.Deferred();
 		var userPromise = getUser(data.maker);
 		userPromise.done(function(res) {
@@ -122,7 +74,66 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
-	var deleteRoom = function(rid, maker) {
+	enterRoom = function(data) {
+		var deferred = $.Deferred();
+		$.post('/enterroom/' + data.rid).done(function(res) {
+			console.log(res);
+			deferred.resolve(res);
+		}).fail(function(err) {
+			console.log(err);
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	};
+	banPerson = function(id, rid) {
+		var deferred = $.Deferred();
+		$.post('/ban/' + id, {rid: rid}).done(function(res) {
+			console.log(res);
+			deferred.resolve(res);
+		}).fail(function(err) {
+			console.log(err);
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	};
+	changeTitle = function(rid, title) {
+		var deferred = $.Deferred();
+		$.post('/changeroom/' + rid, {title: title}).done(function(res) {
+			console.log(res);
+			deferred.resolve(res);
+		}).fail(function(err) {
+			console.log(err);
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	};
+	changeLimit = function(rid, limit) {
+		var deferred = $.Deferred();
+		$.post('/changeroom/' + rid, {limit: limit}).done(function(res) {
+			console.log(res);
+			deferred.resolve(res);
+		}).fail(function(err) {
+			console.log(err);
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	};
+	confirm = function(data) {
+		var deferred = $.Deferred();
+		var rid = data.rid;
+		data.day = JSON.stringify(data.day);
+		data.night = JSON.stringify(data.night)
+		console.log('confirm model', data);
+		$.post('/confirm/' + rid, data).done(function(res) {
+			console.log(res);
+			deferred.resolve(res);
+		}).fail(function(err) {
+			console.log('confirmerror', err);
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	};
+	deleteRoom = function(rid, maker) {
 		var deferred = $.Deferred();
 		$.post('/deleteroom/' + rid, {maker: maker}).done(function (res) {
 			console.log(res);
@@ -136,7 +147,7 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
-	var getRoomInfo = function(rid) {
+	getRoomInfo = function(rid) {
 		var deferred = $.Deferred();
 		$.post('/roominfo/' + rid).done(function (res) {
 			console.log(res);
@@ -150,7 +161,7 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
-	var initModule = function() {
+	initModule = function() {
 		if (localStorage.login) {
 			window.userInfo = JSON.parse(localStorage.login);
 		} else {
