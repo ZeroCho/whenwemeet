@@ -1,11 +1,13 @@
 wwm.shell = (function () {
+	'user strict';
 	var cfMap = {
 		$con: $('#whenwemeet'),
 		$view: $('#view'),
 		$modal: $('#modal'),
 		$logo: $('#logo')
 	};
-	var onPopstate = function(e) {
+	var onPopstate, initModule;
+	onPopstate = function(e) {
 		var state = e.originalEvent.state;
 		var mod = state.mod;
 		console.log('onpopstate', mod);
@@ -44,7 +46,7 @@ wwm.shell = (function () {
 		}
 	};
 
-	var initModule = function() {
+	initModule = function() {
 		console.log('login', localStorage.login);
 		console.log('first', localStorage.first);
 		$(window).on('popstate', onPopstate);
