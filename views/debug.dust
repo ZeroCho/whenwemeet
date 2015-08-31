@@ -8,10 +8,10 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
 	<style>
 	* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	/* outline: 1px dashed salmon; */
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		/* outline: 1px dashed salmon; */
 	}
 	html {
 		height: 100%;
@@ -465,101 +465,51 @@
 		line-height: 30px;
 		padding-left: 7px;
 	}
-	.box-0 {
-		display: none;
-	}
-	.box-1 {
-		height: 100%;
-	}
-	.box-2 {
-		height: 100%;
-	}
-	.box-2 div{
-		width: 50%;
-	}
-	.box-3 {
-		height: 100%;
-	}
-	.box-3 div{
-		width: 33.33333%;
-	}
-	.box-4 {
-		height: 100%;
-	}
-	.box-4 div{
-		width: 25%;
-	}
-	.box-5 {
-		height: 100%;
-	}
-	.box-5 div{
-		width: 20%;
-	}
-	.box-6 {
-		height: 100%;
-	}
-	.box-6 div{
-		width: 33.33333%;
-		height: 50%;
-	}
-	.box-7 {
-		height: 100%;
-	}
-	.box-7 div{
-		width: 14.285714%;
-	}
-	.box-8 {
-		height: 100%;
-	}
-	.box-8 div{
-		width: 25%;
-		height: 50%;
-	}
 	.red {
 		background: red;
-		width: 100%;
+		width: 12.5%;
 		height: 100%;
 		display: inline-block;
 	}
 	.orange {
 		background: orange;
-		width: 100%;
+		width: 12.5%;
 		height: 100%;
 		display: inline-block;
 	}
 	.yellow {
 		background: yellow;
-		width: 100%;
+		width: 12.5%;
 		height: 100%;
 		display: inline-block;
 	}
 	.yellowgreen {
 		background: yellowgreen;
-		width: 100%;
+		width: 12.5%;
 		height: 100%;
 		display: inline-block;
 	}
 	.skyblue {
 		background: skyblue;
-		width: 100%;
+		width: 12.5%;
 		height: 100%;
 		display: inline-block;
 	}
 	.purple {
 		background: purple;
-		width: 100%;
+		width: 12.5%;
 		height: 100%;
 		display: inline-block;
 	}
 	.violet {
 		background: violet;
-		width: 100%;
+		width: 12.5%;
 		height: 100%;
 		display: inline-block;
 	}
 	.pink {
 		background: pink;
-		width: 100%;
+		width: 12.5%;
 		height: 100%;
 		display: inline-block;
 	}
