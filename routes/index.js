@@ -32,7 +32,7 @@ router.get('/debug', function(req, res) {
 	});	
 });
 router.get('/login', function(req, res) {
-	res.render('index', {
+	res.render('debug', {
 		title: '우리언제만나'
 	});
 });
