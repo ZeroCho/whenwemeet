@@ -33,7 +33,7 @@ $.fn.showCanvasLogo = function(width) {
 		ctx.shadowBlur    = 1;
 		ctx.shadowColor   = 'rgb(204, 204, 204)';      
 		ctx.fill(); 
-	}
+	};
 	drawRevEqTriangle = function(ctx, side, cx, cy, color){  
 		var h = side * (Math.sqrt(3)/2); 
 		ctx.fillStyle = color;
@@ -47,7 +47,7 @@ $.fn.showCanvasLogo = function(width) {
 		ctx.shadowBlur    = 1;
 		ctx.shadowColor   = 'rgb(204, 204, 204)'; 
 		ctx.fill(); 
-	}
+	};
 	drawEqTriangle(ctx, 50, canvas.width/2 + 13, canvas.height/2, 'magenta');
 	drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');
 	drawEqTriangle(ctx, 50, canvas.width/2 - 16, canvas.height/2 - 49, 'yellow');
