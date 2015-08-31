@@ -937,7 +937,7 @@ wwm.room = (function(){
 		console.log('arrToTable:', cur, stMapArray);
 	};
 	renderTable = function() {
-		var i, j, k, $cell, $box, oneCell;
+		var i, j, k, $cell, $box, oneCell, $target;
 		var stMapArrayList = [stMap.dayArray, stMap.nightArray];
 		console.log('renderTable', stMap.dayArray, stMap.nightArray);
 		stMapArrayList.forEach(function(stMapArray) {
