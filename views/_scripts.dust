@@ -1421,7 +1421,7 @@ wwm.room = (function(){
 		stMap.current = stMap.memberList.length;
 		stMap.myInfo.id = userInfo.id.toString();
 		stMap.myInfo.name = userInfo.name;
-		stMap.memberList.every(function(member) {
+		stMap.memberList.every(function(member, i) {
 			if (member.id == userInfo.id) {
 				stMap.myInfo.personColor = i;
 				stMap.myInfo.confirm = member.confirm;
@@ -1475,7 +1475,7 @@ wwm.room = (function(){
 			socket.on('out', function(id) {
 				var i;
 				console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
-				stMap.memberList.every(function(member) {
+				stMap.memberList.every(function(member, i) {
 					if (member.id == id) {
 						stMap.onlineList[i] = false;
 						return false;
@@ -1550,7 +1550,7 @@ wwm.room = (function(){
 					stMap.myInfo.personColor--;
 				}
 				alert(findInfo(id).name + '님이 강제퇴장 되었습니다. 잘가요!');
-				stMap.memberList.every(function(member) {
+				stMap.memberList.every(function(member, i) {
 					if (data.id == member.id) {
 						stMap.memberList.splice(i, 1);
 						stMap.onlineList.splice(i, 1);
