@@ -1571,6 +1571,7 @@ wwm.room = (function(){
 			socket.on('chat', function(data) {
 				console.log('socket chat', data.id, data.text);
 				jqMap.$chatList.append('<p>' + data.name + ': ' + data.text + '</p>');
+				jqMap.$chatList.animate({ scrollTop: jqMap.$chatList[0].scrollHeight }, "slow");
 			});
 			socket.on('busy', function(data) {
 				console.log('socketbusy:', data.arr, data.sid, data.cur);
