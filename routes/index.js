@@ -26,6 +26,11 @@ router.get('/lobby/:id', function(req, res) {
 		id: id
 	});
 });
+router.get('/debug', function(req, res) {
+	res.render('debug', {
+		title: 'Debug Mod'	
+	});	
+});
 router.get('/login', function(req, res) {
 	res.render('index', {
 		title: '우리언제만나'
