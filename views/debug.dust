@@ -410,8 +410,9 @@
 	#room-main table td div {
 		width: 12.5%;
 		height: 100%;
+		display: inline-block;
 	}
-	#room-main table td div.busy {
+	#room-main table td.busy {
 		background: lightgray;
 	}
 	#calendar-menu {
