@@ -1289,7 +1289,7 @@ wwm.room = (function(){
 	};
 	chatToggle = function() {
 		var $chat = jqMap.$chatList;
-		if ($chat.hasClass('hidden') {
+		if ($chat.hasClass('hidden')) {
 			$chat.removeClass('hidden');
 			$chat.show();
 			$(this).toggleClass('fa-chevron-down fa-chevron-up');
@@ -1434,6 +1434,7 @@ wwm.room = (function(){
 		stMap.nightArray = doc.night || createArray(12,7);
 		stMap.memberList = Array.isArray(doc.members) ? doc.members : JSON.parse(doc.members);
 		stMap.current = stMap.memberList.length;
+		stMap.picture = doc.picture;
 		stMap.myInfo.id = userInfo.id.toString();
 		stMap.myInfo.name = userInfo.name;
 		stMap.memberList.every(function(member, i) {
@@ -1457,7 +1458,8 @@ wwm.room = (function(){
 			title: stMap.title,
 			current: stMap.current,
 			limit: stMap.limit,
-			members: stMap.memberList
+			members: stMap.memberList,
+			picture: stMap.picture
 		};
 		if (stMap.myInfo.id == stMap.maker) {
 			parser.admin = true;

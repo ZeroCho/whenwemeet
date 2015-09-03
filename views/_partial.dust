@@ -116,7 +116,9 @@
 		</footer>
 	</aside>
 	<header id="room-header">
+		
 		<span id="show-aside"><i class="fa fa-list"></i></span>
+		<img src="{~lb}picture{~rb}"/>
 		<b id="title">{~lb}title{~rb}</b>&nbsp;
 		<div id="room-people-info"><span><b id="current-number">{~lb}current{~rb}</b>명</span>
 			<span>/<b id="limit-number">{~lb}limit{~rb}</b>명</span></div>

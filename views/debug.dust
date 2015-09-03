@@ -230,7 +230,6 @@
 		z-index: 1;
 	}
 	#lobby-footer {
-		padding: 10px;
 		position: absolute;
 		width: 100%;
 		bottom: 0;
@@ -434,7 +433,6 @@
 		position: fixed;
 		bottom: 0;
 		width: 100%;
-		padding: 10px;
 		overflow: auto;
 	}
 	.chat-toggle {
