@@ -286,7 +286,7 @@ wwm.shell = (function () {
 				wwm.modal.initModule($('#wwm-intro').html());
 				break;
 			case 'search':
-				wwm.lobby.showSearchResult(state.data);
+				wwm.lobby.searchRoom(state.query);
 				break;
 			case 'logout':
 				delete window.userInfo;
@@ -501,9 +501,9 @@ wwm.lobby = (function (){
 		if (typeof e !== 'string') {
 			query = $(this).parent().prev().val().trim();
 		}
+		history.pushState({mod: 'search', query: query}, '', '/search/' + query);
 		console.log('query', query);
 		jqMap.$list.append(spinner.el);
-		history.pushState({mod: 'search', data: res}, '', '/search/' + query);
 		searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
 			showRooms(res);
