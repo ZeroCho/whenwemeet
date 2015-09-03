@@ -498,7 +498,7 @@ wwm.lobby = (function (){
 		var spinner = new Spinner().spin();
 		var searchPromise;
 		e.preventDefault();
-		if (typeof e !== string) {
+		if (typeof e !== 'string') {
 			query = $(this).parent().prev().val().trim();
 		}
 		console.log('query', query);
@@ -937,7 +937,7 @@ wwm.room = (function(){
 		console.log('arrToTable:', cur, stMapArray);
 	};
 	renderTable = function() {
-		var i, j, k, $cell, $box, oneCell, $target;
+		var i, j, $cell, $box, oneCell, $target;
 		var stMapArrayList = [stMap.dayArray, stMap.nightArray];
 		console.log('renderTable', stMap.dayArray, stMap.nightArray);
 		stMapArrayList.forEach(function(stMapArray) {
