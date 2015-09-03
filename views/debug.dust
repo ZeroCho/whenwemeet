@@ -181,9 +181,7 @@
 		margin: 0 auto;
 		background: silver;
 		top: 20px;
-		right: 10px;
 		bottom: 20px;
-		left: 10px;
 		text-align: center;
 		white-space: nowrap;
 	}
@@ -379,7 +377,7 @@
 	#room-main {
 		position: absolute;
 		width: 100%;
-		padding: 10px;
+		padding: 0 10px;
 		top: 50px;
 		bottom: 85px;
 	}

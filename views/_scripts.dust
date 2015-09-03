@@ -534,7 +534,7 @@ wwm.lobby = (function (){
 				chuck.render(body, context);
 			}
 			return chunk;
-		}
+		};
 		res.forEach(function(room) {
 			tmpl = dust.loadSource(dust.compile(src));
 			password = room.password || false;
@@ -553,7 +553,7 @@ wwm.lobby = (function (){
 				title: room.title,
 				current: room.members.length,
 				limit: room.limit,
-				vacant: room.limit - room.members.length
+				vacant: room.limit - room.members.length,
 				result: room.result,
 				password: password,
 				unlocked: unlocked
