@@ -506,12 +506,12 @@
 		{~lb}/password{~rb}
 		<div class="title">{~lb}title{~rb}</div>
 		<div class="number">
-		{~lb}repeat times=current{~rb}
+		{~lb}@repeat times=current{~rb}
 		<i class="fa fa-child"></i>
-		{~lb}{~rb}
-		{~lb}repeat times=vacant{~rb}
+		{~lb}/repeat{~rb}
+		{~lb}@repeat times=vacant{~rb}
 		<i class="fa fa-child vacant"></i>
-		{~lb}{~rb}
+		{~lb}/repeat{~rb}
 			<span class="current">{~lb}current{~rb}</span>/<span class="limit">{~lb}limit{~rb}</span>
 		</div>
 		<div class="result">{~lb}result{~rb}</div>
