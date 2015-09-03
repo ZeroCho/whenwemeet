@@ -395,9 +395,10 @@
 			<button id="refresh-calendar"><i class="fa fa-refresh"><span class="sr-only">새로고침</span></i></button>
 			<button id="all-confirmed">결과보기</button>
 		</div>
-		<div id="chat-list"></div>
 	</main>
 	<footer id="room-footer">
+		<i class="fa fa-chevron-down"></i>
+		<div id="chat-list"></div>
 		<div id="my-menu">
 			<div id="admin-menu">
 				<ul>
@@ -504,6 +505,9 @@
 		{~lb}/password{~rb}
 		<div class="title">{~lb}title{~rb}</div>
 		<div class="number">
+		{~lb}{~rb}
+		<i class="fa fa-child"></i>
+		{~lb}{~rb}
 			<span class="current">{~lb}current{~rb}</span>/<span class="limit">{~lb}limit{~rb}</span>
 		</div>
 		<div class="result">{~lb}result{~rb}</div>
