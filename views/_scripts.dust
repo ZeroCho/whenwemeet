@@ -525,6 +525,16 @@ wwm.lobby = (function (){
 		var $frag = $(document.createDocumentFragment());
 		var i, j, room, tmpl, password, unlocked, parser;
 		var src = $('#wwm-room-list').html();
+		if (!dust.helper) { dust.helper = {}; }
+		dust.helper.repeat = function(chunck, context, bodies, params) {
+			var times = Number(params.time);
+			var body = bodies.block;
+			var i;
+			for (i = 0; i < times; i++) {
+				chuck.render(body, context);
+			}
+			return chunk;
+		}
 		res.forEach(function(room) {
 			tmpl = dust.loadSource(dust.compile(src));
 			password = room.password || false;
@@ -842,7 +852,7 @@ wwm.room = (function(){
 		colorList: ['red', 'orange', 'yellow', 'yellowgreen', 'skyblue', 'purple', 'violet', 'pink']
 	};
 	var socket = io();
-	var setJqMap, createArray, tableToArray, arrayToTable, renderTable, showMembers, newMember, showOnline, findInfo, banPerson, changeTitle, changeLimit, onClickDay, onClickTime, onClickCell, excludeDay, excludeTime, showAdminMenu, showDayException, showTimeException, deleteRoom, checkConfirmed, toLobby, quit, toggleCalendar, changeCurrentNumber, changeLimitNumber, sendChat, refresh, confirmCalendar, toConfirmPage, kakaoInvite, fbInvite, toggleAside, initModule;
+	var setJqMap, createArray, tableToArray, arrayToTable, renderTable, showMembers, newMember, showOnline, findInfo, banPerson, changeTitle, changeLimit, onClickDay, onClickTime, onClickCell, excludeDay, excludeTime, showAdminMenu, showDayException, showTimeException, deleteRoom, checkConfirmed, toLobby, quit, toggleCalendar, changeCurrentNumber, changeLimitNumber, sendChat, chatToggle, refresh, confirmCalendar, toConfirmPage, kakaoInvite, fbInvite, toggleAside, initModule;
 	setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
@@ -872,6 +882,7 @@ wwm.room = (function(){
 			$sendChat: $con.find('#send-chat'),
 			$chatbox: $con.find('#chatbox'),
 			$chatList: $con.find('#chat-list'),
+			$chatToggle: $con.find('.chat-toggle'),
 			$confirm: $con.find('#confirm-calendar'),
 			$refresh: $con.find('#refresh-calendar'),
 			$allConfirmed: $con.find('#all-confirmed'),
@@ -1276,6 +1287,18 @@ wwm.room = (function(){
 			}
 		} /* not after */
 	};
+	chatToggle = function() {
+		var $chat = jqMap.$chatList;
+		if ($chat.hasClass('hidden') {
+			$chat.removeClass('hidden');
+			$chat.show();
+			$(this).toggleClass('fa-chevron-down fa-chevron-up');
+		} else {
+			$chat.addClass('hidden');
+			$chat.hide();
+			$(this).toggleClass('fa-chevron-down fa-chevron-up');			
+		}
+	}
 	toLobby = function(e) {
 		console.log('toLobby', e.data.rid);
 		if (jqMap.$confirm.hasClass('confirmed')) {
@@ -1593,6 +1616,7 @@ wwm.room = (function(){
 			jqMap.$thDay.click(onClickDay);
 			jqMap.$thTime.click(onClickTime);
 			jqMap.$confirm.click({id: stMap.myInfo.id, rid: stMap.rid}, confirmCalendar);
+			jqMap.$chatList.click(chatToggle);
 			jqMap.$refresh.click(refresh);
 			jqMap.$allConfirmed.click(toConfirmPage);
 			jqMap.$quit.click({id: stMap.myInfo.id, rid: stMap.rid}, quit);

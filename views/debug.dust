@@ -216,6 +216,9 @@
 		position: absolute;
 		right: 10px;
 	}
+	.vacant {
+		color: silver;
+	}
 	#refresh-list {
 		position: absolute;
 		bottom: 20px;
@@ -428,25 +431,29 @@
 	#all-confirmed {
 		display: none;
 	}
-	#chat-list {
-		width: 100%;
-		position: absolute;
-		bottom: 0px;
-		max-height: 100px;
-		overflow-y: scroll;
-	}
 	#room-footer {
 		background: #006666;
 		position: fixed;
 		bottom: 0;
 		width: 100%;
 		padding: 10px;
+		overflow: auto;
+	}
+	.chat-toggle {
+		position: absolute;
+		right: 5px;
+	}
+	#chat-list {
+		width: 100%;
+		top: 0;
+		position: absolute;
+		height: 100px;
+		overflow-y: scroll;
+		color: white;
+		background: rgba(255,255,255,0.4);
 	}
 	#my-menu, #day-exception, #time-exception, #room-back, #my-info, #admin-menu {
 		display: inline-block;
-	}
-	#my-info {
-		float: right;
 	}
 	#explode-room {
 		text-align: center;
