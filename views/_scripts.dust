@@ -527,7 +527,7 @@ wwm.lobby = (function (){
 		var src = $('#wwm-room-list').html();
 		if (!dust.helper) { dust.helper = {}; }
 		dust.helper.repeat = function(chunck, context, bodies, params) {
-			var times = Number(params.time);
+			var times = dust.helper.tap(params.time, context, bodies);
 			var body = bodies.block;
 			var i;
 			for (i = 0; i < times; i++) {
@@ -1292,6 +1292,7 @@ wwm.room = (function(){
 		if ($chat.hasClass('hidden')) {
 			$chat.removeClass('hidden');
 			$chat.show();
+			$chat.animate({scrollTop: $chat.scrollHeight}, "slow");
 			$(this).toggleClass('fa-chevron-down fa-chevron-up');
 		} else {
 			$chat.addClass('hidden');
