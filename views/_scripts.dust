@@ -531,7 +531,7 @@ wwm.lobby = (function (){
 			var body = bodies.block;
 			var i;
 			for (i = 0; i < times; i++) {
-				chuck.render(body, context);
+				chuck.write(body, context);
 			}
 			return chunk;
 		};
@@ -1618,7 +1618,7 @@ wwm.room = (function(){
 			jqMap.$thDay.click(onClickDay);
 			jqMap.$thTime.click(onClickTime);
 			jqMap.$confirm.click({id: stMap.myInfo.id, rid: stMap.rid}, confirmCalendar);
-			jqMap.$chatList.click(chatToggle);
+			jqMap.$chatToggle.click(chatToggle);
 			jqMap.$refresh.click(refresh);
 			jqMap.$allConfirmed.click(toConfirmPage);
 			jqMap.$quit.click({id: stMap.myInfo.id, rid: stMap.rid}, quit);
