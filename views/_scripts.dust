@@ -526,12 +526,25 @@ wwm.lobby = (function (){
 		var i, j, room, tmpl, password, unlocked, parser;
 		var src = $('#wwm-room-list').html();
 		if (!dust.helper) { dust.helper = {}; }
-		dust.helper.repeat = function(chunck, context, bodies, params) {
-			var times = dust.helper.tap(params.time, context, bodies);
-			var body = bodies.block;
-			var i;
-			for (i = 0; i < times; i++) {
-				chuck.write(body, context);
+		dust.helper.repeat = function(chunk, context, bodies, params) {
+			var i, times;
+			times = parseInt(params.times);
+			if ((times != null) && !isNaN(times)) {
+				if (context.stack.head != null) {
+					context.stack.head['$len'] = times;
+				}
+				for (i = 0; 0 <= times ? i < times : i > times; 0 <= times ? i++ : i--) {
+					if (context.stack.head != null) {
+						context.stack.head['$idx'] = i;
+					}
+					chunk = bodies.block(chunk, context.push(i, i, times));
+				}
+				if (context.stack.head != null) {
+					context.stack.head['$idx'] = 0;
+				}
+				if (context.stack.head != null) {
+					context.stack.head['$len'] = 0;
+				}
 			}
 			return chunk;
 		};
