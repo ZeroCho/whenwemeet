@@ -404,31 +404,31 @@
 			<div id="admin-menu">
 				<ul>
 					{~lb}?admin{~rb}
-					<li id="ban-people">
-						<form class="input-group">
-							<label for="ban-member-list">현재 참여자</label>
-							<select id="ban-member-list">
-								{~lb}#members{~rb}
-								<option value="{~lb}id{~rb}">{~lb}name{~rb}</option>
-								{~lb}/members{~rb}
-							</select>
-							<span class="input-group-btn"><button id="ban-people-btn">강퇴</button></span>
-						</form>
-					</li>
-					<li>
-						<form class="input-group">
-							<label for="current-room-title">현재 방 제목</label>
-							<input id="current-room-title" value="{~lb}title{~rb}"/>
-							<spna class="input-group-btn"><button id="change-room-title">변경</button></spna>
-						</form>
-					<li>
-						<form class="input-group">
-							<label for="current-people-limit">인원수 조정 </label>
-							<input id="current-people-limit" value="{~lb}limit{~rb}"/>
-							<span class="input-group-btn"><button id="change-limit-btn">변경</button></span>
-						</form>
-					</li>
-					<li id="explode-room">방 폭파</li>
+						<li id="ban-people">
+							<form class="input-group">
+								<label for="ban-member-list">현재 참여자</label>
+								<select id="ban-member-list">
+									{~lb}#members{~rb}
+									<option value="{~lb}id{~rb}">{~lb}name{~rb}</option>
+									{~lb}/members{~rb}
+								</select>
+								<span class="input-group-btn"><button id="ban-people-btn">강퇴</button></span>
+							</form>
+						</li>
+						<li>
+							<form class="input-group">
+								<label for="current-room-title">현재 방 제목</label>
+								<input id="current-room-title" value="{~lb}title{~rb}"/>
+								<spna class="input-group-btn"><button id="change-room-title">변경</button></spna>
+							</form>
+						<li>
+							<form class="input-group">
+								<label for="current-people-limit">인원수 조정 </label>
+								<input id="current-people-limit" value="{~lb}limit{~rb}"/>
+								<span class="input-group-btn"><button id="change-limit-btn">변경</button></span>
+							</form>
+						</li>
+						<li id="explode-room">방 폭파</li>
 					{~lb}/admin{~rb}
 					<li id="invite">
 						<span>초대장 보내기</span>
@@ -437,9 +437,9 @@
 					</li>
 				</ul>
 				{~lb}?admin{~rb}
-				<button id="manage-btn">관리자 메뉴</button>
+					<button id="manage-btn">관리자 메뉴</button>
 				{~lb}:else{~rb}
-				<button id="invite-btn">초대</button>
+					<button id="invite-btn">초대</button>
 				{~lb}/admin{~rb}
 			</div>
 			<div id="day-exception">
