@@ -496,22 +496,22 @@
 <script type="text/html" id="wwm-room-list">
 	<div class="room" data-rid="{~lb}rid{~rb}">
 		<div class="picture"><img src="{~lb}picture{~rb}" height="20"/></div>
-		{~lb}?password{~rb}
-		{~lb}?unlocked{~rb}
-		<div class="unlocked"><i class="fa fa-unlock"></i>&nbsp;</div>
-		{~lb}:else{~rb}
-		<div class="locked"><i class="fa fa-lock"></i>&nbsp;</div>
-		{~lb}/unlocked{~rb}
-		{~lb}:else{~rb}
-		{~lb}/password{~rb}
+			{~lb}?password{~rb}
+				{~lb}?unlocked{~rb}
+					<div class="unlocked"><i class="fa fa-unlock"></i>&nbsp;</div>
+				{~lb}:else{~rb}
+					<div class="locked"><i class="fa fa-lock"></i>&nbsp;</div>
+				{~lb}/unlocked{~rb}
+			{~lb}:else{~rb}
+			{~lb}/password{~rb}
 		<div class="title">{~lb}title{~rb}</div>
 		<div class="number">
-		{~lb}@repeat times=current{~rb}
-		<i class="fa fa-child"></i>
-		{~lb}/repeat{~rb}
-		{~lb}@repeat times=vacant{~rb}
-		<i class="fa fa-child vacant"></i>
-		{~lb}/repeat{~rb}
+			{~lb}@repeat times="{~lb}current{~rb}"{~rb}
+				<i class="fa fa-child"></i>
+			{~lb}/repeat{~rb}
+			{~lb}@repeat times="{~lb}vacant{~rb}"{~rb}
+				<i class="fa fa-child vacant"></i>
+			{~lb}/repeat{~rb}
 			<span class="current">{~lb}current{~rb}</span>/<span class="limit">{~lb}limit{~rb}</span>
 		</div>
 		<div class="result">{~lb}result{~rb}</div>
