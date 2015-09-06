@@ -31,9 +31,22 @@ wwm.login = (function () {
 	kakaoLogin = function() {
 		Kakao.Auth.login({
 			success: function () {
-				Kakao.API.request({ /* TODO: 카카오 프로필 업데이트에 대비한 상황 (update_profile) */
-					url: '/v1/api/talk/profile',
-					success: kakaoCallback,
+				Kakao.API.request({
+					url: '/v1/user/me',
+					success: function(result) {
+						console.log(result);
+						Kakao.API.request({
+							url: '/v1/api/talk/profile',
+							success: function(res) {
+								res = $.extend(res, result);
+								kakaoCallback(res);
+								console.log(res);
+							},
+							fail: function (error) {
+								alert(JSON.stringify(error));
+							}
+						});
+					},
 					fail: function (error) {
 						alert(JSON.stringify(error));
 					}

@@ -345,18 +345,10 @@ wwm.shell = (function () {
 
 	initModule = function() {
 		var logged = localStorage.login && JSON.parse(localStorage.login);
-		var first;
-		if (!localStorage.first) {
-			localStorage.first = 'true';
-		}
-		first  = JSON.parse(localStorage.first);
 		console.log('login', localStorage.login);
 		console.log('first', localStorage.first);
 		$(window).on('popstate', onPopstate);
-		if (first) {
-			history.pushState({mod: 'intro'}, '', '/intro');
-			wwm.intro.initModule($('#wwm-intro').html());
-		}
+
 		if (logged) {
 			history.pushState({mode: 'lobby', id: userInfo.id}, '', '/lobby/' + userInfo.id);
 			wwm.lobby.initModule();
@@ -879,10 +871,18 @@ wwm.lobby = (function (){
 		};
 	};
 	initModule = function() {
-		var name, picture, src;
+		var name, picture, src, first;
 		if (!localStorage.login) {
 			history.pushState({mod: 'login'}, '', '/login');
 			wwm.login.initModule();
+		}
+		if (!localStorage.first) {
+			localStorage.first = 'true';
+		}
+		first  = JSON.parse(localStorage.first);
+		if (first) {
+			history.pushState({mod: 'intro'}, '', '/intro');
+			wwm.intro.initModule($('#wwm-intro').html());
 		}
 		if (!window.userInfo) {window.userInfo = JSON.parse(localStorage.login);}
 		src = $('#wwm-lobby').text();
@@ -990,9 +990,22 @@ wwm.login = (function () {
 	kakaoLogin = function() {
 		Kakao.Auth.login({
 			success: function () {
-				Kakao.API.request({ /* TODO: 카카오 프로필 업데이트에 대비한 상황 (update_profile) */
-					url: '/v1/api/talk/profile',
-					success: kakaoCallback,
+				Kakao.API.request({
+					url: '/v1/user/me',
+					success: function(result) {
+						console.log(result);
+						Kakao.API.request({
+							url: '/v1/api/talk/profile',
+							success: function(res) {
+								res = $.extend(res, result);
+								kakaoCallback(res);
+								console.log(res);
+							},
+							fail: function (error) {
+								alert(JSON.stringify(error));
+							}
+						});
+					},
 					fail: function (error) {
 						alert(JSON.stringify(error));
 					}
