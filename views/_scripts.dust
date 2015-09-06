@@ -65,7 +65,7 @@ var wwm = (function () {
 	initModule = function() {
 		wwm.model.initModule();
 		wwm.shell.initModule();
-	}
+	};
 	return {
 		initModule: initModule
 	};
@@ -869,22 +869,22 @@ wwm.room = (function(){
 	setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
-			$calendar: $con.find('table'),
+			$table: $con.find('table'),
 			$dayTable: $con.find('#day-table'),
 			$nightTable: $con.find('#night-table'),
 			$thDay: $con.find('#day-table, #night-table').find('tr').eq(0).find('th'),
 			$thTime: $con.find('#day-table, #night-table').find('tr').find('th:first-child'),
 			$memberList: $con.find('#member-list'),
-			$toggleCalendar: $con.find('#toggle-table'),
-			$toLobby: $con.find('#back-to-lobby'),
-			$quit: $con.find('#quit'),
+			$toggleTable: $con.find('#toggle-table'),
+			$toLobbyBtn: $con.find('#back-to-lobby'),
+			$quitBtn: $con.find('#quit'),
 			$myMenu: $con.find('#my-menu'),
 			$admin: $con.find('#manage-btn, #invite-btn'),
-			$dayExp: $con.find('#day-exc-btn'),
+			$excludeDay: $con.find('#day-exc-btn'),
 			$notDay: $con.find('#day-exception').find('li'),
-			$timeExp: $con.find('#time-exc-btn'),
+			$excludeTime: $con.find('#time-exc-btn'),
 			$notTime: $con.find('#time-exception').find('li'),
-			$explode: $con.find('#explode-room'),
+			$explodeRoom: $con.find('#explode-room'),
 			$ban: $con.find('#ban-people-btn'),
 			$banList: $con.find('#ban-member-list'),
 			$changeLimit: $con.find('#change-limit-btn'),
@@ -895,14 +895,14 @@ wwm.room = (function(){
 			$sendChat: $con.find('#send-chat'),
 			$chatbox: $con.find('#chatbox'),
 			$chatList: $con.find('#chat-list'),
-			$chatToggle: $con.find('.chat-toggle'),
+			$chatToggler: $con.find('.chat-toggle'),
 			$confirm: $con.find('#confirm-calendar'),
 			$refresh: $con.find('#refresh-calendar'),
 			$allConfirmed: $con.find('#all-confirmed'),
 			$kakaoInvite: $con.find('#kakao-invite'),
 			$fbInvite: $con.find('#fb-invite'),
 			$aside: $con.find('#room-aside'),
-			$toggleAside: $con.find('#show-aside, #close-aside')
+			$asideToggler: $con.find('#show-aside, #close-aside')
 		};
 	};
 	createArray = function(length) {
@@ -1616,13 +1616,13 @@ wwm.room = (function(){
 				wwm.lobby.initModule(jqMap.$con);
 				console.log('socket explode');
 			});
-			jqMap.$calendar.find('td').click(onClickCell);
-			jqMap.$explode.click({id: stMap.rid}, deleteRoom);
-			jqMap.$toLobby.click({rid: stMap.rid}, toLobby);
-			jqMap.$toggleCalendar.click(toggleCalendar);
+			jqMap.$table.find('td').click(onClickCell);
+			jqMap.$explodeRoom.click({id: stMap.rid}, deleteRoom);
+			jqMap.$toLobbyBtn.click({rid: stMap.rid}, toLobby);
+			jqMap.$toggleTable.click(toggleCalendar);
 			jqMap.$admin.click(showAdminMenu);
-			jqMap.$dayExp.click(showDayException);
-			jqMap.$timeExp.click(showTimeException);
+			jqMap.$excludeDay.click(showDayException);
+			jqMap.$excludeTime.click(showTimeException);
 			jqMap.$ban.click({rid: stMap.rid}, banPerson);
 			jqMap.$changeLimit.click({id: stMap.rid}, changeLimit);
 			jqMap.$changeTitle.click({id: stMap.rid}, changeTitle);
@@ -1632,11 +1632,11 @@ wwm.room = (function(){
 			jqMap.$thDay.click(onClickDay);
 			jqMap.$thTime.click(onClickTime);
 			jqMap.$confirm.click({id: stMap.myInfo.id, rid: stMap.rid}, confirmCalendar);
-			jqMap.$chatToggle.click(chatToggle);
+			jqMap.$chatToggler.click(chatToggle);
 			jqMap.$refresh.click(refresh);
 			jqMap.$allConfirmed.click(toConfirmPage);
-			jqMap.$quit.click({id: stMap.myInfo.id, rid: stMap.rid}, quit);
-			jqMap.$toggleAside.click(toggleAside);
+			jqMap.$quitBtn.click({id: stMap.myInfo.id, rid: stMap.rid}, quit);
+			jqMap.$asideToggler.click(toggleAside);
 			jqMap.$kakaoInvite.on({
 				click: kakaoInvite,
 				mouseover: function() {
@@ -1672,7 +1672,7 @@ wwm.confirm = (function() {
 	setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
-			$toLobby: $con.find('#to-lobby'),
+			$toLobbyBtn: $con.find('#to-lobby'),
 			$toRoom: $con.find('#to-room'),
 			$toKakao: $con.find('#result-to-kakao'),
 			$toFacebook: $con.find('#result-to-fb'),
@@ -1784,7 +1784,7 @@ wwm.confirm = (function() {
 		setJqMap(wwm.shell.modal);
 		var arr = gatherResult();
 		showResult(arr);
-		jqMap.$toLobby.click(toLobby);
+		jqMap.$toLobbyBtn.click(toLobby);
 		jqMap.$toRoom.click(toRoom);
 		jqMap.$toKakao.on({
 			click:toKakao,

@@ -1,6 +1,8 @@
 wwm.login = (function () {
+	'use strict';
 	var jqMap;
-	var adminLogin = function() {
+	var adminLogin, testLogin, kakaoLogin, fbLogin, setJqMap, kakaoCallback, fbCallback, initModule;
+	adminLogin = function() {
 		var res = {id: "123456789", name: '관리자', picture: '//graph.facebook.com/874512615962577/picture'};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
@@ -13,7 +15,7 @@ wwm.login = (function () {
 		localStorage.loginType = 'local';
 		wwm.lobby.initModule(wwm.shell.view);
 	};
-	var testLogin = function() {
+	testLogin = function() {
 		var res = {id: "987654321", name: '테스터', picture: '//graph.facebook.com/874512615962577/picture'};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
@@ -26,28 +28,12 @@ wwm.login = (function () {
 		localStorage.loginType = 'local2';
 		wwm.lobby.initModule(wwm.shell.view);
 	};
-	var kakaoLogin = function() {
+	kakaoLogin = function() {
 		Kakao.Auth.login({
 			success: function () {
-				Kakao.API.
-				Kakao.API.request({ // TODO: 카카오 프로필 업데이트에 대비한 상황 (update_profile)
+				Kakao.API.request({ /* TODO: 카카오 프로필 업데이트에 대비한 상황 (update_profile) */
 					url: '/v1/api/talk/profile',
-					success: function (res) {
-						console.log(JSON.stringify(res));
-						res.name = res.nickName;
-						res.picture = res.profileImageURL;
-						res.thumb = res.thumbnailURL;
-						var joinPromise = wwm.model.join(res);
-						joinPromise.fail(function(err){
-							alert('가입 오류 발생!');
-							console.log(err.responseText);
-						});
-						history.pushState({mod: 'login', data: res, type: 'kakao'}, '', '/lobby/' + res.id);
-						window.userInfo = res;
-						localStorage.login = JSON.stringify(res);
-						localStorage.loginType = 'kakao';
-						wwm.lobby.initModule(wwm.shell.view);
-					},
+					success: kakaoCallback,
 					fail: function (error) {
 						alert(JSON.stringify(error));
 					}
@@ -58,32 +44,51 @@ wwm.login = (function () {
 			}
 		});
 	};
-	var fbLogin = function() {
+	kakaoCallback = function(res) {
+		var joinPromise;
+		console.log(JSON.stringify(res));
+		res.name = res.nickName;
+		res.picture = res.profileImageURL;
+		res.thumb = res.thumbnailURL;
+		joinPromise = wwm.model.join(res);
+		joinPromise.fail(function(err){
+			alert('가입 오류 발생!');
+			console.log(err.responseText);
+		});
+		history.pushState({mod: 'login', data: res, type: 'kakao'}, '', '/lobby/' + res.id);
+		window.userInfo = res;
+		localStorage.login = JSON.stringify(res);
+		localStorage.loginType = 'kakao';
+		wwm.lobby.initModule(wwm.shell.view);
+	};
+	fbLogin = function() {
 		FB.login(function (res) {
 			if (res.status === 'connected') {
-				FB.api('/me', function (res) {
-					console.log(JSON.stringify(res));
-					res.picture = '//graph.facebook.com/' + res.id + '/picture';
-					var joinPromise = wwm.model.join(res);
-					joinPromise.fail(function(err){
-						alert('가입 오류 발생!');
-						console.log(err.responseText);
-					});
-					history.pushState({mod: 'login', data: res, type: 'facebook'}, '', '/lobby/' + res.id);
-					window.userInfo = res;
-					localStorage.login = JSON.stringify(res);
-					localStorage.loginType = 'facebook';
-					wwm.lobby.initModule(wwm.shell.view);
-				});
+				FB.api('/me', fbCallback);
 			} else if (res.status === 'not_authorized') {
-				// The person is logged into Facebook, but not your app.
+				/* The person is logged into Facebook, but not your app. */
 				alert('Please log log into this app.');
 			} else {
 				alert('Please log into Facebook.');
 			}
 		});
 	};
-	var setJqMap = function($con) {
+	fbCallback = function(res) {
+		var joinPromise;
+		console.log(JSON.stringify(res));
+		res.picture = '//graph.facebook.com/' + res.id + '/picture';
+		joinPromise = wwm.model.join(res);
+		joinPromise.fail(function(err){
+			alert('가입 오류 발생!');
+			console.log(err.responseText);
+		});
+		history.pushState({mod: 'login', data: res, type: 'facebook'}, '', '/lobby/' + res.id);
+		window.userInfo = res;
+		localStorage.login = JSON.stringify(res);
+		localStorage.loginType = 'facebook';
+		wwm.lobby.initModule(wwm.shell.view);
+	};
+	setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
 			$logo: $con.find('#login-logo'),
@@ -94,7 +99,7 @@ wwm.login = (function () {
 			$localhost2: $con.find('#localhost2-login')
 		};
 	};
-	var initModule = function() {
+	initModule = function() {
 		wwm.shell.view.html($('#wwm-login').html());
 		setJqMap(wwm.shell.view);
 		jqMap.$logo.showSVGLogo(100);

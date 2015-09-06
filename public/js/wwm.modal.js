@@ -7,24 +7,24 @@ wwm.modal = (function (){
 			$con: $con,
 			$close: $con.find('.modal-close'),
 			$title: $con.find('#room-title'),
-			$limit: $con.find('#room-people-limit'),
+			$limit: $con.find('#room-limit'),
 			$password: $con.find('#room-password'),
 			$createRoom: $con.find('#create-room-btn')
 		};
 	};
 	onCloseModal = function(e) {
 		e.preventDefault();
-		wwm.shell.modal.hide();
+		wwm.shell.modal.fadeOut('slow');
 	};
-	createRoom = function(e) {		
-		var spinner = new Spinner().spin();		
+	createRoom = function(e) {
+		var spinner = new Spinner().spin();
 		var title = jqMap.$title.val().trim();
 		var limit = jqMap.$limit.val();
 		var password = jqMap.$password.val().trim() || null;
 		var maker = userInfo.id.toString();
 		var picture = userInfo.picture;
 		var data = {
-			rid: new Date().getTime().toString(),
+			rid: new Date().getTime().toString().slice(0, -4),
 			title: title,
 			maker: maker,
 			limit: limit,
@@ -46,11 +46,11 @@ wwm.modal = (function (){
 			console.log(result);
 			data.current = 1;
 			wwm.room.initModule(data, 'create');
-			wwm.shell.modal.hide();
+			wwm.shell.modal.fadeOut('slow');
 		});
 		createRoomPromise.fail(function (err) {
 			console.log(err);
-			alert('방 생성에러! 콘솔확인');
+			alert(err);
 		});
 		createRoomPromise.always(function () {
 			$(spinner.el).remove();
@@ -60,10 +60,11 @@ wwm.modal = (function (){
 		wwm.shell.modal.html($target);
 		setJqMap(wwm.shell.modal);
 		wwm.shell.modal.fadeIn('slow');
+		jqMap.$title.focus();
 		jqMap.$close.click(onCloseModal);
 		jqMap.$createRoom.click(createRoom);
 	};
 	return {
 		initModule: initModule
 	};
-}());
+}());	

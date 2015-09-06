@@ -77,12 +77,10 @@ io.on('connection', function (socket) {
 			if (err) {
 				console.log('entererror:' + err);
 			} else {
-				console.log('enter result:');
 				doc.id = data.id;
 				doc.name = data.name;
 				doc.color = data.color;
 				doc.socket = socket.id;
-				console.log(doc);
 				socket.on('uptodateArr', function(data) {
 					console.log('socket uptodate Arr ' + data.sid);
 					io.sockets.connected[data.sid].emit('uptodateArr', data);
@@ -99,7 +97,7 @@ io.on('connection', function (socket) {
 			} else {
 				console.log('member deleted');
 				console.log(result);
-				io.in(process.env.CURRENT_ROOM).emit('quit', data.id);
+				io.in(process.env.CURRENT_ROOM).emit('quit', data);
 				socket.leave(process.env.CURRENT_ROOM);
 			}	
 		});
@@ -108,6 +106,19 @@ io.on('connection', function (socket) {
 		console.log('socket out');
 		io.in(process.env.CURRENT_ROOM).emit('out', data.id);
 		socket.leave(process.env.CURRENT_ROOM);
+	});
+	socket.on('delegate', function(data) {
+		console.log('socket delegate ' + data.rid + ' ' + data.id + 'next admin' + data.admin);
+		roomCollection.update({'rid': data.rid.toString()}, {$pull: {'members': {'id': data.id}}, $set: {'maker': data.admin, 'picture': data.picture}}, function(err, result) {
+			if (err) {
+				console.log('quiterror:' + err);
+			} else {
+				console.log('member deleted');
+				console.log(result);
+				io.in(process.env.CURRENT_ROOM).emit('quit', data);
+				socket.leave(process.env.CURRENT_ROOM);
+			}
+		});
 	});
 	socket.on('explode', function(rid) {
 		console.log('socket explode');

@@ -4,7 +4,7 @@ wwm.lobby = (function (){
 	var socket = io();
 	var getList, onSearchRoom, showRooms, showCreateroom, logout, enterRoom, refreshList, refreshProfile, showResult, setJqMap, initModule;
 	showCreateroom = function() {
-		wwm.modal.initModule($('#wwm-createroom-modal').html());
+		wwm.modal.initModule($('#wwm-create-modal').html());
 	};
 	getList = function() {
 		var spinner = new Spinner().spin();
@@ -29,13 +29,13 @@ wwm.lobby = (function (){
 		var query = e;
 		var spinner = new Spinner().spin();
 		var searchPromise;
-		e.preventDefault();
-		if (typeof e !== string) {
+		if (typeof e !== 'string') {
 			query = $(this).parent().prev().val().trim();
+			e.preventDefault();
 		}
+		history.pushState({mod: 'search', query: query}, '', '/search/' + query);
 		console.log('query', query);
 		jqMap.$list.append(spinner.el);
-		history.pushState({mod: 'search', data: res}, '', '/search/' + query);
 		searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
 			showRooms(res);
@@ -54,20 +54,19 @@ wwm.lobby = (function (){
 	};
 	showRooms = function(res) {
 		var $frag = $(document.createDocumentFragment());
-		var i, j, room, src, tmpl, password, unlocked, parser;
-		for (i = 0; i < res.length; i++) {
-			room = res[i];
-			src = $('#wwm-room-list').html();
+		var room, tmpl, password, unlocked, parser;
+		var src = $('#wwm-room-list').html();
+		res.forEach(function(room) {
 			tmpl = dust.loadSource(dust.compile(src));
 			password = room.password || false;
 			unlocked = false;
 			if (password) {
-				for (j = 0; j < room.members.length; j++) {
-					if (room.members[j].id == userInfo.id) {
-						unlocked = true;
-						break;
+				room.members.some(function(member) {
+					if (member.id === userInfo.id) {
+						return unlocked = true;
 					}
-				}
+					return false;
+				});
 			}
 			parser = {
 				rid: room.rid,
@@ -75,6 +74,7 @@ wwm.lobby = (function (){
 				title: room.title,
 				current: room.members.length,
 				limit: room.limit,
+				vacant: room.limit - room.members.length,
 				result: room.result,
 				password: password,
 				unlocked: unlocked
@@ -82,7 +82,7 @@ wwm.lobby = (function (){
 			dust.render(tmpl, parser, function(err, out) {
 				$frag.append(out);
 			});
-		}
+		});
 		jqMap.$list.html($frag);
 	};
 	logout = function() {
@@ -97,7 +97,6 @@ wwm.lobby = (function (){
 		var spinner = new Spinner().spin();
 		var enterRoomPromise, data, pw;
 		jqMap.$list.append(spinner.el);
-		
 		if (typeof rid !== 'string') {
 			rid = $(this).data('rid');
 			if ($(this).has('.locked').length) {
@@ -119,6 +118,7 @@ wwm.lobby = (function (){
 		};
 		enterRoomPromise = wwm.model.enterRoom(data);
 		enterRoomPromise.done(function(res) {
+			console.log(res);
 			if (res === 'no_room') {
 				alert('방이 없습니다');
 				return;
@@ -148,19 +148,19 @@ wwm.lobby = (function (){
 	};
 	refreshProfile = function() {
 		var userPromise = wwm.model.getUser(userInfo.id);
+		var json = JSON.parse(localStorage.login);
 		userPromise.done(function(res) {
 			jqMap.$profilePicture.attr('src', res.picture);
 			jqMap.$profileName.text(res.name);
 			userInfo.picture = res.picture;
 			userInfo.name = res.name;
-			var json = JSON.parse(localStorage.login);
 			json.picture = res.picture;
 			json.name = res.name;
 			localStorage.login = JSON.stringify(json);
 		});
 	};
 	showResult = function(rid) {
-		var resultPromise;
+		var resultPromise, data = {};
 		if (rid) {
 			resultPromise = wwm.model.getRoomInfo(rid);
 			resultPromise.done(function(doc) {
@@ -168,7 +168,6 @@ wwm.lobby = (function (){
 					alert('방이 없습니다');
 				} else {
 					history.pushState({mod: 'confirm'}, '', '/result/' + rid);
-					var data = {};
 					data.dayArray = doc.day;
 					data.nightArray = doc.night;
 					data.rid = doc.rid;
@@ -200,14 +199,15 @@ wwm.lobby = (function (){
 		};
 	};
 	initModule = function() {
+		var name, picture, src;
 		if (!localStorage.login) {
 			history.pushState({mod: 'login'}, '', '/login');
 			wwm.login.initModule();
 		}
 		if (!window.userInfo) {window.userInfo = JSON.parse(localStorage.login);}
-		var src = $('#wwm-lobby').text();
-		var name =  userInfo.name;
-		var picture = userInfo.picture;
+		src = $('#wwm-lobby').text();
+		name =  userInfo.name;
+		picture = userInfo.picture;
 		dust.render(dust.loadSource(dust.compile(src)), {
 			name: name,
 			picture: picture
@@ -224,44 +224,47 @@ wwm.lobby = (function (){
 				jqMap.$logout.click(logout);
 				jqMap.$refresh.click(refreshList);
 				jqMap.$refreshProfile.click(refreshProfile);
+				jqMap.$con.on('click', '.room', enterRoom);
+				jqMap.$con.on('click', '.result', showResult);
 				socket.on('titleChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
 						$(item).data('rid');
 					}).get();
-					for (var i = 0; i < rid.length; i++) {
-						if (data.rid === rid[i]) {
+					rid.every(function(room, i) {
+						if (data.rid === room) {
 							$rooms.eq(i).find('.title').text(data.title);
-							break;
+							return false;
 						}
-					}
+						return true;
+					});
 				});
 				socket.on('currentChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
 						$(item).data('rid');
 					}).get();
-					for (var i = 0; i < rid.length; i++) {
-						if (data.rid === rid[i]) {
+					rid.every(function(room, i) {
+						if (data.rid === room) {
 							$rooms.eq(i).find('.current').text(data.number);
-							break;
+							return false;
 						}
-					}	
+						return true;
+					});
 				});
 				socket.on('limitChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
 						$(item).data('rid');
 					}).get();
-					for (var i = 0; i < rid.length; i++) {
-						if (data.rid === rid[i]) {
+					rid.every(function(room, i) {
+						if (data.rid === room) {
 							$rooms.eq(i).find('.total').text(data.number);
-							break;
+							return false;
 						}
-					}
+						return true;
+					});
 				});
-				$(document).on('click', '.room', enterRoom);
-				$(document).on('click', '.result', showResult);
 			}
 		});
 	};
@@ -269,6 +272,7 @@ wwm.lobby = (function (){
 		initModule: initModule,
 		enterRoom: enterRoom,
 		showResult: showResult,
-		searchRoom: onSearchRoom
+		searchRoom: onSearchRoom,
+		refreshList: refreshList
 	};
-}());	
+}());

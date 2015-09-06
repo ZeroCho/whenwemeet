@@ -4,7 +4,7 @@
 wwm.model = (function () {
 	'use strict';
 	var join, getRoomList, getRoomInfo, getUser, searchList, createRoom, enterRoom,
-	banPerson, changeTitle, changeLimit, confirm, deleteRoom, initModule;
+		banPerson, changeTitle, changeLimit, confirm, deleteRoom, initModule;
 	join = function(data) {
 		var deferred = $.Deferred();
 		$.ajax('/join', {
@@ -24,7 +24,7 @@ wwm.model = (function () {
 			if (res.length === 0) {
 				deferred.reject('no_room');
 			} else {
-				deferred.resolve(res);	
+				deferred.resolve(res);
 			}
 		}).fail(function (err) {
 			deferred.reject(err);
@@ -55,13 +55,14 @@ wwm.model = (function () {
 	createRoom = function(data) {
 		var deferred = $.Deferred();
 		var userPromise = getUser(data.maker);
+		var msg;
 		userPromise.done(function(res) {
 			if (res.roomcount >= 3) {
-				var msg = '방은 최대 세 개까지 만들 수 있습니다.';
+				msg = '방은 최대 세 개까지 만들 수 있습니다.';
 				deferred.reject(msg);
 			} else {
 				$.post('/addroom/' + data.rid, data).done(function (r) {
-					deferred.resolve(r);				
+					deferred.resolve(r);
 				}).fail(function (err) {
 					console.log(err);
 					deferred.reject(err);
@@ -76,7 +77,7 @@ wwm.model = (function () {
 	};
 	enterRoom = function(data) {
 		var deferred = $.Deferred();
-		$.post('/enterroom/' + data.rid).done(function(res) {
+		$.post('/enterroom/' + data.rid, data).done(function(res) {
 			console.log(res);
 			deferred.resolve(res);
 		}).fail(function(err) {
@@ -122,7 +123,7 @@ wwm.model = (function () {
 		var deferred = $.Deferred();
 		var rid = data.rid;
 		data.day = JSON.stringify(data.day);
-		data.night = JSON.stringify(data.night)
+		data.night = JSON.stringify(data.night);
 		console.log('confirm model', data);
 		$.post('/confirm/' + rid, data).done(function(res) {
 			console.log(res);
@@ -135,10 +136,11 @@ wwm.model = (function () {
 	};
 	deleteRoom = function(rid, maker) {
 		var deferred = $.Deferred();
+		var msg;
 		$.post('/deleteroom/' + rid, {maker: maker}).done(function (res) {
 			console.log(res);
 			if (res === 'no_room') {
-				var msg = '심각한 오류! 방장이 아닙니다.';
+				msg = '심각한 오류! 방장이 아닙니다.';
 				deferred.reject(msg);
 			}
 			deferred.resolve(res);
@@ -149,10 +151,11 @@ wwm.model = (function () {
 	};
 	getRoomInfo = function(rid) {
 		var deferred = $.Deferred();
+		var msg;
 		$.post('/roominfo/' + rid).done(function (res) {
 			console.log(res);
 			if (res === 'no_room') {
-				var msg = '심각한 오류! 방장이 아닙니다.';
+				msg = '심각한 오류! 방장이 아닙니다.';
 				deferred.reject(msg);
 			}
 			deferred.resolve(res);

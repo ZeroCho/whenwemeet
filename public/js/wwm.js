@@ -17,7 +17,7 @@ $.fn.showCanvasLogo = function(width) {
 	var $logo = $($('#wwm-canvas-logo').html());
 	var canvas = $logo[0];
 	var ctx = canvas.getContext('2d');
-	function drawEqTriangle(ctx, side, cx, cy, color){  
+	var drawEqTriangle = function(ctx, side, cx, cy, color){
 		var h = side * (Math.sqrt(3)/2);    
 		ctx.fillStyle = color;
 		ctx.beginPath();
@@ -30,8 +30,8 @@ $.fn.showCanvasLogo = function(width) {
 		ctx.shadowBlur    = 1;
 		ctx.shadowColor   = 'rgb(204, 204, 204)';      
 		ctx.fill(); 
-	}
-	function drawRevEqTriangle(ctx, side, cx, cy, color){  
+	};
+	var drawRevEqTriangle = function(ctx, side, cx, cy, color){
 		var h = side * (Math.sqrt(3)/2); 
 		ctx.fillStyle = color;
 		ctx.beginPath(); 
@@ -44,7 +44,7 @@ $.fn.showCanvasLogo = function(width) {
 		ctx.shadowBlur    = 1;
 		ctx.shadowColor   = 'rgb(204, 204, 204)'; 
 		ctx.fill(); 
-	}
+	};
 	drawEqTriangle(ctx, 50, canvas.width/2 + 13, canvas.height/2, 'magenta');
 	drawRevEqTriangle(ctx, 50, canvas.width/2 + 7, canvas.height/2, 'cyan');
 	drawEqTriangle(ctx, 50, canvas.width/2 - 16, canvas.height/2 - 49, 'yellow');
@@ -53,13 +53,52 @@ $.fn.showCanvasLogo = function(width) {
 	this.prepend($logo);
 	return this;
 };
+var eval_dust_string = function(str, chunk, context) {
+	var buf;
+	if (typeof str === "function") {
+		if (str.length === 0) {
+			str = str();
+		} else {
+			buf = '';
+			(chunk.tap(function(data) {
+				buf += data;
+				return '';
+			})).render(str, context).untap();
+			str = buf;
+		}
+	}
+	return str;
+};
+if (!dust.helpers) { dust.helpers = {}; }
+dust.helpers.repeat = function(chunk, context, bodies, params) {
+	var i, times;
+	times = parseInt(eval_dust_string(params.times, chunk, context));
+	if ((times !== null) && !isNaN(times)) {
+		if (context.stack.head !== null) {
+			context.stack.head.$len = times;
+		}
+		for (i = 0; i < times; i++) {
+			if (context.stack.head !== null) {
+				context.stack.head.$idx = i;
+			}
+			chunk = bodies.block(chunk, context.push(i, i, times));
+		}
+		if (context.stack.head !== null) {
+			context.stack.head.$idx = 0;
+		}
+		if (context.stack.head !== null) {
+			context.stack.head.$len = 0;
+		}
+	}
+	return chunk;
+};
 var wwm = (function () {
 	'use strict';
 	var initModule;
 	initModule = function() {
 		wwm.model.initModule();
 		wwm.shell.initModule();
-	}
+	};
 	return {
 		initModule: initModule
 	};

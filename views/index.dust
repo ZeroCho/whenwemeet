@@ -21,15 +21,18 @@
 			</div>
 		</div>
 		<div id="modal"></div>
+		<div id="intro"></div>
 	</div>
 	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
+	<script src="/bower_components/dustjs-linkedin-helpers/dist/dust-helpers.min.js"></script>
 	<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 	<script src="/bower_components/spin.js/spin.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/js/wwm.js"></script>
 	<script src="/js/wwm.model.js"></script>
 	<script src="/js/wwm.shell.js"></script>
+	<script src="/js/wwm.intro.js"></script>
 	<script src="/js/wwm.login.js"></script>
 	<script src="/js/wwm.lobby.js"></script>
 	<script src="/js/wwm.modal.js"></script>
@@ -49,6 +52,18 @@
 			Kakao.cleanup();
 			Kakao.init(KAKAO_KEY);
 			wwm.initModule();
+			{@select key="{mod}"}
+				{@eq value="room"}
+					wwm.lobby.enterRoom('{rid}');
+				{/eq}
+				{@eq value="search"}
+					wwm.lobby.searchRoom('{query}');
+				{/eq}
+				{@eq value="result"}
+					wwm.lobby.enterRoom('{rid}');
+					wwm.lobby.showResult('{rid}');
+				{/eq}
+			{/select}
 		});
 	</script>
 	{>"_partial"/}

@@ -1,10 +1,11 @@
 wwm.shell = (function () {
-	'user strict';
+	'use strict';
 	var cfMap = {
 		$con: $('#whenwemeet'),
 		$view: $('#view'),
 		$modal: $('#modal'),
-		$logo: $('#logo')
+		$logo: $('#logo'),
+		$intro: $('#intro')
 	};
 	var onPopstate, initModule;
 	onPopstate = function(e) {
@@ -28,7 +29,7 @@ wwm.shell = (function () {
 				wwm.modal.initModule($('#wwm-intro').html());
 				break;
 			case 'search':
-				wwm.lobby.showSearchResult(state.data);
+				wwm.lobby.searchRoom(state.query);
 				break;
 			case 'logout':
 				delete window.userInfo;
@@ -47,14 +48,18 @@ wwm.shell = (function () {
 	};
 
 	initModule = function() {
+		var logged = localStorage.login && JSON.parse(localStorage.login);
+		var first;
+		if (!localStorage.first) {
+			localStorage.first = 'true';
+		}
+		first  = JSON.parse(localStorage.first);
 		console.log('login', localStorage.login);
 		console.log('first', localStorage.first);
 		$(window).on('popstate', onPopstate);
-		var logged = localStorage.login && JSON.parse(localStorage.login);
-		var first = localStorage.first && JSON.parse(localStorage.first);
 		if (first) {
 			history.pushState({mod: 'intro'}, '', '/intro');
-			wwm.modal.initModule($('#wwm-intro').html());
+			wwm.intro.initModule($('#wwm-intro').html());
 		}
 		if (logged) {
 			history.pushState({mode: 'lobby', id: userInfo.id}, '', '/lobby/' + userInfo.id);
@@ -69,6 +74,7 @@ wwm.shell = (function () {
 		initModule: initModule,
 		view: cfMap.$view,
 		modal: cfMap.$modal,
-		logo: cfMap.$logo
+		logo: cfMap.$logo,
+		intro: cfMap.$intro
 	};
 }());

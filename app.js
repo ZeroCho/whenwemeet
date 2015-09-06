@@ -8,10 +8,13 @@ var bodyParser = require('body-parser');
 var adaro = require('adaro');
 
 var app = express();
-
+var options = {
+  helpers: ['dustjs-helpers'],
+  whitespace: true
+};
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.engine('dust', adaro.dust({'whitespace': true}));
+app.engine('dust', adaro.dust(options));
 app.set('view engine', 'dust');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -35,7 +38,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function(err, req, res) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -46,7 +49,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,

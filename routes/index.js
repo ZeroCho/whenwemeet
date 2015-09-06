@@ -28,7 +28,7 @@ router.get('/lobby/:id', function(req, res) {
 });
 router.get('/debug', function(req, res) {
 	res.render('debug', {
-		title: 'Debug Mod'	
+		title: 'Debug Mod'
 	});	
 });
 router.get('/login', function(req, res) {
@@ -38,22 +38,25 @@ router.get('/login', function(req, res) {
 });
 router.get('/search/:query', function(req, res) {
 	var query = req.params.query;
-	res.render('search', {
+	res.render('index', {
 		title: '우리언제만나::검색?' + query,
-		query: query
+		query: query,
+		mod: 'search'
 	});
 });
 router.get('/room/:rid', function(req, res) {
 	var rid = req.params.rid;
-	res.render('room', {
+	res.render('index', {
 		title: '우리언제만나::Room#' + rid,
+		mod: 'room',
 		rid: rid
 	});
 });
 router.get('/result/:rid', function(req, res) {
 	var rid = req.params.rid;
-	res.render('result', {
+	res.render('index', {
 		title: '우리언제만나::Result#' + rid,
+		mod: 'room',
 		rid: rid
 	});
 });
@@ -89,8 +92,7 @@ router.get('/rooms/:pid', function (req, res) {
 		if (err) {
 			console.log('room list error:' + err);
 		} else {
-			console.log('room list result:');
-			console.log(docs);
+			console.log('room list result: ' + docs[0]);
 			res.send(docs);
 		}
 	});
@@ -144,12 +146,12 @@ router.post('/addroom/:rid', function (req, res) {
 	var maker = req.body.maker;
 	var title = req.body.title;
 	var members = JSON.parse(req.body.members);
-	process.env.MY_ID = maker;
-	process.env.NAME = members[0].name;
 	var limit = req.body.limit;
 	var password = req.body.password;
 	var picture = req.body.picture;
-	memberCollection.update({'id': maker}, {'$inc': {'roomcount': 1}}, function(err, result) {
+	process.env.MY_ID = maker;
+	process.env.NAME = members[0].name;
+	memberCollection.update({'id': maker}, {'$inc': {'roomcount': 1}}, function(err) {
 		if (err) {
 			console.log('roomcounterror:' + err);
 		} else {
@@ -172,11 +174,8 @@ router.post('/enterroom/:rid', function(req, res) {
 	var pid = req.body.pid;
 	var name = req.body.name;
 	var picture = req.body.picture;
-	var alreadyMember = false;
-	process.env.MY_ID = pid;
-	process.env.CURRENT_ROOM = rid;
-	console.log('rid: ' + rid + ', pw: ' + pw);
-	roomCollection.findOne({rid: rid}, function(err, doc) {
+	var enterRoomCallback = function(err, doc) {
+		var i, alreadyMember = false;
 		if (err) {
 			console.error('enterroom: find room error!');
 			console.log(err);
@@ -186,58 +185,52 @@ router.post('/enterroom/:rid', function(req, res) {
 				return;
 			}
 			if (Array.isArray(doc.ban)) {
-				for (var i = 0; i < doc.ban.length; i++) {
+				for (i = 0; i < doc.ban.length; i++) {
 					if (doc.ban[i] == pid) {
 						res.send('ban');
 						return;
 					}
 				}
 			}
-			if (pw === null) {
-				res.send(doc);
-				return;
+			for (i = 0; i < doc.members.length; i++) {
+				if (doc.members[i].id == pid) {
+					alreadyMember = true;
+					break;
+				}
 			}
-			roomCollection.findOne({rid: rid, password: pw}, function (err, doc) {
-				if (err) {
-					console.log('enter room error: ' + err);
-				} else {
-					if (doc === null) { // 비밀번호가 틀림
-						res.send('wrong_password');
-						return;
-					}
-					for (var i = 0; i < doc.members.length; i++) {
-						if (doc.members[i].id == pid) {
-							alreadyMember = true;
-							break;
+			if (alreadyMember) {
+				process.env.CURRENT_ROOM = rid;
+				console.log('enterroom result' + doc);
+				res.send(doc);
+			} else {
+				if (doc.password !== pw) {
+					res.send('wrong_password');
+					return;
+				}
+				roomCollection.update({rid: rid}, {
+					$push: {
+						members: {
+							id: pid,
+							name: name,
+							picture: picture,
+							confirm: false
 						}
 					}
-					if (alreadyMember) {
-						process.env.CURRENT_ROOM = rid;
-						console.log('enterroom result');
-						console.log(doc);
-						res.send(doc);
+				}, function (err) {
+					if (err) {
+						console.log('enterroomaddmembererror:' + err);
 					} else {
-						roomCollection.update({rid: rid}, {
-							$push: {
-								members: {
-									id: pid,
-									name: name,
-									picture: picture,
-									confirm: false
-								}
-							}
-						}, function (err, result) {
-							if (err) {
-								console.log('enterroomaddmembererror:' + err);
-							} else {
-								res.send(doc);
-							}
-						});
+						console.log('adding a member to room');
+						res.send(doc);
 					}
-				}
-			});
+				});
+			}
 		}
-	});
+	};
+	process.env.MY_ID = pid;
+	process.env.CURRENT_ROOM = rid;
+	console.log('enterroom rid: ' + rid + ', pw: ' + pw);
+	roomCollection.findOne({rid: rid}, enterRoomCallback);
 });
 
 router.post('/roominfo/:rid', function(req, res) {
@@ -259,8 +252,9 @@ router.post('/roominfo/:rid', function(req, res) {
 });
 router.post('/changeroom/:rid', function(req, res) {
 	var rid = req.params.rid;
+	var title, limit;
 	if (req.body.title) {
-		var title = req.body.title;
+		title = req.body.title;
 		roomCollection.update({rid: rid}, {$set: {title: title}}, function(err, result) {
 			if (err) {
 				console.log('changeroomerror:' + err);
@@ -270,7 +264,7 @@ router.post('/changeroom/:rid', function(req, res) {
 			}
 		});
 	} else if (req.body.limit) {
-		var limit = req.body.limit;
+		limit = req.body.limit;
 		roomCollection.update({rid: rid}, {$set: {limit: limit}}, function(err, result) {
 			if (err) {
 				console.log('changeroomerror:' + err);
@@ -290,7 +284,7 @@ router.post('/deleteroom/:rid', function (req, res) {
 		} else if (doc === null) {
 			res.send('no_room');
 		} else {
-			memberCollection.update({id: maker}, {$inc: {roomcount: -1}}, function(err, result) {
+			memberCollection.update({id: maker}, {$inc: {roomcount: -1}}, function(err) {
 				if (err) {
 					console.log('roomcounterror:' + err);
 				} else {
@@ -314,6 +308,27 @@ router.post('/search/:query', function (req, res) {
 	roomCollection.find({title: {$regex: query}}).toArray(function(err, docs) {
 		if (err) {
 			console.log('searcherror:' + err);
+		} else {
+			console.log('search result:' + docs[0]);
+			res.send(docs);
+		}
+	});
+});
+// for debugging
+router.get('/getallmembers', function(req ,res) {
+	memberCollection.find({}).toArray(function(err, docs) {
+		if (err) {
+			console.log('getallmembererror:' + err);
+		} else {
+			console.log(docs);
+			res.send(docs);
+		}
+	});
+});
+router.get('/getallrooms', function(req ,res) {
+	roomCollection.find({}).toArray(function(err, docs) {
+		if (err) {
+			console.log('getallroomerror:' + err);
 		} else {
 			console.log(docs);
 			res.send(docs);
