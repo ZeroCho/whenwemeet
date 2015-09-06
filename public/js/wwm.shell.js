@@ -49,18 +49,10 @@ wwm.shell = (function () {
 
 	initModule = function() {
 		var logged = localStorage.login && JSON.parse(localStorage.login);
-		var first;
-		if (!localStorage.first) {
-			localStorage.first = 'true';
-		}
-		first  = JSON.parse(localStorage.first);
 		console.log('login', localStorage.login);
 		console.log('first', localStorage.first);
 		$(window).on('popstate', onPopstate);
-		if (first) {
-			history.pushState({mod: 'intro'}, '', '/intro');
-			wwm.intro.initModule($('#wwm-intro').html());
-		}
+
 		if (logged) {
 			history.pushState({mode: 'lobby', id: userInfo.id}, '', '/lobby/' + userInfo.id);
 			wwm.lobby.initModule();

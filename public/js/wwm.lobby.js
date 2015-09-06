@@ -199,10 +199,18 @@ wwm.lobby = (function (){
 		};
 	};
 	initModule = function() {
-		var name, picture, src;
+		var name, picture, src, first;
 		if (!localStorage.login) {
 			history.pushState({mod: 'login'}, '', '/login');
 			wwm.login.initModule();
+		}
+		if (!localStorage.first) {
+			localStorage.first = 'true';
+		}
+		first  = JSON.parse(localStorage.first);
+		if (first) {
+			history.pushState({mod: 'intro'}, '', '/intro');
+			wwm.intro.initModule($('#wwm-intro').html());
 		}
 		if (!window.userInfo) {window.userInfo = JSON.parse(localStorage.login);}
 		src = $('#wwm-lobby').text();
