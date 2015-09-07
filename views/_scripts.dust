@@ -777,7 +777,7 @@ wwm.modal = (function (){
 		jqMap = {
 			$con: $con,
 			$close: $con.find('.modal-close'),
-			$title: $con.find('#room-title'),
+			$roomTitle: $con.find('#room-title'),
 			$limit: $con.find('#room-people-limit'),
 			$password: $con.find('#room-password'),
 			$createRoom: $con.find('#create-room-btn')
@@ -789,7 +789,7 @@ wwm.modal = (function (){
 	};
 	createRoom = function(e) {		
 		var spinner = new Spinner().spin();		
-		var title = jqMap.$title.val().trim();
+		var title = jqMap.$roomTitle.val().trim();
 		var limit = jqMap.$limit.val();
 		var password = jqMap.$password.val().trim() || null;
 		var maker = userInfo.id.toString();
@@ -889,7 +889,7 @@ wwm.room = (function(){
 			$banList: $con.find('#ban-member-list'),
 			$changeLimit: $con.find('#change-limit-btn'),
 			$changeTitle: $con.find('#change-room-title'),
-			$title: $con.find('#title'),
+			$roomTitle: $con.find('#title'),
 			$current: $con.find('#current-number'),
 			$limit: $con.find('#limit-number'),
 			$sendChat: $con.find('#send-chat'),
@@ -1060,7 +1060,7 @@ wwm.room = (function(){
 		console.log('changeTitle', title);
 		titlePromise.done(function() {
 			stMap.title = title;
-			jqMap.$title.text(title);
+			jqMap.$roomTitle.text(title);
 		});
 		titlePromise.fail(function(err) {
 			alert('제목 바꾸기 실패!');

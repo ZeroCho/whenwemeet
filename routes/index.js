@@ -203,7 +203,9 @@ router.post('/enterroom/:rid', function(req, res) {
 				console.log('enterroom result' + doc);
 				res.send(doc);
 			} else {
-				if (doc.password !== pw) {
+				console.log(doc);
+				console.log('password ' +  doc.password + ' ' + (doc.password == null));
+				if (doc.password !== '' && doc.password !== pw) {
 					res.send('wrong_password');
 					return;
 				}
@@ -274,6 +276,17 @@ router.post('/changeroom/:rid', function(req, res) {
 			}
 		});
 	}
+});
+router.post('/introdone/:id', function(req, res) {
+	var id = req.params.id;
+	memberCollection.update({id: id}, {$set: {first: false}}, function(err, result) {
+		if (err) {
+			console.log('introdone:' + err);
+		} else {
+			console.log(result);
+			res.send(result);
+		}
+	});
 });
 router.post('/deleteroom/:rid', function (req, res) {
 	var rid = req.params.rid;

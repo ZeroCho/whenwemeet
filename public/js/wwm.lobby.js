@@ -93,6 +93,7 @@ wwm.lobby = (function (){
 		wwm.login.initModule();
 	};
 	enterRoom = function(rid) {
+		/* TODO: 처음 방에 들어갔을 시 멤버정보가 안뜨는 현상 수정하기 */
 		var $this = $(this);
 		var spinner = new Spinner().spin();
 		var enterRoomPromise, data, pw;
@@ -209,7 +210,6 @@ wwm.lobby = (function (){
 		}
 		first  = JSON.parse(localStorage.first);
 		if (first) {
-			history.pushState({mod: 'intro'}, '', '/intro');
 			wwm.intro.initModule($('#wwm-intro').html());
 		}
 		if (!window.userInfo) {window.userInfo = JSON.parse(localStorage.login);}

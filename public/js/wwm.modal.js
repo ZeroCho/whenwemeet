@@ -6,10 +6,13 @@ wwm.modal = (function (){
 		jqMap = {
 			$con: $con,
 			$close: $con.find('.modal-close'),
-			$title: $con.find('#room-title'),
+			$roomTitle: $con.find('#room-title'),
 			$limit: $con.find('#room-limit'),
 			$password: $con.find('#room-password'),
-			$createRoom: $con.find('#create-room-btn')
+			$createRoom: $con.find('#create-room-btn'),
+			$reportTitle: $con.find('#report-title'),
+			$reportContent: $con.find('#report-content'),
+			$report: $con.find('#report-btn')
 		};
 	};
 	onCloseModal = function(e) {
@@ -18,7 +21,7 @@ wwm.modal = (function (){
 	};
 	createRoom = function(e) {
 		var spinner = new Spinner().spin();
-		var title = jqMap.$title.val().trim();
+		var title = jqMap.$roomTitle.val().trim();
 		var limit = jqMap.$limit.val();
 		var password = jqMap.$password.val().trim() || null;
 		var maker = userInfo.id.toString();
@@ -60,7 +63,7 @@ wwm.modal = (function (){
 		wwm.shell.modal.html($target);
 		setJqMap(wwm.shell.modal);
 		wwm.shell.modal.fadeIn('slow');
-		jqMap.$title.focus();
+		jqMap.$roomTitle.focus();
 		jqMap.$close.click(onCloseModal);
 		jqMap.$createRoom.click(createRoom);
 	};

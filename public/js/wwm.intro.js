@@ -70,11 +70,13 @@ wwm.intro = (function() {
 		if ($(this).is(':checked')) {
 			localStorage.first = 'false';
 			wwm.shell.intro.fadeOut('slow');
+			wwm.model.introDone(userInfo.id);
 		}
 	};
 	endIntro = function () {
 		localStorage.first = 'false';
 		wwm.shell.intro.fadeOut('slow');
+		wwm.model.introDone(userInfo.id);
 	};
 	createRoom = function (e) {
 		var spinner = new Spinner().spin();

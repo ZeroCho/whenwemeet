@@ -110,8 +110,7 @@
 			</div>
 		</div>
 		<footer id="aside-footer">
-			{~lb}+admin-menu/{~rb}
-			<button class="flat-btn" id="report">오류 제보</button>
+			<button class="flat-btn" id="report-error">오류 제보</button>
 			<button class="flat-btn" id="back-to-lobby">로비</button>
 			<button class="flat-btn" id="quit">나가기<i class="fa fa-signout"></i></button>
 		</footer>
@@ -540,12 +539,30 @@
 		<button id="intro-end">종료</button>
 	</div>
 </script>
+<script type="text/html" id="wwm-report">
+	<header id="report-header"><h1>오류 제보</h1></header>
+	<form>
+		<main id="report-main">
+			<div class="form-group">
+				<label for="report-title">제목</label>
+				<input id="report-title"/>
+			</div>
+			<div class="form-group">
+				<label for="report-content">내용</label>
+				<textarea id="report-content" placeholder="오류 내용을 적어주세요."></textarea>
+			</div>
+		</main>
+		<footer id="report-footer">
+			<button id="report-btn">제보</button>
+			<button class="modal-close">취소</button>
+		</footer>
+	</form>
+</script>
 <script type="text/html" id="wwm-admin-menu">
-	{~lb}&lt;admin-menu{~rb}
 	<div id="admin-menu">
 		<ul>
 			{~lb}?admin{~rb}
-			<!--
+			<!-- TODO: 어드민메뉴를 블록으로 사용하기
 			<li id="ban-people">
 				<form class="input-group">
 					<label for="ban-member-list">현재 참여자</label>
@@ -585,6 +602,5 @@
 		<button id="invite-btn" class="flat-btn">초대</button>
 		{~lb}/admin{~rb}
 	</div>
-	{~lb}/admin-menu{~rb}
 </script>
 <div id="fb-root"></div>
