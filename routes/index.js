@@ -176,6 +176,7 @@ router.post('/enterroom/:rid', function(req, res) {
 	var picture = req.body.picture;
 	var enterRoomCallback = function(err, doc) {
 		var i, alreadyMember = false;
+		var number = doc.members.length;
 		if (err) {
 			console.error('enterroom: find room error!');
 			console.log(err);
@@ -192,7 +193,7 @@ router.post('/enterroom/:rid', function(req, res) {
 					}
 				}
 			}
-			for (i = 0; i < doc.members.length; i++) {
+			for (i = 0; i < number; i++) {
 				if (doc.members[i].id == pid) {
 					alreadyMember = true;
 					break;
@@ -203,8 +204,11 @@ router.post('/enterroom/:rid', function(req, res) {
 				console.log('enterroom result' + doc);
 				res.send(doc);
 			} else {
-				console.log(doc);
-				console.log('password ' +  doc.password + ' ' + (doc.password == null));
+				console.log(number + ' ' + doc.limit);
+				if (doc.limit == number) {
+					res.send('full');
+					return;
+				}
 				if (doc.password !== '' && doc.password !== pw) {
 					res.send('wrong_password');
 					return;
@@ -223,6 +227,12 @@ router.post('/enterroom/:rid', function(req, res) {
 						console.log('enterroomaddmembererror:' + err);
 					} else {
 						console.log('adding a member to room');
+						doc.members.push({
+							id: pid,
+							name: name,
+							picture: picture,
+							confirm: false
+						});
 						res.send(doc);
 					}
 				});

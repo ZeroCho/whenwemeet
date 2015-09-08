@@ -808,6 +808,9 @@ wwm.lobby = (function (){
 			if (res === 'no_room') {
 				alert('방이 없습니다');
 				return;
+			} else if (res === 'full') {
+				alert('방이 다 찼습니다.');
+				return;
 			} else if (res === 'wrong_password') {
 				alert('비밀번호가 틀렸습니다.');
 				return;
@@ -872,9 +875,9 @@ wwm.lobby = (function (){
 	setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
-			$logo: $con.find('#lobby-logo'),
 			$showCreateroom: $con.find('#show-createroom-modal'),
 			$searchroomBtn: $con.find('#searchroom-btn'),
+			$main: $con.find('#lobby-main'),
 			$list: $con.find('#rooms'),
 			$logout: $con.find('#logout-btn'),
 			$refresh: $con.find('#refresh-list'),
@@ -911,14 +914,15 @@ wwm.lobby = (function (){
 			} else {
 				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
+				jqMap.$main.showSVGLogo(100);
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);
 				jqMap.$logout.click(logout);
 				jqMap.$refresh.click(refreshList);
 				jqMap.$refreshProfile.click(refreshProfile);
-				jqMap.$con.on('click', '.room', enterRoom);
-				jqMap.$con.on('click', '.result', showResult);
+				jqMap.$list.on('click', '.room', enterRoom);
+				jqMap.$list.on('click', '.result', showResult);
 				socket.on('titleChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
@@ -988,7 +992,7 @@ wwm.login = (function () {
 		wwm.lobby.initModule(wwm.shell.view);
 	};
 	testLogin = function() {
-		var res = {id: "987654321", name: '테스터', picture: '//graph.facebook.com/874512615962577/picture'};
+		var res = {id: "987654321", name: '테스터', picture: 'http://th-p.talk.kakao.co.kr/th/talkp/wkkZf8zHlk/lxr9VefTlrfUr7FAzsAgJk/ljh2mh_640x640_s.jpg'};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');
@@ -1208,7 +1212,8 @@ wwm.room = (function(){
 		title: null,
 		picture: null,
 		limit: 0,
-		current: 0
+		current: 0,
+		event: false
 	};
 	var cfMap = {
 		colorList: ['red', 'orange', 'yellow', 'yellowgreen', 'skyblue', 'purple', 'violet', 'pink']
@@ -1216,7 +1221,7 @@ wwm.room = (function(){
 	var socket = io();
 	var setJqMap, createArray, tableToArray, arrayToTable, renderTable, showMembers, newMember, showOnline, findInfo,
 		banPerson, changeTitle, changeLimit, onClickDay, onClickTime, onClickCell,
-		showAdminMenu, deleteRoom, checkConfirmed, toLobby, quit, showReport,
+		showAdminMenu, deleteRoom, checkConfirmed, toLobby, quit, showReport, handleSocketEvent,
 		toggleCalendar, changeCurrentNumber, changeLimitNumber, sendChat, toggleChat, refresh, removeSchedule,
 		confirmTable, toConfirmPage, kakaoInvite, fbInvite, toggleAside, showMemberMenu, initModule;
 	setJqMap = function($con) {
@@ -1779,6 +1784,150 @@ wwm.room = (function(){
 	showReport = function () {
 		wwm.modal.initModule($('#wwm-report').html());
 	};
+	handleSocketEvent = function () {
+		console.log('handleEvnet', stMap.event);
+		if (stMap.event) {
+			return;
+		}
+		socket.on('out', function(id) {
+			console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
+			stMap.memberList.every(function(member, i) {
+				if (member.id == id) {
+					stMap.onlineList[i] = false;
+					return false;
+				}
+				return true;
+			});
+			showOnline();
+			console.log('socketout', stMap.onlineList, stMap.memberList);
+		});
+		socket.on('quit', function(data) {
+			stMap.memberList.forEach(function(member, i) {
+				if (member.id == data.id) {
+					stMap.onlineList.splice(i, 1);
+					stMap.memberList.splice(i, 1);
+					return false;
+				}
+				return true;
+			});
+			console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + data.id + ']'));
+			changeCurrentNumber(-1);
+			showMembers();
+			removeSchedule(data.order);
+			console.log('socket quit', stMap.onlineList, stMap.memberList);
+		});
+		socket.on('delegate', function(data) {
+			stMap.memberList.forEach(function(member, i) {
+				if (member.id == data.id) {
+					stMap.onlineList.splice(i, 1);
+					stMap.memberList.splice(i, 1);
+					return false;
+				}
+				return true;
+			});
+			console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + data.id + ']'));
+			changeCurrentNumber(-1);
+			showMembers();
+			removeSchedule(data.order);
+			stMap.maker = data.admin;
+			stMap.picture = data.picture;
+			jqMap.$picture.attr('src', stMap.picture);
+			if (stMap.myInfo.id === data.admin) {
+				dust.render(dust.loadSource(dust.compile(menu)), {admin: true}, function(err, out) {
+					if (err) {
+						console.log(err);
+					} else {
+						jqMap.$admin.replaceWith(out);
+					}
+				});
+			}
+			console.log('socket quit', stMap.onlineList, stMap.memberList);
+		});
+		socket.on('newMember', function(data) {
+			console.log('socket newmember', data);
+			stMap.onlineList[data.color] = true;
+			socket.emit('uptodateArr', {sid: data.socket, day: stMap.dayArray, night: stMap.nightArray, online: stMap.onlineList});
+			if (data.color >= stMap.current) {
+				changeCurrentNumber(1);
+				newMember(data);
+			}
+			showOnline();
+		});
+		socket.on('uptodateArr', function(data) {
+			console.log('socket uptodateArr');
+			stMap.dayArray = data.day;
+			stMap.nightArray = data.night;
+			stMap.onlineList = data.online;
+			showOnline();
+			renderTable();
+		});
+		socket.on('chat', function(data) {
+			console.log('socket chat', data.id, data.text);
+			jqMap.$chatList.append('<p><span class="' + cfMap.colorList[data.color] + '-text">' + data.name + '</span>: ' + data.text + '</p>');
+			jqMap.$chatbox.val('').focus();
+			jqMap.$chatList.animate({ scrollTop: jqMap.$chatList[0].scrollHeight }, "slow");
+		});
+		socket.on('busy', function(data) {
+			console.log('socketbusy:', data.arr, data.sid, data.cur);
+			arrayToTable(data.arr, data.sid, data.cur, true);
+		});
+		socket.on('not-busy', function(data) {
+			console.log('socketnotbusy:', data.arr, data.sid, data.cur);
+			arrayToTable(data.arr, data.sid, data.cur, false);
+		});
+		socket.on('requestArr', function(data) {
+			console.log('socket requestArr');
+			socket.emit('responseArr', {sid: data.sid, day: stMap.dayArray, night: stMap.nightArray});
+		});
+		socket.on('ban', function(data) {
+			/* 강퇴당한 경우. */
+			if (stMap.myInfo.personColor == data.order) {
+				alert('강퇴당하셨습니다...');
+				wwm.lobby.initModule(jqMap.$con);
+				return;
+			}
+			/* 다른 사람이 강퇴당한 경우. */
+			if (stMap.myInfo.personColor > data.order) {
+				stMap.myInfo.personColor--;
+			}
+			alert(findInfo(data.id).name + '님이 강제퇴장 되었습니다. 잘가요!');
+			stMap.memberList.every(function(member, i) {
+				if (data.id == member.id) {
+					stMap.memberList.splice(i, 1);
+					stMap.onlineList.splice(i, 1);
+					return false;
+				}
+				return true;
+			});
+			changeCurrentNumber(-1);
+			removeSchedule(data.order);
+			showMembers();
+			console.log('socket ban');
+		});
+		socket.on('confirmed', function(data) {
+			var confirmCount = 0;
+			stMap.memberList.forEach(function(member) {
+				if (member.id == data.id) {
+					member.confirm = data.bool;
+				}
+				if (member.confirm === true) {
+					confirmCount++;
+				}
+			});
+			if (confirmCount == stMap.memberList.length) {
+				jqMap.$allConfirmed.show();
+			} else {
+				jqMap.$allConfirmed.hide();
+			}
+			console.log('socket confirmed');
+		});
+		socket.on('explode', function() {
+			alert('방이 폭파되었습니다. 로비로 이동합니다.');
+			wwm.lobby.initModule(jqMap.$con);
+			console.log('socket explode');
+		});
+		stMap.event = true;
+	};
 	initModule = function(doc) {
 		var parser;
 		var src = $('#wwm-room').text();
@@ -1855,144 +2004,7 @@ wwm.room = (function(){
 				}
 				jqMap.$roomTitle.addClass(cfMap.colorList[stMap.myInfo.personColor] + '-text');
 				showMembers();
-				socket.on('out', function(id) {
-					console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + id + ']'));
-					stMap.memberList.every(function(member, i) {
-						if (member.id == id) {
-							stMap.onlineList[i] = false;
-							return false;
-						}
-						return true;
-					});
-					showOnline();
-					console.log('socketout', stMap.onlineList, stMap.memberList);
-				});
-				socket.on('quit', function(data) {
-					stMap.memberList.forEach(function(member, i) {
-						if (member.id == data.id) {
-							stMap.onlineList.splice(i, 1);
-							stMap.memberList.splice(i, 1);
-							return false;
-						}
-						return true;
-					});
-					console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + data.id + ']'));
-					changeCurrentNumber(-1);
-					showMembers();
-					removeSchedule(data.order);
-					console.log('socket quit', stMap.onlineList, stMap.memberList);
-				});
-				socket.on('delegate', function(data) {
-					stMap.memberList.forEach(function(member, i) {
-						if (member.id == data.id) {
-							stMap.onlineList.splice(i, 1);
-							stMap.memberList.splice(i, 1);
-							return false;
-						}
-						return true;
-					});
-					console.log(jqMap.$memberList, jqMap.$memberList.find('[data-id=' + data.id + ']'));
-					changeCurrentNumber(-1);
-					showMembers();
-					removeSchedule(data.order);
-					stMap.maker = data.admin;
-					stMap.picture = data.picture;
-					jqMap.$picture.attr('src', stMap.picture);
-					if (stMap.myInfo.id === data.admin) {
-						/* TODO: 방장 메뉴를 넣는 부분 만들기 */
-						dust.render(dust.loadSource(dust.compile(menu)), {admin: true}, function(err, out) {
-							if (err) {
-								console.log(err);
-							} else {
-								jqMap.$admin.replaceWith(out);
-							}
-						});
-					}
-					console.log('socket quit', stMap.onlineList, stMap.memberList);
-				});
-				socket.on('newMember', function(data) {
-					console.log('socket newmember', data);
-					stMap.onlineList[data.color] = true;
-					socket.emit('uptodateArr', {sid: data.socket, day: stMap.dayArray, night: stMap.nightArray, online: stMap.onlineList});
-					if (data.color >= stMap.current) {
-						changeCurrentNumber(1);
-						newMember(data);
-					}
-					showOnline();
-				});
-				socket.on('uptodateArr', function(data) {
-					console.log('socket uptodateArr');
-					stMap.dayArray = data.day;
-					stMap.nightArray = data.night;
-					stMap.onlineList = data.online;
-					showOnline();
-					renderTable();
-				});
-				socket.on('chat', function(data) {
-					console.log('socket chat', data.id, data.text);
-					jqMap.$chatList.append('<p><span class="' + cfMap.colorList[data.color] + '-text">' + data.name + '</span>: ' + data.text + '</p>');
-					jqMap.$chatbox.val('').focus();
-					jqMap.$chatList.animate({ scrollTop: jqMap.$chatList[0].scrollHeight }, "slow");
-				});
-				socket.on('busy', function(data) {
-					console.log('socketbusy:', data.arr, data.sid, data.cur);
-					arrayToTable(data.arr, data.sid, data.cur, true);
-				});
-				socket.on('not-busy', function(data) {
-					console.log('socketnotbusy:', data.arr, data.sid, data.cur);
-					arrayToTable(data.arr, data.sid, data.cur, false);
-				});
-				socket.on('requestArr', function(data) {
-					console.log('socket requestArr');
-					socket.emit('responseArr', {sid: data.sid, day: stMap.dayArray, night: stMap.nightArray});
-				});
-				socket.on('ban', function(data) {
-					/* 강퇴당한 경우. */
-					if (stMap.myInfo.personColor == data.order) {
-						alert('강퇴당하셨습니다...');
-						wwm.lobby.initModule(jqMap.$con);
-						return;
-					}
-					/* 다른 사람이 강퇴당한 경우. */
-					if (stMap.myInfo.personColor > data.order) {
-						stMap.myInfo.personColor--;
-					}
-					alert(findInfo(data.id).name + '님이 강제퇴장 되었습니다. 잘가요!');
-					stMap.memberList.every(function(member, i) {
-						if (data.id == member.id) {
-							stMap.memberList.splice(i, 1);
-							stMap.onlineList.splice(i, 1);
-							return false;
-						}
-						return true;
-					});
-					changeCurrentNumber(-1);
-					removeSchedule(data.order);
-					showMembers();
-					console.log('socket ban');
-				});
-				socket.on('confirmed', function(data) {
-					var confirmCount = 0;
-					stMap.memberList.forEach(function(member) {
-						if (member.id == data.id) {
-							member.confirm = data.bool;
-						}
-						if (member.confirm === true) {
-							confirmCount++;
-						}
-					});
-					if (confirmCount == stMap.memberList.length) {
-						jqMap.$allConfirmed.show();
-					} else {
-						jqMap.$allConfirmed.hide();
-					}
-					console.log('socket confirmed');
-				});
-				socket.on('explode', function() {
-					alert('방이 폭파되었습니다. 로비로 이동합니다.');
-					wwm.lobby.initModule(jqMap.$con);
-					console.log('socket explode');
-				});
+				handleSocketEvent();
 				jqMap.$table.find('td').click(onClickCell);
 				jqMap.$explodeRoom.click({rid: stMap.rid}, deleteRoom);
 				jqMap.$toLobbyBtn.click({rid: stMap.rid}, toLobby);

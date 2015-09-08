@@ -16,7 +16,7 @@ wwm.login = (function () {
 		wwm.lobby.initModule(wwm.shell.view);
 	};
 	testLogin = function() {
-		var res = {id: "987654321", name: '테스터', picture: '//graph.facebook.com/874512615962577/picture'};
+		var res = {id: "987654321", name: '테스터', picture: 'http://th-p.talk.kakao.co.kr/th/talkp/wkkZf8zHlk/lxr9VefTlrfUr7FAzsAgJk/ljh2mh_640x640_s.jpg'};
 		var joinPromise = wwm.model.join(res);
 		joinPromise.fail(function(err){
 			alert('가입 오류 발생!');

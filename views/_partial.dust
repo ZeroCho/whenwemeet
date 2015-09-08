@@ -562,7 +562,6 @@
 	<div id="admin-menu">
 		<ul>
 			{~lb}?admin{~rb}
-			<!-- TODO: 어드민메뉴를 블록으로 사용하기
 			<li id="ban-people">
 				<form class="input-group">
 					<label for="ban-member-list">현재 참여자</label>

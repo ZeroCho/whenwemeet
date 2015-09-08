@@ -123,6 +123,9 @@ wwm.lobby = (function (){
 			if (res === 'no_room') {
 				alert('방이 없습니다');
 				return;
+			} else if (res === 'full') {
+				alert('방이 다 찼습니다.');
+				return;
 			} else if (res === 'wrong_password') {
 				alert('비밀번호가 틀렸습니다.');
 				return;
@@ -187,9 +190,9 @@ wwm.lobby = (function (){
 	setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
-			$logo: $con.find('#lobby-logo'),
 			$showCreateroom: $con.find('#show-createroom-modal'),
 			$searchroomBtn: $con.find('#searchroom-btn'),
+			$main: $con.find('#lobby-main'),
 			$list: $con.find('#rooms'),
 			$logout: $con.find('#logout-btn'),
 			$refresh: $con.find('#refresh-list'),
@@ -226,14 +229,15 @@ wwm.lobby = (function (){
 			} else {
 				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
+				jqMap.$main.showSVGLogo(100);
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);
 				jqMap.$logout.click(logout);
 				jqMap.$refresh.click(refreshList);
 				jqMap.$refreshProfile.click(refreshProfile);
-				jqMap.$con.on('click', '.room', enterRoom);
-				jqMap.$con.on('click', '.result', showResult);
+				jqMap.$list.on('click', '.room', enterRoom);
+				jqMap.$list.on('click', '.result', showResult);
 				socket.on('titleChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {

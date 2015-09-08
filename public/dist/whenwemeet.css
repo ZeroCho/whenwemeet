@@ -2,6 +2,10 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 	/* outline: 1px dashed salmon; */
 }
 html {
@@ -41,7 +45,6 @@ button {
 	text-align: center;
 	white-space: nowrap;
 	vertical-align: middle;
-	user-select: none;
 	background: white;
 	border-radius: 3px;
 	border: 1px solid #bbb;
@@ -291,6 +294,12 @@ svg .triangle-3 { fill: greenyellow; }
 	bottom: 30px;
 	width: 100%;
 }
+#lobby-main svg {
+	z-index: 5;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+}
 #rooms {
 	position: absolute;
 	border: 1px solid gray;
@@ -303,7 +312,6 @@ svg .triangle-3 { fill: greenyellow; }
 	text-align: center;
 	white-space: nowrap;
 }
-
 .room {
 	border: 1px solid gray;
 	border-radius: 4px;
@@ -314,9 +322,11 @@ svg .triangle-3 { fill: greenyellow; }
 	padding-top: 5px;
 	padding-bottom: 5px;
 	position: relative;
+	z-index: 10;
 }
 .room:hover {
-	background: beige;
+	border-color: #66afe9;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6), 0 8px 6px -6px black;
 }
 .room:active {
 	background: #cccccc;
@@ -343,15 +353,15 @@ svg .triangle-3 { fill: greenyellow; }
 }
 #refresh-list {
 	position: absolute;
-	bottom: 0;
-	left: 0;
-	z-index: 1;
+	bottom: 2px;
+	left: 2px;
+	z-index: 15;
 }
 #show-createroom-modal {
 	position: absolute;
-	bottom: 0;
-	right: 0;
-	z-index: 1;
+	bottom: 2px;
+	right: 2px;
+	z-index: 15;
 }
 #lobby-footer {
 	position: absolute;
@@ -374,8 +384,7 @@ svg .triangle-3 { fill: greenyellow; }
 	border-radius: 0;
 }
 .input-group input, .input-group select{
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
+	border-radius: 0;
 	display: table-cell;
 	width: 100%;
 	float: left;
@@ -391,10 +400,11 @@ svg .triangle-3 { fill: greenyellow; }
 	display: table-cell;
 }
 .input-group-btn button {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
+	border-radius: 0;
 	z-index: 2;
-	margin-left: -1px;
+}
+#lobby-footer .input-group-btn button {
+	margin-right: -1px;
 }
 #create-header {
 	text-align: center;
@@ -492,7 +502,6 @@ svg .triangle-3 { fill: greenyellow; }
 #room-header {
 	position: relative;
 	width: 100%;
-	user-select: none;
 	height: 40px;
 	background: #006666;
 	color: white;
@@ -524,7 +533,6 @@ svg .triangle-3 { fill: greenyellow; }
 }
 #toggle-table {
 	margin-bottom: 10px;
-	user-select: none;
 }
 #toggle-table .tapped{
 	background: crimson;
@@ -539,8 +547,6 @@ svg .triangle-3 { fill: greenyellow; }
 }
 #room-main table {
 	width: 100%;
-	user-select: none;
-	-webkit-user-select: none;
 	border: 1px solid silver;
 	margin-bottom: 10px;
 	cursor: pointer;
@@ -628,6 +634,9 @@ td.busy .red, td.busy .orange, td.busy .yellow, td.busy .yellowgreen, td.busy .s
 	height: 34px;
 	line-height: 30px;
 	padding-left: 7px;
+}
+#invite img {
+	cursor: pointer;
 }
 .red {
 	background: red;
