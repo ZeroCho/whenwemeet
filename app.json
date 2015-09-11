@@ -1,0 +1,14 @@
+{
+  "name":"whenwemeet",
+  "description":"A mobile application which shows time when people can meet graphically",
+  "scripts":{
+    "postdeploy":"gulp"
+  },
+  "env":{},
+  "addons":[
+    "memcachier",
+    "newrelic",
+    "papertrail",
+    "mongolab"
+  ]
+}
