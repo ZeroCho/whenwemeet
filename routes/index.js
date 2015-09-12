@@ -215,14 +215,14 @@ router.post('/enterroom/:rid', function(req, res) {
 			}
 			if (Array.isArray(doc.ban)) {
 				for (i = 0; i < doc.ban.length; i++) {
-					if (doc.ban[i] == pid) {
+					if (doc.ban[i] === pid) {
 						res.send('ban');
 						return;
 					}
 				}
 			}
 			for (i = 0; i < number; i++) {
-				if (doc.members[i].id == pid) {
+				if (doc.members[i].id === pid) {
 					alreadyMember = true;
 					break;
 				}
@@ -233,7 +233,7 @@ router.post('/enterroom/:rid', function(req, res) {
 				res.send(doc);
 			} else {
 				console.log(number + ' ' + doc.limit);
-				if (doc.limit == number) {
+				if (doc.limit === number) {
 					res.send('full');
 					return;
 				}

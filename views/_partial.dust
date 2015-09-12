@@ -562,6 +562,7 @@
 	<div id="admin-menu">
 		<ul>
 			{~lb}?admin{~rb}
+			<!--
 			<li id="ban-people">
 				<form class="input-group">
 					<label for="ban-member-list">현재 참여자</label>

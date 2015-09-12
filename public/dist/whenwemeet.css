@@ -32,8 +32,7 @@ input, select {
 	background-color: #fff;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
-	-webkit-transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-	        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 }
 input:focus, select:focus {
 	border-color: #66afe9;
@@ -106,8 +105,7 @@ li {
 .intro-wrapper {
 	position: relative;
 	top: 50%;
-	-ms-transform: translateY(-50%);
-	    transform: translateY(-50%);
+	transform: translateY(-50%);
 	-webkit-transform: translateY(-50%);
 }
 .phase-0 {
@@ -226,8 +224,7 @@ li {
 svg {
 	position: relative;
 	top: 50%;
-	-ms-transform: translateY(-50%);
-	    transform: translateY(-50%);
+	transform: translateY(-50%);
 	-webkit-transform: translateY(-50%);
 }
 svg .triangle {
@@ -304,7 +301,6 @@ svg .triangle-3 { fill: greenyellow; }
 	z-index: 5;
 	left: 50%;
 	-webkit-transform: translate(-50%, -50%);
-	    -ms-transform: translate(-50%, -50%);
 	        transform: translate(-50%, -50%);
 	position: absolute;
 }
@@ -460,8 +456,7 @@ svg .triangle-3 { fill: greenyellow; }
 	width: 250px;
 	position: absolute;
 	z-index: 100;
-	-webkit-transition: left 1s;
-	        transition: left 1s;
+	transition: left 1s;
 	background: #003333;
 }
 #aside-header {

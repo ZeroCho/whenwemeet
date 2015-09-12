@@ -17,7 +17,7 @@ wwm.modal = (function (){
 		};
 	};
 	closeModal = function(e) {
-		if (e)	e.preventDefault();
+		if (e)	{e.preventDefault();}
 		wwm.shell.modal.fadeOut('slow');
 	};
 	createRoom = function(e) {

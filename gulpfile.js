@@ -77,7 +77,7 @@ gulp.task('serve', ['build'], function () {
 	});
 });
 gulp.task('scripts', ['js:uglify']);
-gulp.task('styles', function () {
+gulp.task('styles', ['clean'] ,function () {
 	gulp.src(dir.dist.css)
 		.pipe(plumber())
 	//	.pipe(compass({
@@ -96,7 +96,7 @@ gulp.task('clean', function () {
 	del([dir.dist.root + 'whenwemeet.min.js', dir.dist.root + 'whenwemeet.js']);
 });
 
-gulp.task('js:concat', function () {
+gulp.task('js:concat', ['styles'], function () {
 	gulp
 		.src([
 			'public/js/wwm.js',
@@ -121,6 +121,7 @@ gulp.task('dust', function () {
 	gulp.src(dir.dust.src)
 		.pipe(plumber())
 		.pipe(dusthtml({
+			basePath: 'views',
 			whitespace: false,
 			data: {
 				title: '우리언제만나'

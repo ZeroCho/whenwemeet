@@ -58,7 +58,7 @@ wwm.lobby = (function (){
 	};
 	showRooms = function(res) {
 		var $frag = $(document.createDocumentFragment());
-		var room, tmpl, password, unlocked, parser;
+		var tmpl, password, unlocked, parser;
 		var src = $('#wwm-room-list').html();
 		res.forEach(function(room) {
 			tmpl = dust.loadSource(dust.compile(src));
@@ -67,7 +67,8 @@ wwm.lobby = (function (){
 			if (password) {
 				room.members.some(function(member) {
 					if (member.id === userInfo.id) {
-						return unlocked = true;
+						unlocked = true;
+						return unlocked;
 					}
 					return false;
 				});
@@ -84,6 +85,9 @@ wwm.lobby = (function (){
 				unlocked: unlocked
 			};
 			dust.render(tmpl, parser, function(err, out) {
+				if (err) {
+					return;
+				}
 				$frag.append(out);
 			});
 		});
@@ -126,13 +130,16 @@ wwm.lobby = (function (){
 			if (res === 'no_room') {
 				alert('방이 없습니다');
 				return;
-			} else if (res === 'full') {
+			}
+			if (res === 'full') {
 				alert('방이 다 찼습니다.');
 				return;
-			} else if (res === 'wrong_password') {
+			}
+			if (res === 'wrong_password') {
 				alert('비밀번호가 틀렸습니다.');
 				return;
-			} else if (res === 'ban') {
+			}
+			if (res === 'ban') {
 				alert('강퇴당한 방에는 들어갈 수 없습니다.');
 				return;
 			}
@@ -244,6 +251,7 @@ wwm.lobby = (function (){
 				socket.on('titleChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
+						console.log(idx);
 						$(item).data('rid');
 					}).get();
 					rid.every(function(room, i) {
@@ -257,6 +265,7 @@ wwm.lobby = (function (){
 				socket.on('currentChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
+						console.log(idx);
 						$(item).data('rid');
 					}).get();
 					rid.every(function(room, i) {
@@ -270,6 +279,7 @@ wwm.lobby = (function (){
 				socket.on('limitChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
+						console.log(idx);
 						$(item).data('rid');
 					}).get();
 					rid.every(function(room, i) {

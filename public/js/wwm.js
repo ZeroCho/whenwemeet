@@ -72,7 +72,7 @@ var eval_dust_string = function(str, chunk, context) {
 if (!dust.helpers) { dust.helpers = {}; }
 dust.helpers.repeat = function(chunk, context, bodies, params) {
 	var i, times;
-	times = parseInt(eval_dust_string(params.times, chunk, context));
+	times = parseInt(eval_dust_string(params.times, chunk, context), 10);
 	if ((times !== null) && !isNaN(times)) {
 		if (context.stack.head !== null) {
 			context.stack.head.$len = times;

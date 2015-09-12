@@ -71,8 +71,9 @@ wwm.confirm = (function() {
 			rangeList[i].forEach(function(range) {
 				if (range[0] === null) {
 					return false;
-				} else if (range[0] < 12) {
-					prefix = '오전'
+				}
+				if (range[0] < 12) {
+					prefix = '오전';
 				} else if (range[0] === 12) {
 					prefix = '오후';
 				} else {
@@ -81,7 +82,7 @@ wwm.confirm = (function() {
 				}
 				str += prefix + ' ' + range[0] + '시부터 ~ ';
 				if (range[1] < 12) {
-					prefix = '오전'
+					prefix = '오전';
 				} else if (range[1] === 12) {
 					prefix = '오후';
 				} else if (range[1] === 24) {
@@ -106,7 +107,10 @@ wwm.confirm = (function() {
 		history.pushState({mod: 'room'}, '', '/room/' + stMap.rid);
 		jqMap.$con.fadeOut('slow');
 	};
-	toKakao = function() {};
+	toKakao = function() {
+		/* TODO: kakao에 결과 링크 보내기 */
+		console.log('kakao send');
+	};
 	toFacebook = function() {
 		FB.ui({
 			method: 'send',

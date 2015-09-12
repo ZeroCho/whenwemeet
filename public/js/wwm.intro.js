@@ -24,13 +24,13 @@ wwm.intro = (function() {
 		}
 	};
 	checkPhase = function () {
-		var phase = stMap.phase || parseInt(jqMap.$main.find('div').attr('class').slice(6));
+		var phase = stMap.phase || parseInt(jqMap.$main.find('div').attr('class').slice(6), 10);
 		switch (phase) {
 			case 0:
 				jqMap.$main.find('.intro-logo').showSVGLogo(100);
 				break;
 			case 1:
-				corbounce(jqMap.$main.find('#arrow-to-modal'));
+				bounce(jqMap.$main.find('#arrow-to-modal'));
 				break;
 			case 2:
 				jqMap.$main.find('#intro-create-room, #arrow-to-create').css('left', $(window).width() * 0.5 - 50);
@@ -56,6 +56,7 @@ wwm.intro = (function() {
 				jqMap.$main.find('.intro-wrapper').css({background: 'white', opacity: 0.9});
 				break;
 			default:
+				break;
 		}
 	};
 	toNextPhase = function () {

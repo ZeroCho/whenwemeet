@@ -40,7 +40,7 @@
 	<script src="/js/wwm.confirm.js"></script>
 	<script>
 		$(function () {
-			var KAKAO_KEY = 'a35623411563ec424430d3bd5dc7a93e';
+			var kakaoKey = 'a35623411563ec424430d3bd5dc7a93e';
 			$.ajaxSetup({cache: true});
 			$.getScript('//connect.facebook.net/ko_KR/sdk.js', function () {
 				FB.init({
@@ -50,7 +50,7 @@
 				});
 			});
 			Kakao.cleanup();
-			Kakao.init(KAKAO_KEY);
+			Kakao.init(kakaoKey);
 			wwm.initModule();
 			{@select key="{mod}"}
 				{@eq value="room"}
