@@ -66,6 +66,6 @@
 			{/select}
 		});
 	</script>
-	{>"_partial"/}
+	{>"./_partial"/}
 </body>
 </html>

@@ -852,7 +852,7 @@ wwm.room = (function(){
 			id: null,
 			name: null,
 			confirm: false,
-			personColor: 0
+			order: 0
 		},
 		onlineList: new Array(8),
 		maker: 0,
@@ -1028,7 +1028,7 @@ wwm.room = (function(){
 		console.log('findInfo', id);
 		stMap.memberList.forEach(function(member) {
 			if (id == member.id) {
-				info.personColor = i;
+				info.order = i;
 				info.name = member.name;
 				info.color = cfMap.colorList[i];
 			}
@@ -1046,7 +1046,7 @@ wwm.room = (function(){
 		}
 		banPromise = wwm.model.ban(banned, e.data.rid);
 		banPromise.done(function() {
-			socket.emit('ban', {id: banned, order: findInfo(banned).personColor});
+			socket.emit('ban', {id: banned, order: findInfo(banned).order});
 		});
 		banPromise.fail(function(err) {
 			console.log(err);
@@ -1167,7 +1167,7 @@ wwm.room = (function(){
 			arr = stMap.nightArray;
 		}
 		arr.forEach(function(tr, i) {
-			if (tr[day].indexOf(stMap.myInfo.personColor) == -1) {
+			if (tr[day].indexOf(stMap.myInfo.order) == -1) {
 				allSelected = false;
 				dayList.push([i, day]);
 			}
@@ -1178,10 +1178,10 @@ wwm.room = (function(){
 				dayList.push([i, day]);
 			});
 			$(this).removeClass('selected');
-			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: dayList});
+			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: dayList});
 		} else {
 			$(this).addClass('selected');
-			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: dayList});
+			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: dayList});
 		}
 	};
 	onClickTime = function() {
@@ -1197,7 +1197,7 @@ wwm.room = (function(){
 		}
 		console.log(arr[time]);
 		arr[time].forEach(function(target, i) {
-			if (target.indexOf(stMap.myInfo.personColor) == -1) {
+			if (target.indexOf(stMap.myInfo.order) == -1) {
 				allSelected = false;
 				timeList.push([time, i]);
 			}
@@ -1208,10 +1208,10 @@ wwm.room = (function(){
 				timeList.push([time, i]);
 			});
 			$(this).removeClass('selected');
-			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
+			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: timeList});
 		} else {
 			$(this).addClass('selected');
-			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: timeList});
+			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: timeList});
 		}
 	};
 	onClickCell = function() {
@@ -1224,16 +1224,16 @@ wwm.room = (function(){
 			arr = stMap.nightArray;
 		}
 		cell = arr[this.parentNode.rowIndex - 1][this.cellIndex - 1];
-		console.log('onclickCell', this.parentNode.rowIndex - 1, this.cellIndex - 1, cell, cell.length, stMap.myInfo.personColor);
+		console.log('onclickCell', this.parentNode.rowIndex - 1, this.cellIndex - 1, cell, cell.length, stMap.myInfo.order);
 		if (cell) {
-			console.log(cell.length, cell.indexOf(stMap.myInfo.personColor) > -1);
-			if (cell.length && cell.indexOf(stMap.myInfo.personColor) > -1) {
-				socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: tableToArray([this], false)});
+			console.log(cell.length, cell.indexOf(stMap.myInfo.order) > -1);
+			if (cell.length && cell.indexOf(stMap.myInfo.order) > -1) {
+				socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: tableToArray([this], false)});
 			} else {
-				socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: tableToArray([this], true)});
+				socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: tableToArray([this], true)});
 			}
 		} else {
-			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.personColor, arr: tableToArray([this], true)});
+			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: tableToArray([this], true)});
 		}
 	};
 	excludeDay = function() {
@@ -1246,12 +1246,12 @@ wwm.room = (function(){
 			arr.push([i, idx]);
 		}
 		if ($(this).hasClass('selected')) {
-			socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
-			socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
+			socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.order, arr: arr});
+			socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.order, arr: arr});
 			$(this).removeClass('selected');
 		} else {
-			socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
-			socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
+			socket.emit('busy', {cur: 'day', sid: stMap.myInfo.order, arr: arr});
+			socket.emit('busy', {cur: 'night', sid: stMap.myInfo.order, arr: arr});
 			$(this).addClass('selected');
 		}
 	};
@@ -1273,12 +1273,12 @@ wwm.room = (function(){
 			}
 			console.log('arr', arr);
 			if ($(this).hasClass('selected')) {
-				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
-				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
+				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.order, arr: arr});
+				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.order, arr: arr});
 				$(this).removeClass('selected');
 			} else { /* no selected */
-				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
-				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
+				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.order, arr: arr});
+				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.order, arr: arr});
 				$(this).addClass('selected');
 			} /* not before */
 		} else { /* not after */
@@ -1290,12 +1290,12 @@ wwm.room = (function(){
 			}
 			console.log('arr', arr);
 			if ($(this).hasClass('selected')) {
-				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
-				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
+				socket.emit('not-busy', {cur: 'day', sid: stMap.myInfo.order, arr: arr});
+				socket.emit('not-busy', {cur: 'night', sid: stMap.myInfo.order, arr: arr});
 				$(this).removeClass('selected');
 			} else { /* no selected */
-				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.personColor, arr: arr});
-				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.personColor, arr: arr});
+				socket.emit('busy', {cur: 'day', sid: stMap.myInfo.order, arr: arr});
+				socket.emit('busy', {cur: 'night', sid: stMap.myInfo.order, arr: arr});
 				$(this).addClass('selected');
 			}
 		} /* not after */
@@ -1453,18 +1453,18 @@ wwm.room = (function(){
 		stMap.myInfo.name = userInfo.name;
 		stMap.memberList.every(function(member, i) {
 			if (member.id == userInfo.id) {
-				stMap.myInfo.personColor = i;
+				stMap.myInfo.order = i;
 				stMap.myInfo.confirm = member.confirm;
 				return false;
 			}
 			return true;
 		});
-		stMap.onlineList[stMap.myInfo.personColor] = true;
+		stMap.onlineList[stMap.myInfo.order] = true;
 		socket.emit('enter', {
 			'id': stMap.myInfo.id,
 			'rid': stMap.rid,
 			'name': stMap.myInfo.name,
-			'color': stMap.myInfo.personColor,
+			'color': stMap.myInfo.order,
 			'picture': userInfo.picture
 		});
 		parser = {
@@ -1571,14 +1571,14 @@ wwm.room = (function(){
 			socket.on('ban', function(data) {
 				var i;
 				/* 강퇴당한 경우. */
-				if (stMap.myInfo.personColor == data.order) {
+				if (stMap.myInfo.order == data.order) {
 					alert('강퇴당하셨습니다...');
 					wwm.lobby.initModule(jqMap.$con);
 					return;
 				}
 				/* 다른 사람이 강퇴당한 경우. */
-				if (stMap.myInfo.personColor > data.order) {
-					stMap.myInfo.personColor--;
+				if (stMap.myInfo.order > data.order) {
+					stMap.myInfo.order--;
 				}
 				alert(findInfo(id).name + '님이 강제퇴장 되었습니다. 잘가요!');
 				stMap.memberList.every(function(member, i) {

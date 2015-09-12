@@ -15,7 +15,7 @@ wwm.lobby = (function (){
 		});
 		getListPromise.fail(function (err) {
 			if (err === 'no_room') {
-				jqMap.$list.html('<span class="info-message">방이 없습니다. 방을 만들어보세요.</span>');
+				jqMap.$list.html('<span class="info-message">방이 없습니다. +를 눌러 방을 만들어보세요.</span>');
 				return;
 			}
 			console.log(err);
@@ -29,12 +29,16 @@ wwm.lobby = (function (){
 		var query = e;
 		var spinner = new Spinner().spin();
 		var searchPromise;
-		if (typeof e !== 'string') {
+		if (typeof query !== 'string') {
 			query = $(this).parent().prev().val().trim();
 			e.preventDefault();
 		}
+		if (query === '') {
+			refreshList();
+			return;
+		}
 		history.pushState({mod: 'search', query: query}, '', '/search/' + query);
-		console.log('query', query);
+		console.log('query', query, typeof query);
 		jqMap.$list.append(spinner.el);
 		searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
@@ -109,7 +113,6 @@ wwm.lobby = (function (){
 				}
 			}
 		}
-		console.log(rid);
 		data = {
 			rid: rid,
 			pw: pw,

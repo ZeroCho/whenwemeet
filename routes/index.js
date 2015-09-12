@@ -3,6 +3,7 @@ var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://zero:Wpfhsms0!@ds031873.mongolab.com:31873/heroku_lhdjlrwx';
 var db, memberCollection, roomCollection;
+var nodemailer = require('nodemailer');
 MongoClient.connect(url, function(err, database) {
 	if (err) {
 		console.error('connectionerror:' + err);
@@ -26,13 +27,13 @@ router.get('/lobby/:id', function(req, res) {
 		id: id
 	});
 });
-router.get('/debug', function(req, res) {
-	res.render('debug', {
-		title: 'Debug Mod'
-	});	
-});
 router.get('/login', function(req, res) {
 	res.render('debug', {
+		title: '우리언제만나'
+	});
+});
+router.get('/search', function(req, res) {
+	res.render('index', {
 		title: '우리언제만나'
 	});
 });
@@ -140,7 +141,34 @@ router.post('/confirm/:rid', function(req, res) {
 		}
 	});
 });
-
+router.post('/report', function(req, res) {
+	var id = req.body.id;
+	var name = req.body.name;
+	var rid = req.body.rid;
+	var title = req.body.title;
+	var content = req.body.content;
+	var date = req.body.date;
+	var smtpTransport = nodemailer.createTransport({
+		service: 'Gmail',
+		auth: {
+			user: 'zerohch0@gmail.com',
+			pass: 'pswdofzer0'
+		}
+	});
+	var mailOptions = {
+		from: 'WhenWeMeet <zerohcho0@gmail.com>',
+		to: 'zerohch0@gmail.com',
+		subject: title,
+		html: '<h2>id: ' + id + ' name: ' + name + '</h2><h3>rid: ' + rid +'</h3><h4>' + date + '</h4>' + '<p>' + content + '</p>'
+	};
+	smtpTransport.sendMail(mailOptions, function(error, info){
+		if (error){
+			console.log(error);
+		} else {
+			res.send("Message sent : " + info.response);
+		}
+	});
+});
 router.post('/addroom/:rid', function (req, res) {
 	var rid = req.params.rid;
 	var maker = req.body.maker;
@@ -324,7 +352,6 @@ router.post('/deleteroom/:rid', function (req, res) {
 	});
 	
 });
-
 
 router.post('/search/:query', function (req, res) {
 	var query = req.params.query;

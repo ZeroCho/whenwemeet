@@ -3,7 +3,7 @@
  */
 wwm.model = (function () {
 	'use strict';
-	var join, getRoomList, getRoomInfo, getUser, searchList, createRoom, enterRoom,
+	var join, getRoomList, getRoomInfo, getUser, searchList, createRoom, enterRoom, report,
 		banPerson, changeTitle, changeLimit, confirm, deleteRoom, introDone, initModule;
 	join = function(data) {
 		var deferred = $.Deferred();
@@ -174,6 +174,16 @@ wwm.model = (function () {
 		});
 		return deferred.promise();
 	};
+	report = function(data) {
+		var deferred = $.Deferred();
+		$.post('/report', data).done(function (res) {
+			console.log(res);
+			deferred.resolve(res);
+		}).fail(function(err){
+			deferred.reject(err);
+		});
+		return deferred.promise();
+	};
 	initModule = function() {
 		if (localStorage.login) {
 			window.userInfo = JSON.parse(localStorage.login);
@@ -195,6 +205,7 @@ wwm.model = (function () {
 		confirm: confirm,
 		join: join,
 		getRoomInfo: getRoomInfo,
-		introDone: introDone
+		introDone: introDone,
+		report: report
 	};
 }());

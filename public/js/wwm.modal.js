@@ -1,7 +1,7 @@
 wwm.modal = (function (){
 	'use strict';
 	var jqMap;
-	var setJqMap, onCloseModal, createRoom, initModule;
+	var setJqMap, closeModal, createRoom, report, initModule;
 	setJqMap = function($con) {
 		jqMap = {
 			$con: $con,
@@ -11,12 +11,13 @@ wwm.modal = (function (){
 			$password: $con.find('#room-password'),
 			$createRoom: $con.find('#create-room-btn'),
 			$reportTitle: $con.find('#report-title'),
+			$reportHidden: $con.find('#report-hidden'),
 			$reportContent: $con.find('#report-content'),
 			$report: $con.find('#report-btn')
 		};
 	};
-	onCloseModal = function(e) {
-		e.preventDefault();
+	closeModal = function(e) {
+		if (e)	e.preventDefault();
 		wwm.shell.modal.fadeOut('slow');
 	};
 	createRoom = function(e) {
@@ -52,11 +53,35 @@ wwm.modal = (function (){
 			wwm.shell.modal.fadeOut('slow');
 		});
 		createRoomPromise.fail(function (err) {
-			console.log(err);
+			console.error(err);
 			alert(err);
 		});
 		createRoomPromise.always(function () {
 			$(spinner.el).remove();
+		});
+	};
+	report = function (e) {
+		var title = jqMap.$reportTitle.val().trim();
+		var content = jqMap.$reportContent.val().trim();
+		var data = {
+			id: userInfo.id,
+			rid: userInfo.rid,
+			name: userInfo.name,
+			title: title,
+			content: content,
+			date: new Date().toString()
+		};
+		var reportPromise;
+		e.preventDefault();
+		reportPromise = wwm.model.report(data);
+		reportPromise.done(function (res) {
+			alert('전송되었습니다. 빠른 시일 내에 조치하겠습니다.');
+			console.log(res);
+			closeModal();
+		});
+		reportPromise.fail(function (err) {
+			console.error(err);
+			alert(err);
 		});
 	};
 	initModule = function($target) {
@@ -64,8 +89,9 @@ wwm.modal = (function (){
 		setJqMap(wwm.shell.modal);
 		wwm.shell.modal.fadeIn('slow');
 		jqMap.$roomTitle.focus();
-		jqMap.$close.click(onCloseModal);
+		jqMap.$close.click(closeModal);
 		jqMap.$createRoom.click(createRoom);
+		jqMap.$report.click(report);
 	};
 	return {
 		initModule: initModule

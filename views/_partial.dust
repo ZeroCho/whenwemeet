@@ -110,7 +110,7 @@
 			</div>
 		</div>
 		<footer id="aside-footer">
-			<button class="flat-btn" id="report-error">오류 제보</button>
+			<button class="flat-btn" id="report-error">오류 및 건의사항</button>
 			<button class="flat-btn" id="back-to-lobby">로비</button>
 			<button class="flat-btn" id="quit">나가기<i class="fa fa-signout"></i></button>
 		</footer>
@@ -540,7 +540,7 @@
 	</div>
 </script>
 <script type="text/html" id="wwm-report">
-	<header id="report-header"><h1>오류 제보</h1></header>
+	<header id="report-header"><h1>오류 및 건의사항</h1></header>
 	<form>
 		<main id="report-main">
 			<div class="form-group">
@@ -549,7 +549,7 @@
 			</div>
 			<div class="form-group">
 				<label for="report-content">내용</label>
-				<textarea id="report-content" placeholder="오류 내용을 적어주세요."></textarea>
+				<textarea id="report-content" placeholder="오류 및 건의사항을 적어주세요."></textarea>
 			</div>
 		</main>
 		<footer id="report-footer">

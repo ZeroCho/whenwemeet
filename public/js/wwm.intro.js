@@ -30,7 +30,7 @@ wwm.intro = (function() {
 				jqMap.$main.find('.intro-logo').showSVGLogo(100);
 				break;
 			case 1:
-				bounce(jqMap.$main.find('#arrow-to-modal'));
+				corbounce(jqMap.$main.find('#arrow-to-modal'));
 				break;
 			case 2:
 				jqMap.$main.find('#intro-create-room, #arrow-to-create').css('left', $(window).width() * 0.5 - 50);

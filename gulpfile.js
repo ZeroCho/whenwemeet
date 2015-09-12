@@ -14,31 +14,39 @@ var	plumber = require('gulp-plumber');
 var	path = require('path');
 
 var	dir = {
+	public: {
+		root: 'public/'
+	},
 	sass: {
+		root: 'public/sass/',
 		src: 'public/sass/*.sass',
 		cssSrc: 'public/css',
 		compassSrc: 'public/sass'
 	},
+	css: {
+		root: 'public/css/'
+	},
 	js: {
+		root: 'public/js/',
 		src: 'public/js/*.js',
-		filename: 'whenwemeet.js',
-		dest: 'public/dist/'
+		filename: 'whenwemeet.js'
 	},
 	dust: {
 		src: 'views/*.dust'
 	},
 	dist: {
+		root: 'public/dist/',
 		js: 'public/dist/whenwemeet.js',
 		css: 'public/dist/whenwemeet.css'
 	},
 	www: {
-		index: 'www',
+		root: 'www/',
 		dist: 'www/dist/'
 	}
 };
 	
 gulp.task('default', ['product']);
-gulp.task('build', ['clean', 'styles', 'scripts']);
+gulp.task('build', ['clean', 'styles', 'scripts', 'dust']);
 gulp.task('product', ['build', 'serve', 'watch']);
 gulp.task('watch', ['clean'], function () {
 	livereload.listen();
@@ -59,7 +67,7 @@ gulp.task('watch', ['clean'], function () {
 	//gulp.watch(['public/phonegapHandler.js'], function (event) {
 	//	gulp.src(event.path)
 	//		.pipe(plumber())
-	//		.pipe(gulp.dest(dir.www.index))
+	//		.pipe(gulp.dest(dir.www.root))
 	//		.pipe(livereload());
 	//});
 });
@@ -77,15 +85,15 @@ gulp.task('styles', function () {
 	//		sass: dir.sass.compassSrc
 	//	}))
 		.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie9', 'opera 12.1', 'ios 6'))
-	//	.pipe(rename('whenwemeet.css'))
-	//	.pipe(gulp.dest(dir.js.dest))
+		.pipe(rename('whenwemeet.css'))
+	 	.pipe(gulp.dest(dir.dist.root))
 		.pipe(minifycss())
 		.pipe(rename({suffix: '.min'}))
-		.pipe(gulp.dest(dir.js.dest));
-	//.pipe(gulp.dest(dir.www.dist));
+		.pipe(gulp.dest(dir.dist.root))
+		.pipe(gulp.dest(dir.www.dist));
 });
 gulp.task('clean', function () {
-	del([dir.js.dest + 'whenwemeet.min.js', dir.js.dest + 'whenwemeet.js']);
+	del([dir.dist.root + 'whenwemeet.min.js', dir.dist.root + 'whenwemeet.js']);
 });
 
 gulp.task('js:concat', function () {
@@ -98,29 +106,28 @@ gulp.task('js:concat', function () {
 		])
 		.pipe(plumber())
 		.pipe(concat(dir.js.filename))
-		//.pipe(gulp.dest(dir.www.dist))
-		.pipe(gulp.dest(dir.js.dest));
+		.pipe(gulp.dest(dir.www.dist))
+		.pipe(gulp.dest(dir.dist.root));
 });
 gulp.task('js:uglify', ['js:concat'], function () {
-	gulp.src(dir.js.dest + dir.js.filename)
+	gulp.src(dir.dist.root + dir.js.filename)
 		.pipe(plumber())
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
-		//.pipe(gulp.dest(dir.www.dist))
-		.pipe(gulp.dest(dir.js.dest));
+		.pipe(gulp.dest(dir.www.dist))
+		.pipe(gulp.dest(dir.dist.root));
 });
 gulp.task('dust', function () {
-	gulp.src('views/index.dust')
+	gulp.src(dir.dust.src)
 		.pipe(plumber())
 		.pipe(dusthtml({
-			whitespace: true,
+			whitespace: false,
 			data: {
 				title: '우리언제만나'
 			}
 		}))
-		.pipe(gulp.dest('public/'))
-		//.pipe(gulp.dest(dir.www.index))
+		.pipe(gulp.dest(dir.www.root))
 		.pipe(livereload());
 	//gulp.src('public/wwm.appcache')
-	//	.pipe(gulp.dest(dir.www.index));
+	//	.pipe(gulp.dest(dir.www.root));
 });
