@@ -18,7 +18,7 @@ wwm.lobby = (function (){
 				jqMap.$list.html('<span class="info-message">방이 없습니다. +를 눌러 방을 만들어보세요.</span>');
 				return;
 			}
-			console.log(err);
+			console.error(err);
 			jqMap.$list.html(err.responseText);
 		});
 		getListPromise.always(function() {
@@ -38,7 +38,6 @@ wwm.lobby = (function (){
 			return;
 		}
 		history.pushState({mod: 'search', query: query}, '', '/search/' + query);
-		console.log('query', query, typeof query);
 		jqMap.$list.append(spinner.el);
 		searchPromise = wwm.model.searchList(query);
 		searchPromise.done(function (res) {
@@ -49,7 +48,7 @@ wwm.lobby = (function (){
 				jqMap.$list.html('<span class="info-message">검색 결과가 없습니다.</span>');
 				return;
 			}
-			console.log(err);
+			console.error(err);
 			jqMap.$list.html(err.responseText);
 		});
 		searchPromise.always(function() {
@@ -94,6 +93,7 @@ wwm.lobby = (function (){
 		jqMap.$list.html($frag);
 	};
 	logout = function() {
+		console.info('logout');
 		history.pushState({mod: 'logout'}, '', '/');
 		delete window.userInfo;
 		localStorage.removeItem('login');
@@ -110,7 +110,6 @@ wwm.lobby = (function (){
 			rid = $(this).data('rid');
 			if ($(this).has('.locked').length) {
 				pw = prompt('비밀번호', '');
-				console.log(pw);
 				if (pw === null || pw.trim() === '') {
 					$(spinner.el).remove();
 					return;
@@ -126,7 +125,6 @@ wwm.lobby = (function (){
 		};
 		enterRoomPromise = wwm.model.enterRoom(data);
 		enterRoomPromise.done(function(res) {
-			console.log(res);
 			if (res === 'no_room') {
 				alert('방이 없습니다');
 				return;
@@ -144,12 +142,12 @@ wwm.lobby = (function (){
 				return;
 			}
 			res.current = $this.find('.current').text();
-			console.log('enter room post result', res);
+			console.info('enter room post result', res);
 			history.pushState({mod: 'room', data: res}, '', '/room/' + rid);
 			wwm.room.initModule(res, 'enter');
 		});
 		enterRoomPromise.fail(function(err) {
-			console.log(err.responseText);
+			console.error(err.responseText);
 			alert('오류발생! 콘솔확인');
 		});
 		enterRoomPromise.always(function() {
@@ -157,7 +155,7 @@ wwm.lobby = (function (){
 		});
 	};
 	refreshList = function() {
-		console.log('refreshlist');
+		console.info('refreshlist');
 		getList();
 	};
 	refreshProfile = function() {
@@ -234,7 +232,7 @@ wwm.lobby = (function (){
 			picture: picture
 		}, function(err, out) {
 			if (err) {
-				console.log(err);
+				console.error(err);
 				alert('rendering error! 콘솔 확인');
 			} else {
 				wwm.shell.view.html(out).fadeIn('slow');
@@ -251,7 +249,6 @@ wwm.lobby = (function (){
 				socket.on('titleChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
-						console.log(idx);
 						$(item).data('rid');
 					}).get();
 					rid.every(function(room, i) {
@@ -265,7 +262,6 @@ wwm.lobby = (function (){
 				socket.on('currentChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
-						console.log(idx);
 						$(item).data('rid');
 					}).get();
 					rid.every(function(room, i) {
@@ -279,7 +275,6 @@ wwm.lobby = (function (){
 				socket.on('limitChanged', function(data) {
 					var $rooms = $('.room');
 					var rid = $rooms.map(function(idx, item) {
-						console.log(idx);
 						$(item).data('rid');
 					}).get();
 					rid.every(function(room, i) {
