@@ -52,13 +52,19 @@ gulp.task('watch', ['clean'], function () {
 	livereload.listen();
 	gulp.watch(dir.js.src, ['scripts'], function (e) {
 		console.log('watch scripts', e, e.path);
+		gulp.src(e.path)
+			.pipe(plumber())
+			.pipe(livereload());
 	});
 	gulp.watch(dir.sass.src, ['styles'], function (e) {
 		console.log('watch sass', e, e.path);
+		gulp.src(e.path)
+			.pipe(plumber())
+			.pipe(livereload());
 	});
-	//gulp.watch(dir.dust.src, ['dust'], function (e) {
-	//	console.log('watch dust', e, e.path);
-	//});
+	gulp.watch(dir.dust.src, ['dust'], function (e) {
+		console.log('watch dust', e, e.path);
+	});
 	gulp.watch([dir.dist.css, dir.dist.js], function (event) {
 		gulp.src(event.path)
 			.pipe(plumber())

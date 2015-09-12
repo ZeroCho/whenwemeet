@@ -1409,6 +1409,7 @@ wwm.room = (function(){
 	showMembers = function() {
 		console.log('showMembers', stMap.memberList);
 		jqMap.$memberList.find('ul').empty();
+		console.log(cfMap.memberList);
 		stMap.memberList.forEach(function(member, i) {
 			dust.render(dust.loadSource(dust.compile(cfMap.memberList)), {id: member.id, color: cfMap.colorList[i], name: member.name, picture: member.picture}, function(err, out){
 				if (err) {

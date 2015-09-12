@@ -29,6 +29,7 @@
 	<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 	<script src="/bower_components/spin.js/spin.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
+	{>"./_partial"/}
 	<script src="/js/wwm.js"></script>
 	<script src="/js/wwm.model.js"></script>
 	<script src="/js/wwm.shell.js"></script>
@@ -39,33 +40,32 @@
 	<script src="/js/wwm.room.js"></script>
 	<script src="/js/wwm.confirm.js"></script>
 	<script>
-		$(function () {
-			var kakaoKey = 'a35623411563ec424430d3bd5dc7a93e';
-			$.ajaxSetup({cache: true});
-			$.getScript('//connect.facebook.net/ko_KR/sdk.js', function () {
-				FB.init({
-					appId: '1617440885181938',
-					xfbml: true,
-					version: 'v2.4'
-				});
+	$(function () {
+		var kakaoKey = 'a35623411563ec424430d3bd5dc7a93e';
+		$.ajaxSetup({cache: true});
+		$.getScript('//connect.facebook.net/ko_KR/sdk.js', function () {
+			FB.init({
+				appId: '1617440885181938',
+				xfbml: true,
+				version: 'v2.4'
 			});
-			Kakao.cleanup();
-			Kakao.init(kakaoKey);
-			wwm.initModule();
-			{@select key="{mod}"}
-				{@eq value="room"}
-					wwm.lobby.enterRoom('{rid}');
-				{/eq}
-				{@eq value="search"}
-					wwm.lobby.searchRoom('{query}');
-				{/eq}
-				{@eq value="result"}
-					wwm.lobby.enterRoom('{rid}');
-					wwm.lobby.showResult('{rid}');
-				{/eq}
-			{/select}
 		});
+		Kakao.cleanup();
+		Kakao.init(kakaoKey);
+		wwm.initModule();
+		{@select key="{mod}"}
+			{@eq value="room"}
+				wwm.lobby.enterRoom('{rid}');
+			{/eq}
+			{@eq value="search"}
+				wwm.lobby.searchRoom('{query}');
+			{/eq}
+			{@eq value="result"}
+				wwm.lobby.enterRoom('{rid}');
+				wwm.lobby.showResult('{rid}');
+			{/eq}
+		{/select}
+	});
 	</script>
-	{>"./_partial"/}
 </body>
 </html>
