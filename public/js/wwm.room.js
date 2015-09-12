@@ -339,6 +339,19 @@ wwm.room = (function(){
 		} else {
 			arr = stMap.nightArray;
 		}
+		if (day === -1 && confirm('전체를 선택하거나 취소합니다.')) {
+			arr.forEach(function(tr, i) {
+				tr.forEach(function(cell, j) {
+					dayList.push([i, j]);
+				});
+			});
+			if (arr[0][0].length) {
+				socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: dayList});
+			} else {
+				socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: dayList});
+			}
+			return;
+		}
 		arr.forEach(function(tr, i) {
 			if (tr[day].indexOf(stMap.myInfo.order) === -1) {
 				allSelected = false;
@@ -760,13 +773,6 @@ wwm.room = (function(){
 			return true;
 		});
 		stMap.onlineList[stMap.myInfo.order] = true;
-		socket.emit('enter', {
-			'id': stMap.myInfo.id,
-			'rid': stMap.rid,
-			'name': stMap.myInfo.name,
-			'color': stMap.myInfo.order,
-			'picture': userInfo.picture
-		});
 		parser = {
 			name: stMap.myInfo.name,
 			title: stMap.title,
@@ -812,6 +818,13 @@ wwm.room = (function(){
 				jqMap.$roomTitle.addClass(cfMap.colorList[stMap.myInfo.order] + '-text');
 				showMembers();
 				handleSocketEvent();
+				socket.emit('enter', {
+					'id': stMap.myInfo.id,
+					'rid': stMap.rid,
+					'name': stMap.myInfo.name,
+					'color': stMap.myInfo.order,
+					'picture': userInfo.picture
+				});
 				jqMap.$table.find('td').click(onClickCell);
 				jqMap.$explodeRoom.click({rid: stMap.rid}, deleteRoom);
 				jqMap.$toLobbyBtn.click({rid: stMap.rid}, toLobby);

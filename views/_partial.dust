@@ -138,7 +138,7 @@
 		</div>
 		<table id="day-table" border="1">
 			<tr>
-				<th></th>
+				<th>ALL</th>
 				<th>일</th>
 				<th>월</th>
 				<th>화</th>
@@ -270,7 +270,7 @@
 		</table>
 		<table id="night-table" border="1" hidden>
 			<tr>
-				<th></th>
+				<th>ALL</th>
 				<th>일</th>
 				<th>월</th>
 				<th>화</th>
