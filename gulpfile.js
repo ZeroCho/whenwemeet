@@ -46,7 +46,7 @@ var	dir = {
 };
 	
 gulp.task('default', ['product']);
-gulp.task('build', ['clean', 'styles', 'scripts', 'dust']);
+gulp.task('build', ['styles', 'scripts', 'dust']);
 gulp.task('product', ['build', 'serve', 'watch']);
 gulp.task('watch', ['clean'], function () {
 	livereload.listen();
@@ -77,7 +77,7 @@ gulp.task('serve', ['build'], function () {
 	});
 });
 gulp.task('scripts', ['js:uglify']);
-gulp.task('styles', ['clean'] ,function () {
+gulp.task('styles',function () {
 	gulp.src(dir.dist.css)
 		.pipe(plumber())
 	//	.pipe(compass({
@@ -87,6 +87,7 @@ gulp.task('styles', ['clean'] ,function () {
 		.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie9', 'opera 12.1', 'ios 6'))
 		.pipe(rename('whenwemeet.css'))
 	 	.pipe(gulp.dest(dir.dist.root))
+		.pipe(gulp.dest(dir.www.dist))
 		.pipe(minifycss())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest(dir.dist.root))
@@ -106,16 +107,17 @@ gulp.task('js:concat', ['styles'], function () {
 		])
 		.pipe(plumber())
 		.pipe(concat(dir.js.filename))
-		.pipe(gulp.dest(dir.www.dist))
-		.pipe(gulp.dest(dir.dist.root));
+		.pipe(gulp.dest(dir.dist.root))
+		.pipe(gulp.dest(dir.www.dist));
+
 });
 gulp.task('js:uglify', ['js:concat'], function () {
 	gulp.src(dir.dist.root + dir.js.filename)
 		.pipe(plumber())
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
-		.pipe(gulp.dest(dir.www.dist))
-		.pipe(gulp.dest(dir.dist.root));
+		.pipe(gulp.dest(dir.dist.root))
+		.pipe(gulp.dest(dir.www.dist));
 });
 gulp.task('dust', function () {
 	gulp.src(dir.dust.src)

@@ -5,15 +5,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<title>우리 언제 만나</title>
-	<link rel="stylesheet" href="dist/whenwemeet.css"/>
+	<link rel="stylesheet" href="dist/whenwemeet.min.css"/>
 </head>
 <body>
 <h1>{message}</h1>
 <p>{error.status}</p>
 <pre>{error.stack}</pre>
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/dustjs-linkedin/dist/dust-full.js"></script>
-<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
+<script src="/bower_components/dustjs-linkedin-helpers/dist/dust-helpers.min.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script src="/bower_components/spin.js/spin.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script src="dist/whenwemeet.js"></script>
 </body>
 </html>
