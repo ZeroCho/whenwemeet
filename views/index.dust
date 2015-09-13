@@ -29,7 +29,7 @@
 	<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 	<script src="/bower_components/spin.js/spin.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="cordova.js"></script>
+	<script src="/cordova.js"></script>
 	{>"./_partial"/}
 	<script src="/dist/whenwemeet.js"></script>
 	<script>

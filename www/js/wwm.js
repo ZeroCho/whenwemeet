@@ -7,6 +7,11 @@ window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
 	}
 	console.log('Error: ', errorMsg, ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' + errorObj);
 };
+window.oncontextmenu = function(event) {
+	event.preventDefault();
+	event.stopPropagation();
+	return false;
+};
 $.fn.showSVGLogo = function(width) {
 	var $logo = $($('#wwm-svg-logo').html());
 	$logo.width(width || '100%');

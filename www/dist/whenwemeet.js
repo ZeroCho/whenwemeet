@@ -7,6 +7,11 @@ window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
 	}
 	console.log('Error: ', errorMsg, ' Script: ' + url + ' Line: ' + lineNumber + ' Column: ' + column + ' StackTrace: ' + errorObj);
 };
+window.oncontextmenu = function(event) {
+	event.preventDefault();
+	event.stopPropagation();
+	return false;
+};
 $.fn.showSVGLogo = function(width) {
 	var $logo = $($('#wwm-svg-logo').html());
 	$logo.width(width || '100%');
@@ -1566,6 +1571,7 @@ wwm.room = (function(){
 	checkConfirmStatus = function() {
 		if (jqMap.$confirm.hasClass('confirmed')) {
 			alert('확정 상태가 해제됩니다.');
+			jqMap.$table.find('td').off('mouseover touchmove');
 			jqMap.$confirm.removeClass('confirmed');
 			stMap.myInfo.confirm = false;
 			socket.emit('confirmed', {id: stMap.myInfo.id, bool: false});
@@ -1662,22 +1668,22 @@ wwm.room = (function(){
 	onClickCell = function(e) {
 		var arr, cell;
 		checkConfirmStatus();
-		jqMap.$table.find('td').off('mouseover').on('mouseover', onClickCell);
-		/* 어레이를 발송 */
+		/* TODO: 모바일에서도 가능하게 만들기 - 현재 touchmove시 cell이 고정되어있음 */
+		jqMap.$table.find('td').off('mouseover touchmove').on('mouseover touchmove', onClickCell);
 		if (stMap.now === 'day') {
 			arr = stMap.dayArray;
 		} else {
 			arr = stMap.nightArray;
 		}
 		cell = arr[this.parentNode.rowIndex - 1][this.cellIndex - 1];
-		console.info('onclickCell', this.parentNode.rowIndex - 1, this.cellIndex - 1);
+		console.info('onclickCell', this.parentNode.rowIndex - 1, this.cellIndex - 1, this);
 		if (!stMap.currentCell) {stMap.currentCell = cell;}
 		if (stMap.clickMod === 'busy') { /* 연속 상황 중 busy */
-			if (e.type === 'mouseover' && stMap.currentCell === cell) {return;}
+			if ((e.type === 'mouseover' || e.type === 'touchmove') && stMap.currentCell === cell) {return;}
 			stMap.currentCell = cell;
 			socket.emit('busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: cellToCoord([this], false)});
 		} else if (stMap.clickMod === 'not-busy') { /* 연속 상황 중 not-busy */
-			if (e.type === 'mouseover' && stMap.currentCell === cell) {return;}
+			if ((e.type === 'mouseover' || e.type === 'touchmove') && stMap.currentCell === cell) {return;}
 			stMap.currentCell = cell;
 			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: cellToCoord([this], false)});
 		} else { /* 기본 상황 */
@@ -1691,7 +1697,7 @@ wwm.room = (function(){
 		}
 	};
 	onMouseupCell = function() {
-		jqMap.$table.find('td').off('mouseover');
+		jqMap.$table.find('td').off('mouseover touchmove');
 		stMap.clickMod = null;
 		stMap.currentCell = null;
 	};
@@ -2094,8 +2100,8 @@ wwm.room = (function(){
 					'color': stMap.myInfo.order,
 					'picture': userInfo.picture
 				});
-				jqMap.$table.find('td').mousedown(onClickCell);
-				jqMap.$table.find('td').mouseup(onMouseupCell);
+				jqMap.$table.find('td').on('mousedown touchstart', onClickCell);
+				jqMap.$table.find('td').on('mouseup touchend', onMouseupCell);
 				jqMap.$thDay.mousedown(onClickDay);
 				jqMap.$thDay.mouseup(onMouseupDay);
 				jqMap.$thTime.mousedown(onClickTime);
