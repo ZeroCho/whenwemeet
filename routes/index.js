@@ -28,7 +28,7 @@ router.get('/lobby/:id', function(req, res) {
 	});
 });
 router.get('/login', function(req, res) {
-	res.render('debug', {
+	res.render('index', {
 		title: '우리언제만나'
 	});
 });

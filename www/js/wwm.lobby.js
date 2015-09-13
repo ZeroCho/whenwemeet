@@ -12,8 +12,7 @@ wwm.lobby = (function (){
 		jqMap.$list.append(spinner.el);
 		getListPromise.done(function (res) {
 			showRooms(res);
-		});
-		getListPromise.fail(function (err) {
+		});		getListPromise.fail(function (err) {
 			if (err === 'no_room') {
 				jqMap.$list.html('<span class="info-message">방이 없습니다. +를 눌러 방을 만들어보세요.</span>');
 				return;
@@ -237,7 +236,7 @@ wwm.lobby = (function (){
 			} else {
 				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
-				jqMap.$main.showSVGLogo(100);
+				jqMap.$main.showSVGLogo();
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);

@@ -115,7 +115,7 @@ wwm.login = (function () {
 	initModule = function() {
 		wwm.shell.view.html($('#wwm-login').html());
 		setJqMap(wwm.shell.view);
-		jqMap.$logo.showSVGLogo(100);
+		jqMap.$logo.showSVGLogo();
 		jqMap.$logo.animate({height: '70%'});
 		jqMap.$wrapper.fadeIn('slow');
 		jqMap.$kakaoLogin.on({

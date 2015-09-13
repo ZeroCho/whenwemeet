@@ -622,11 +622,11 @@ td.busy .red, td.busy .orange, td.busy .yellow, td.busy .yellowgreen, td.busy .s
 }
 #admin-menu ul {
 	position: absolute;
-	left: 10px;
-	bottom: 120px;
+	left: 5px;
+	bottom: 123px;
 	background: white;
 	margin: 0 auto;
-	right: 10px;
+	right: 5px;
 	border: 1px solid silver;
 	box-shadow: 0 8px 6px -6px black;
 	display: none;
@@ -642,7 +642,7 @@ td.busy .red, td.busy .orange, td.busy .yellow, td.busy .yellowgreen, td.busy .s
 	cursor: pointer;
 }
 .red {
-	background: red;
+	background: crimson;
 }
 .orange {
 	background: orange;
@@ -657,13 +657,13 @@ td.busy .red, td.busy .orange, td.busy .yellow, td.busy .yellowgreen, td.busy .s
 	background: skyblue;
 }
 .purple {
-	background: purple;
+	background: mediumpurple;
 }
 .violet {
-	background: violet;
+	background: blueviolet;
 }
 .pink {
-	background: pink;
+	background: hotpink;
 }
 .online {
 	color: lawngreen;
@@ -671,12 +671,16 @@ td.busy .red, td.busy .orange, td.busy .yellow, td.busy .yellowgreen, td.busy .s
 .offline {
 	color: crimson;
 }
+.prepare {
+	text-decoration: line-through;
+	color: gray;
+}
 .confirmed span{
 	display: inline !important;
 	color: lawngreen !important;
 }
 .red-text {
-	color: red;
+	color: crimson;
 }
 .orange-text {
 	color: orange;
@@ -691,13 +695,13 @@ td.busy .red, td.busy .orange, td.busy .yellow, td.busy .yellowgreen, td.busy .s
 	color: skyblue;
 }
 .purple-text {
-	color: purple;
+	color: mediumpurple;
 }
 .violet-text {
-	color: violet;
+	color: blueviolet;
 }
 .pink-text {
-	color: pink;
+	color: hotpink;
 }
 
 #confirm-header {
