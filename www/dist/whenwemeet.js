@@ -1276,7 +1276,7 @@ wwm.room = (function(){
 	};
 	var jqMap;
 	var socket = io();
-	var setJqMap, createArray, cellToCoord, coordListToTable, renderTable, showMembers, addNewMember, showOnlineStatus,
+	var setJqMap, createArray, cellToCoord, coordListToTable, renderTable, showMembers, addNewMember, showOnlineStatus, checkCellStatus,
 		banPerson, changeTitle, changeLimit, changeCurrentNumber, onClickDay, onClickTime, onClickCell, onMouseupCell, onMouseupDay, onMouseupTime,
 		showAdminMenu, deleteRoom, checkConfirmStatus, toLobby, quitRoom, showReportModal, handleSocketEvent,
 		toggleTable, sendChat, toggleChatList, refreshTable, removeSchedule, findInfoById,
@@ -1664,6 +1664,9 @@ wwm.room = (function(){
 	onMouseupTime = function () {
 		jqMap.$thTime.off('mouseover');
 	};
+	checkCellStatus = function(cell) {
+
+	};
 	onClickCell = function(e) {
 		var arr, cell;
 		checkConfirmStatus();
@@ -1674,8 +1677,9 @@ wwm.room = (function(){
 		} else {
 			arr = stMap.nightArray;
 		}
+		checkCellStatus(this);
 		cell = arr[this.parentNode.rowIndex - 1][this.cellIndex - 1];
-		console.info('onclickCell', this.parentNode.rowIndex - 1, this.cellIndex - 1, this);
+		console.info('onclickCell', this.parentNode.rowIndex - 1, this.cellIndex - 1, e.type);
 		if (!stMap.currentCell) {stMap.currentCell = cell;}
 		if (stMap.clickMod === 'busy') { /* 연속 상황 중 busy */
 			if ((e.type === 'mouseover' || e.type === 'touchmove') && stMap.currentCell === cell) {return;}
@@ -1684,11 +1688,11 @@ wwm.room = (function(){
 		} else if (stMap.clickMod === 'not-busy') { /* 연속 상황 중 not-busy */
 			if ((e.type === 'mouseover' || e.type === 'touchmove') && stMap.currentCell === cell) {return;}
 			stMap.currentCell = cell;
-			socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: cellToCoord([this], false)});
+			socket.emit('not-busy', {rid: stMap.rid, cur: stMap.now, sid: stMap.myInfo.order, arr: cellToCoord([this], false)});
 		} else { /* 기본 상황 */
 			if (cell.length && cell.indexOf(stMap.myInfo.order) > -1) {
 				stMap.clickMod = 'not-busy';
-				socket.emit('not-busy', {cur: stMap.now, sid: stMap.myInfo.order, arr: cellToCoord([this], false)});
+				socket.emit('not-busy', {rid: stMap.rid, cur: stMap.now, sid: stMap.myInfo.order, arr: cellToCoord([this], false)});
 			} else {
 				stMap.clickMod = 'busy';
 				socket.emit('busy', {rid: stMap.rid, cur: stMap.now, sid: stMap.myInfo.order, arr: cellToCoord([this], true)});
@@ -2109,8 +2113,8 @@ wwm.room = (function(){
 					'order': stMap.myInfo.order,
 					'picture': userInfo.picture
 				});
-				jqMap.$table.find('td').on('mousedown touchstart', onClickCell);
-				jqMap.$table.find('td').on('mouseup touchend', onMouseupCell);
+				jqMap.$table.find('td').on('mousedown', onClickCell);
+				jqMap.$table.find('td').on('mouseup', onMouseupCell);
 				jqMap.$thDay.mousedown(onClickDay);
 				jqMap.$thDay.mouseup(onMouseupDay);
 				jqMap.$thTime.mousedown(onClickTime);
