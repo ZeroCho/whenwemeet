@@ -1,9 +1,9 @@
 <script type="text/html" id="wwm-svg-logo">
 	<svg version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
 	 y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve">
-	<foreignobject  x="20" y="0" height="260" width="260">
+	<foreignobject  x="20" y="0" height="263" width="263">
 		<body  xmlns="http://www.w3.org/1999/xhtml">
-			<table border="1" cellspacing="0" cellpadding="0" width="260">
+			<table border="1" cellspacing="0" cellpadding="0">
 				<tr height="87">
 					<td width="87" bgcolor="crimson"></td>
 					<td width="87"></td>
@@ -23,8 +23,8 @@
 		</body>
 	</foreignobject>
 	<g>
-		<path fill="#DC143C" d="M170,150h90c11.046,0,20,8.954,20,20v90c0,11.046-8.954,20-20,20h-90c-11.046,0-20-8.954-20-20v-90	C150,158.954,158.954,150,170,150z"/>
-		<polygon fill="#FFFFFF" points="182.5,172.5 257.5,172.5 202.5,241.563 257.5,241.563 252.5,257.5 172.5,257.5 227.5,188.438 177.5,188.438"/>
+		<path fill="#DC143C" d="M180,160h90c11.046,0,20,8.954,20,20v90c0,11.046-8.954,20-20,20h-90c-11.046,0-20-8.954-20-20v-90 C160,168.954,168.954,160,180,160z"/>
+		<polygon fill="#FFFFFF" points="192.5,182.5 267.5,182.5 212.5,251.563 267.5,251.563 262.5,267.5 182.5,267.5 237.5,198.438 187.5,198.438"/>
 	</g>
 	</svg>
 </script>
@@ -420,8 +420,8 @@
 		</div>
 	</main>
 	<footer id="room-footer">
-		<i class="chat-toggler fa fa-chevron-up"></i>
-		<div id="chat-wrapper" class="minified"><div id="chat-list"></div></div>
+		<i class="chat-toggler fa fa-chevron-down"></i>
+		<div id="chat-wrapper"><div id="chat-list"></div></div>
 		<div id="chat">
 			<form class="input-group">
 				<input id="chatbox" placeholder="채팅창"/>

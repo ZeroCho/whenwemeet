@@ -5,11 +5,11 @@
 var app = require('../app');
 var debug = require('debug')('whenwemeet:server');
 var http = require('http');
-var fs = require('fs');
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://zero:Wpfhsms0!@ds031873.mongolab.com:31873/heroku_lhdjlrwx';
 var db, memberCollection, roomCollection;
-MongoClient.connect(url, function(err, database) {
+var rooms = {};
+MongoClient.connect(url, function (err, database) {
 	if (err) {
 		console.error(err);
 	} else {
@@ -31,117 +31,122 @@ var httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer);
 io.on('connection', function (socket) {
 	console.log(socket.id + ' user connected');
-	socket.on('disconnect', function(){
+	socket.on('disconnect', function () {
 		console.log('user disconnected');
-		io.in(process.env.CURRENT_ROOM).emit('out', process.env.MY_ID);
-		socket.leave(process.env.CURRENT_ROOM);
 	});
-	socket.on('busy', function(data) {
+	socket.on('busy', function (data) {
 		console.log('socket busy');
 		console.log(data);
-		io.in(process.env.CURRENT_ROOM).emit('busy', data);
+		io.in(data.rid).emit('busy', data);
 	});
-	socket.on('not-busy', function(data) {
+	socket.on('not-busy', function (data) {
 		console.log('socket not-busy');
 		console.log(data);
-		io.in(process.env.CURRENT_ROOM).emit('not-busy', data);
+		io.in(data.rid).emit('not-busy', data);
 	});
-	socket.on('chat', function(data) {
+	socket.on('chat', function (data) {
 		console.log('socket chat');
-		io.in(process.env.CURRENT_ROOM).emit('chat', data);
+		io.in(data.rid).emit('chat', data);
 	});
-	socket.on('confirmed', function(data) {
+	socket.on('confirmed', function (data) {
 		console.log(data.id + ' socket confirmed');
-		io.in(process.env.CURRENT_ROOM).emit('confirmed', data);
+		io.in(data.rid).emit('confirmed', data);
 	});
-	socket.on('requestArr', function(data) {
+	socket.on('requestArr', function (data) {
 		console.log('socket request Arr ' + data.rid + ' ' + data.id);
 		data.sid = socket.id;
-		socket.broadcast.to(process.env.CURRENT_ROOM).emit('requestArr', data);
+		socket.broadcast.to(data.rid).emit('requestArr', data);
 	});
-	socket.on('responseArr', function(data) {
+	socket.on('responseArr', function (data) {
 		console.log('socket responseArr ' + data.sid);
 		io.sockets.connected[data.sid].emit('responseArr', data);
 	});
-	socket.on('ban', function(data) {
+	socket.on('ban', function (data) {
 		console.log('socket ban');
-		io.in(process.env.CURRENT_ROOM).emit('ban', data);
+		io.in(data.rid).emit('ban', data);
 	});
-	socket.on('enter', function(data) {
+	socket.on('enter', function (data) {
 		console.log('socket enter');
-		console.log(data);
-		console.log(process.env.MY_ID);
-		process.env.CURRENT_ROOM = data.rid;
-		socket.join(process.env.CURRENT_ROOM);
-		roomCollection.findOne({rid: data.rid.toString()}, function(err, doc) {
+		console.log(rooms[data.rid] === undefined);
+		socket.join(data.rid);
+		if (rooms[data.rid] === undefined) {
+			console.log('create room#' + data.rid);
+			rooms[data.rid] = {};
+			rooms[data.rid].socket_ids = {};
+		}
+		rooms[data.rid].socket_ids[data.id] = data.name;
+		roomCollection.findOne({rid: data.rid.toString()}, function (err, doc) {
 			if (err) {
 				console.log('entererror:' + err);
 			} else {
 				doc.id = data.id;
 				doc.name = data.name;
-				doc.color = data.color;
+				doc.order = data.order;
 				doc.socket = socket.id;
-				socket.on('uptodateArr', function(data) {
+				socket.on('uptodateArr', function (data) {
 					console.log('socket uptodate Arr ' + data.sid);
 					io.sockets.connected[data.sid].emit('uptodateArr', data);
 				});
-				socket.broadcast.to(process.env.CURRENT_ROOM).emit('newMember', doc);
+				socket.broadcast.to(data.rid).emit('newMember', doc);
 			}
 		});
 	});
-	socket.on('quit', function(data) {
+	socket.on('quit', function (data) {
 		console.log('socket quit ' + data.rid + ' ' + data.id);
-		roomCollection.update({'rid': data.rid.toString()}, {$pull: {'members': {'id': data.id}}}, function(err, result) {
-			if (err) {
-				console.log('quiterror:' + err);
-			} else {
-				console.log('member deleted');
-				console.log(result);
-				io.in(process.env.CURRENT_ROOM).emit('quit', data);
-				socket.leave(process.env.CURRENT_ROOM);
-			}	
+		roomCollection.updateOne({'rid': data.rid.toString()}, {$pull: {'members': {'id': data.id}}}).then(function (result) {
+			console.log('member deleted');
+			console.log(result);
+			io.in(data.rid).emit('quit', data);
+			socket.leave(data.rid);
+			delete rooms[data.rid].socket_ids[data.id];
+		}).catch(function (err) {
+			console.error('quiterror:' + err);
 		});
 	});
-	socket.on('out', function(data) {
+	socket.on('out', function (data) {
 		console.log('socket out');
-		io.in(process.env.CURRENT_ROOM).emit('out', data.id);
-		socket.leave(process.env.CURRENT_ROOM);
+		io.in(data.rid).emit('out', data);
+		socket.leave(data.rid);
+		delete rooms[data.rid].socket_ids[data.id];
 	});
-	socket.on('delegate', function(data) {
+	socket.on('delegate', function (data) {
 		console.log('socket delegate ' + data.rid + ' ' + data.id + 'next admin' + data.admin);
-		roomCollection.update({'rid': data.rid.toString()}, {$pull: {'members': {'id': data.id}}, $set: {'maker': data.admin, 'picture': data.picture}}, function(err, result) {
+		roomCollection.updateOne({'rid': data.rid.toString()}, {
+			$pull: {'members': {'id': data.id}},
+			$set: {'maker': data.admin, 'picture': data.picture}
+		}, function (err, result) {
 			if (err) {
 				console.log('quiterror:' + err);
 			} else {
 				console.log('member deleted');
 				console.log(result);
-				io.in(process.env.CURRENT_ROOM).emit('quit', data);
-				socket.leave(process.env.CURRENT_ROOM);
+				io.in(data.rid).emit('quit', data);
+				socket.leave(data.rid);
+				delete rooms[data.rid].socket_ids[data.id];
 			}
 		});
 	});
-	socket.on('explode', function(rid) {
+	socket.on('explode', function (rid) {
 		console.log('socket explode');
-		socket.broadcast.to(process.env.CURRENT_ROOM).emit('explode', rid);
+		socket.broadcast.to(rid).emit('explode', rid);
+		socket.leave(data.rid);
 	});
-	socket.on('titleChanged', function(data) {
+	socket.on('titleChanged', function (data) {
 		console.log('socket titleChanged');
 		socket.emit('titleChanged', data);
 	});
-	socket.on('currentChanged', function(data) {
+	socket.on('currentChanged', function (data) {
 		console.log('current titleChanged');
 		socket.emit('currentChanged', data);
 	});
-	socket.on('totalChanged', function(data) {
+	socket.on('totalChanged', function (data) {
 		console.log('total titleChanged');
 		socket.emit('totalChanged', data);
 	});
 });
-
 httpServer.listen(port);
 httpServer.on('error', onError);
 httpServer.on('listening', onListening);
-
 function normalizePort(val) {
 	var port = parseInt(val, 10);
 	if (isNaN(port)) {
@@ -154,14 +159,11 @@ function normalizePort(val) {
 	}
 	return false;
 }
-
 function onError(error) {
+	var bind = (typeof port === 'string') ? 'Pipe ' + port : 'Port ' + port;
 	if (error.syscall !== 'listen') {
 		throw error;
 	}
-	var bind = typeof port === 'string'
-		? 'Pipe ' + port
-		: 'Port ' + port;
 	// handle specific listen errors with friendly messages
 	switch (error.code) {
 		case 'EACCES':
@@ -176,7 +178,6 @@ function onError(error) {
 			throw error;
 	}
 }
-
 function onListening() {
 	var addr = httpServer.address();
 	var bind = typeof addr === 'string'

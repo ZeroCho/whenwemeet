@@ -80,7 +80,7 @@ wwm.confirm = (function() {
 					prefix = '오후';
 					range[0] -= 12;
 				}
-				str += prefix + ' ' + range[0] + '시부터 ~ ';
+				str += prefix + ' ' + range[0] + '시 ~ ';
 				if (range[1] < 12) {
 					prefix = '오전';
 				} else if (range[1] === 12) {
@@ -92,10 +92,9 @@ wwm.confirm = (function() {
 					prefix = '오후';
 					range[1] -= 12;
 				}
-				str += prefix + ' ' + range[1] + '시까지<br>';
+				str += prefix + ' ' + range[1] + '시<br>';
 			});
 		});
-		str += '입니다.';
 		jqMap.$result.html(str);
 	};
 	toLobby = function() {

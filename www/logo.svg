@@ -3,29 +3,31 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
 	 y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve">
-<foreignobject  x="20" y="0" height="260" width="260">
+<foreignobject  height="263" width="263" x="20" y="0">
 	<body  xmlns="http://www.w3.org/1999/xhtml">
-		<table  border="1" cellspacing="0" cellpadding="0" width="260" height="260">
-			<tr height="87">
-				<td width="87" bgcolor="crimson"></td>
-				<td width="87"></td>
-				<td width="87"></td>
+		<table  border="1" cellpadding="0" cellspacing="0">
+			<tr  height="87">
+				<td  width="87" bgcolor="crimson"></td>
+				<td  width="87"></td>
+				<td  width="87"></td>
 			</tr>
-			<tr height="87">
+			<tr  height="87">
 				<td></td>
-				<td style="text-align:center;font-size:4em">?</td>
-				<td bgcolor="yellow"></td>
+				<td  style="text-align:center;font-size:4em">?</td>
+				<td  bgcolor="yellow"></td>
 			</tr>
-			<tr height="87">
+			<tr  height="87">
 				<td></td>
-				<td bgcolor="orange"></td>
+				<td  bgcolor="orange"></td>
 				<td>a</td>
 			</tr>
 		</table>
 	</body>
 </foreignobject>
 <g>
-	<path fill="#DC143C" d="M170,150h90c11.046,0,20,8.954,20,20v90c0,11.046-8.954,20-20,20h-90c-11.046,0-20-8.954-20-20v-90 C150,158.954,158.954,150,170,150z"/>
-	<polygon fill="#FFFFFF" points="182.5,172.5 257.5,172.5 202.5,241.563 257.5,241.563 252.5,257.5 172.5,257.5 227.5,188.438 177.5,188.438 	"/>
+	<path fill="#DC143C" d="M180,160h90c11.046,0,20,8.954,20,20v90c0,11.046-8.954,20-20,20h-90c-11.046,0-20-8.954-20-20v-90
+		C160,168.954,168.954,160,180,160z"/>
+	<polygon fill="#FFFFFF" points="192.5,182.5 267.5,182.5 212.5,251.563 267.5,251.563 262.5,267.5 182.5,267.5 237.5,198.438 
+		187.5,198.438 	"/>
 </g>
 </svg>

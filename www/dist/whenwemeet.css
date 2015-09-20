@@ -595,8 +595,11 @@ td.busy .red, td.busy .orange, td.busy .yellow, td.busy .yellowgreen, td.busy .s
 #chat-wrapper {
 	border-top: 1px solid silver;
 	overflow: hidden;
-	height: 20px;
+	height: 100px;
 	opacity: 0.9;
+}
+::-webkit-scrollbar {
+	display: none;
 }
 #chat-list {
 	width: 100%;
