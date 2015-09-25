@@ -222,7 +222,7 @@ router.post('/enterroom/:rid', function(req, res) {
 				}
 			}
 			for (i = 0; i < number; i++) {
-				if (doc.members[i].id === pid) {
+				if (doc.members[i].id.toString() === pid.toString()) {
 					alreadyMember = true;
 					break;
 				}

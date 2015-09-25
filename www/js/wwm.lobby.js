@@ -236,7 +236,7 @@ wwm.lobby = (function (){
 			} else {
 				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
-				jqMap.$main.showSVGLogo();
+				jqMap.$main.showSVGLogo('50%');
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
 				jqMap.$searchroomBtn.click(onSearchRoom);
