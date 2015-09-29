@@ -5,6 +5,9 @@
   "scripts": {
     "start": "gulp"
   },
+  "engine": {
+    "node": "4.1.0"
+  },
   "dependencies": {
     "adaro": "^1.0.0",
     "body-parser": "^1.13.3",

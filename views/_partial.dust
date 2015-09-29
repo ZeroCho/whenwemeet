@@ -132,13 +132,14 @@
 		<div id="show-aside"><i class="fa fa-list"></i></div>
 		<img src="{~lb}picture{~rb}" width="40" height="40"/>
 		<b id="title">{~lb}title{~rb}</b>
+
 		<div id="room-people-info">
-			{~lb}@repeat times=current{~rb}
+            {~lb}@repeat times=current{~rb}
 			<i class="fa fa-child"></i>
-			{~lb}/repeat{~rb}
-			{~lb}@repeat times=vacant{~rb}
+            {~lb}/repeat{~rb}
+            {~lb}@repeat times=vacant{~rb}
 			<i class="fa fa-child vacant"></i>
-			{~lb}/repeat{~rb}
+            {~lb}/repeat{~rb}
 			<!-- <span id="current-number">{~lb}current{~rb}</span>/
 			<span id="limit-number">{~lb}limit{~rb}</span> -->
 		</div>
@@ -162,123 +163,123 @@
 			</tr>
 			<tr>
 				<th>12</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>1</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>2</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>3</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>4</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>5</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>6</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>7</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>8</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>9</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>10</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>11</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 		</table>
 		<table id="night-table" border="1" hidden>
@@ -294,125 +295,128 @@
 			</tr>
 			<tr>
 				<th>12</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>1</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>2</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>3</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>4</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>5</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>6</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>7</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>8</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>9</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>10</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>11</th>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
-				<td><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 			</tr>
 		</table>
+		<div id="toggle-member">
+
+		</div>
 		<div id="calendar-menu">
 			<button id="confirm-calendar"><span><i class="fa fa-check"></i></span>확정</button>
 			<button id="refresh-calendar"><i class="fa fa-refresh"><span class="sr-only">새로고침</span></i></button>
@@ -421,7 +425,10 @@
 	</main>
 	<footer id="room-footer">
 		<i class="chat-toggler fa fa-chevron-down"></i>
-		<div id="chat-wrapper"><div id="chat-list"></div></div>
+
+		<div id="chat-wrapper">
+			<div id="chat-list"></div>
+		</div>
 		<div id="chat">
 			<form class="input-group">
 				<input id="chatbox" placeholder="채팅창"/>
@@ -438,6 +445,7 @@
 		<div id="result"></div>
 		<div id="result-to-sns">
 			<p>결과 보내기</p>
+
 			<div id="result-to-kakao"><img src="/kakaolink_btn_medium.png" width="80"/></div>
 			<div id="result-to-fb"><img src="/facebook_invite.png" width="80"/></div>
 		</div>
@@ -450,22 +458,22 @@
 <script type="text/html" id="wwm-room-list">
 	<div class="room" data-rid="{~lb}rid{~rb}">
 		<div class="picture"><img src="{~lb}picture{~rb}" height="20"/></div>
-			{~lb}?password{~rb}
-				{~lb}?unlocked{~rb}
-					<div class="unlocked"><i class="fa fa-unlock"></i>&nbsp;</div>
-				{~lb}:else{~rb}
-					<div class="locked"><i class="fa fa-lock"></i>&nbsp;</div>
-				{~lb}/unlocked{~rb}
-			{~lb}:else{~rb}
-			{~lb}/password{~rb}
+        {~lb}?password{~rb}
+        {~lb}?unlocked{~rb}
+		<div class="unlocked"><i class="fa fa-unlock"></i>&nbsp;</div>
+        {~lb}:else{~rb}
+		<div class="locked"><i class="fa fa-lock"></i>&nbsp;</div>
+        {~lb}/unlocked{~rb}
+        {~lb}:else{~rb}
+        {~lb}/password{~rb}
 		<div class="title">{~lb}title{~rb}</div>
 		<div class="number">
-			{~lb}@repeat times="{~lb}current{~rb}"{~rb}
-				<i class="fa fa-child"></i>
-			{~lb}/repeat{~rb}
-			{~lb}@repeat times="{~lb}vacant{~rb}"{~rb}
-				<i class="fa fa-child vacant"></i>
-			{~lb}/repeat{~rb}
+            {~lb}@repeat times="{~lb}current{~rb}"{~rb}
+			<i class="fa fa-child"></i>
+            {~lb}/repeat{~rb}
+            {~lb}@repeat times="{~lb}vacant{~rb}"{~rb}
+			<i class="fa fa-child vacant"></i>
+            {~lb}/repeat{~rb}
 			<!-- <span class="current">{~lb}current{~rb}</span>/<span class="limit">{~lb}limit{~rb}</span> -->
 		</div>
 		<div class="result">{~lb}result{~rb}</div>
@@ -502,6 +510,7 @@
 			새로운 방을 만들어볼까요?
 		</div>
 		<i id="arrow-to-modal" class="fa fa-hand-o-down fa-2x"></i>
+
 		<div id="intro-show-modal"></div>
 	</div>
 </script>
@@ -512,6 +521,7 @@
 			<b>비밀번호가 없으면</b> 모두가 들어갈 수 있는 공개방이 됩니다.
 		</div>
 		<i id="arrow-to-create" class="fa fa-hand-o-down fa-2x"></i>
+
 		<div id="intro-create-room"></div>
 	</div>
 </script>
@@ -523,6 +533,7 @@
 			다 칠하면 <b>확정</b>을 눌러주세요!
 		</div>
 		<i id="arrow-to-confirm" class="fa fa-hand-o-right fa-2x"></i>
+
 		<div id="intro-confirm"></div>
 	</div>
 </script>
@@ -574,7 +585,7 @@
 <script type="text/html" id="wwm-admin-menu">
 	<div id="admin-menu">
 		<ul>
-			{~lb}?admin{~rb}
+            {~lb}?admin{~rb}
 			<!--
 			<li id="ban-people">
 				<form class="input-group">
@@ -602,19 +613,35 @@
 				</form>
 			</li>
 			<li id="explode-room">방 폭파</li>
-			{~lb}/admin{~rb}
-			<li id="change-color" class="prepare">색상변경</li>
+            {~lb}/admin{~rb}
+			<li id="change-color" class="prepare">
+                <table border="1">
+                    <tr>
+                        <td rowspan="2">색상변경</td>
+						<td class="red"></td>
+						<td class="orange"></td>
+						<td class="yellow"></td>
+						<td class="yellowgreen"></td>
+                    </tr>
+					<tr>
+						<td class="skyblue"></td>
+						<td class="purple"></td>
+						<td class="violet"></td>
+						<td class="pink"></td>
+					</tr>
+                </table>
+            </li>
 			<li id="invite">
 				<span>초대장 보내기</span>
 				<img src="/kakaolink_btn_medium.png" height="30" id="kakao-invite"/>
 				<img src="/facebook_invite.png" height="30" id="fb-invite"/>
 			</li>
 		</ul>
-		{~lb}?admin{~rb}
+        {~lb}?admin{~rb}
 		<button id="manage-btn" class="flat-btn">관리자 메뉴</button>
-		{~lb}:else{~rb}
+        {~lb}:else{~rb}
 		<button id="invite-btn" class="flat-btn">초대</button>
-		{~lb}/admin{~rb}
+        {~lb}/admin{~rb}
 	</div>
 </script>
 <div id="fb-root"></div>

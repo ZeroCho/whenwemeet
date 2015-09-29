@@ -110,7 +110,7 @@ io.on('connection', function (socket) {
 		delete rooms[data.rid].socket_ids[data.id];
 	});
 	socket.on('delegate', function (data) {
-		console.log('socket delegate ' + data.rid + ' ' + data.id + 'next admin' + data.admin);
+		console.log('socket delegate ' + data.rid + ' ' + data.id + ' next admin' + data.admin);
 		roomCollection.updateOne({'rid': data.rid.toString()}, {
 			$pull: {'members': {'id': data.id}},
 			$set: {'maker': data.admin, 'picture': data.picture}
@@ -120,7 +120,7 @@ io.on('connection', function (socket) {
 			} else {
 				console.log('member deleted');
 				console.log(result);
-				io.in(data.rid).emit('quit', data);
+				io.in(data.rid).emit('delegate', data);
 				socket.leave(data.rid);
 				delete rooms[data.rid].socket_ids[data.id];
 			}

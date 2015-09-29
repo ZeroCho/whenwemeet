@@ -562,8 +562,8 @@ svg .triangle-3 { fill: greenyellow; }
 	height: 20px;
 	display: none;
 }
-td.busy .red, td.busy .orange, td.busy .yellow, td.busy .yellowgreen, td.busy .skyblue, td.busy .purple, td.busy .violet, td.busy .pink{
-	display: table-cell	!important;
+td.busy {
+	background: lightgrey;
 }
 #calendar-menu {
 	position: absolute;
@@ -641,32 +641,38 @@ td.busy .red, td.busy .orange, td.busy .yellow, td.busy .yellowgreen, td.busy .s
 	line-height: 30px;
 	padding-left: 7px;
 }
+#change-color td{
+	min-width: 20px;
+}
 #invite img {
 	cursor: pointer;
 }
 .red {
-	background: crimson;
+	background: crimson !important;
 }
 .orange {
-	background: orange;
+	background: orange !important;
 }
 .yellow {
-	background: yellow;
+	background: yellow !important;
 }
 .yellowgreen {
-	background: yellowgreen;
+	background: yellowgreen !important;
 }
 .skyblue {
-	background: skyblue;
+	background: skyblue !important;
 }
 .purple {
-	background: mediumpurple;
+	background: mediumpurple !important;
 }
 .violet {
-	background: blueviolet;
+	background: blueviolet !important;
 }
 .pink {
-	background: hotpink;
+	background: hotpink !important;
+}
+.toggle-member {
+	display: inline-block;
 }
 .online {
 	color: lawngreen;
