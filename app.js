@@ -6,12 +6,17 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var adaro = require('adaro');
-
+var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://zero:Wpfhsms0!@ds031873.mongolab.com:31873/heroku_lhdjlrwx';
 var app = express();
 var options = {
   helpers: ['dustjs-helpers'],
   whitespace: true
 };
+MongoClient.connect(url).then(function (database) {
+	console.log("app:Connected correctly to server");
+	app.set('db', database);
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.engine('dust', adaro.dust(options));
@@ -23,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'www')));
 
-var routes = require('./routes/index');
+var routes = require('./routes/index')(db);
 app.use('/', routes);
 
 // catch 404 and forward to error handler

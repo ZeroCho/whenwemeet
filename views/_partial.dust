@@ -618,17 +618,17 @@
                 <table border="1">
                     <tr>
                         <td rowspan="2">색상변경</td>
-						<td class="red"></td>
-						<td class="orange"></td>
-						<td class="yellow"></td>
-						<td class="yellowgreen"></td>
+					<td class="color-option red"></td>
+					<td class="color-option orange"></td>
+					<td class="color-option yellow"></td>
+					<td class="color-option yellowgreen"></td>
                     </tr>
-					<tr>
-						<td class="skyblue"></td>
-						<td class="purple"></td>
-						<td class="violet"></td>
-						<td class="pink"></td>
-					</tr>
+				<tr>
+					<td class="color-option skyblue"></td>
+					<td class="color-option purple"></td>
+					<td class="color-option violet"></td>
+					<td class="color-option pink"></td>
+				</tr>
                 </table>
             </li>
 			<li id="invite">
@@ -640,7 +640,7 @@
         {~lb}?admin{~rb}
 		<button id="manage-btn" class="flat-btn">관리자 메뉴</button>
         {~lb}:else{~rb}
-		<button id="invite-btn" class="flat-btn">초대</button>
+		<button id="invite-btn" class="flat-btn">설정 및 초대</button>
         {~lb}/admin{~rb}
 	</div>
 </script>

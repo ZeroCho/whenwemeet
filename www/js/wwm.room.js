@@ -34,7 +34,7 @@ wwm.room = (function () {
 	var setJqMap, createArray, cellToCoord, coordListToTable, renderTable, showMembers, addNewMember, showOnlineStatus, checkCellStatus,
 		banPerson, changeTitle, changeLimit, changeCurrentNumber, onClickDay, onClickTime, onClickCell, onMouseupCell, onMouseupDay, onMouseupTime,
 		showAdminMenu, deleteRoom, checkConfirmStatus, toLobby, quitRoom, showReportModal, handleSocketEvent,
-		toggleTable, sendChat, toggleChatList, refreshTable, removeSchedule, findInfoById,
+		toggleTable, sendChat, toggleChatList, refreshTable, removeSchedule, findInfoById, checkUnoccupiedColor, changeColor,
 		confirmTable, toConfirmPage, kakaoInvite, fbInvite, toggleAside, showMemberMenu, initModule;
 	setJqMap = function ($con) {
 		jqMap = {
@@ -53,6 +53,7 @@ wwm.room = (function () {
 			$explodeRoom: $con.find('#explode-room'),
 			$changeLimit: $con.find('#change-limit-btn'),
 			$changeTitle: $con.find('#change-room-title'),
+			$changeColor: $con.find('#change-color').find('.color-option'),
 			$toggleMember: $con.find('#toggle-member'),
 			$roomTitle: $con.find('#title'),
 			$report: $con.find('#report-error'),
@@ -71,6 +72,39 @@ wwm.room = (function () {
 			$asideFooter: $con.find('#aside-footer'),
 			$asideToggler: $con.find('#show-aside, #close-aside')
 		};
+	};
+	checkUnoccupiedColor = function () {
+		var order;
+		stMap.memberColor.forEach(function (id, i) {
+			if (id === undefined) {
+				if (order === undefined) order = i;
+			} else {
+				jqMap.$changeColor.eq(i).addClass('chosen');
+			}
+		});
+		return order;
+	};
+	changeColor = function () {
+		var color = $(this).attr('class').split(' ')[1];
+		var original = stMap.myInfo.color;
+		if ($(this).hasClass('chosen')) {
+			alert('이미 남이 선택한 색상입니다.');
+			return;
+		}
+		cfMap.colorList.every(function (item, i) {
+			console.log(color + ' ' + item);
+			if (color === item) {
+				stMap.myInfo.color = i;
+				return false;
+			}
+			return true;
+		})
+		socket.emit('changeColor', {
+			id: stMap.myInfo.id,
+			rid: stMap.rid,
+			orig: original,
+			now: stMap.myInfo.color;
+		});
 	};
 	createArray = function (length) { /* dayArray, nightArray를 만든다 */
 		var arr = new Array(length || 0);
@@ -777,7 +811,9 @@ wwm.room = (function () {
 			socket.emit('uptodateArr', {
 				sid: data.socket,
 				day: stMap.dayArray,
+				id: stMap.myInfo.id,
 				night: stMap.nightArray,
+				order: stMap.myInfo.order,
 				online: stMap.onlineList
 			});
 			if (data.order >= stMap.current) {
@@ -793,6 +829,7 @@ wwm.room = (function () {
 			stMap.dayArray = data.day;
 			stMap.nightArray = data.night;
 			stMap.onlineList = data.online;
+			stMap.memberColor[data.order] = data.id;
 			showOnlineStatus();
 			renderTable();
 		});
@@ -862,7 +899,25 @@ wwm.room = (function () {
 			wwm.lobby.initModule(jqMap.$con);
 			console.info('socket explode');
 		});
-		socket.on('changeColor', function () {
+		socket.on('changeColor', function (data) {
+			var orig= cfMap.colorList[data.orig];
+			var now = cfMap.colorList[data.now];
+			var stMapList = [stMap.dayArray, stMap.nightArray];
+			jqMap.$roomTitle.removeClass(orig + '-text').addClass(now + '-text');
+			jqMap.$memberList.find('[data-id=' + data.id + ']').find('.' + orig + '-text').removeClass().addClass(now + '-text');
+			stMapList.forEach(function (list) {
+				list.forEach(function(tr) {
+					tr.forEach(function (target) {
+						target.forEach(function (idx, i) {
+							if (idx === data.orig) {
+								target[i] = data.now;
+							}
+						})
+					});
+				});	
+			});
+			renderTable();
+			console.info('socket' + data.id + ' changed color from' + orig + 'to' + now);
 		});
 		stMap.event = true;
 	};
@@ -882,14 +937,13 @@ wwm.room = (function () {
 		stMap.picture = doc.picture;
 		stMap.myInfo.id = userInfo.id.toString();
 		stMap.myInfo.name = userInfo.name;
-		stMap.memberList.every(function (member, i) {
+		stMap.memberList.forEach(function (member, i) {
+			stMap.memberColor[member.order] = member.id;
 			if (member.id === userInfo.id) {
-				stMap.myInfo.order = i;
 				stMap.myInfo.confirm = member.confirm;
-				return false;
 			}
-			return true;
 		});
+		stMap.myInfo.order = checkUnoccupiedColor();
 		stMap.onlineList[stMap.myInfo.order] = true;
 		stMap.currentPerson = stMap.myInfo.order;
 		parser = {
@@ -955,6 +1009,7 @@ wwm.room = (function () {
 				jqMap.$admin.click(showAdminMenu);
 				jqMap.$changeLimit.click({rid: stMap.rid}, changeLimit);
 				jqMap.$changeTitle.click({rid: stMap.rid}, changeTitle);
+				jqMap.$changeColor.click(changeColor);
 				jqMap.$sendChat.click(sendChat);
 				jqMap.$memberList.on('click', 'li', showMemberMenu);
 				jqMap.$memberList.on('click', '.ban-this-btn', function () {

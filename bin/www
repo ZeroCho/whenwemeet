@@ -7,18 +7,11 @@ var debug = require('debug')('whenwemeet:server');
 var http = require('http');
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://zero:Wpfhsms0!@ds031873.mongolab.com:31873/heroku_lhdjlrwx';
-var db, memberCollection, roomCollection;
+var db = app.get('db');
+var memberCollection = db.collection('members');
+var roomCollection = db.colletion('rooms');
 var rooms = {};
-MongoClient.connect(url, function (err, database) {
-	if (err) {
-		console.error(err);
-	} else {
-		console.log("www:Connected correctly to server");
-		db = database;
-		memberCollection = db.collection('members');
-		roomCollection = db.collection('rooms');
-	}
-});
+
 /**
  * Get port from environment and store in Express.
  */
@@ -33,6 +26,17 @@ io.on('connection', function (socket) {
 	console.log(socket.id + ' user connected');
 	socket.on('disconnect', function () {
 		console.log('user disconnected');
+	});
+	socket.on('changeColor', function (data) {
+		console.log('socket change color');
+			roomCollection.updateOne({
+			'rid': data.rid, 'members.id': data.id
+		}, {
+			$set: {'members.$.order': data.now}
+		}).then(function (r) {
+			res.send(r);
+		});
+		io.in(data.rid).emit('changeColor', data);
 	});
 	socket.on('busy', function (data) {
 		console.log('socket busy');
@@ -75,20 +79,16 @@ io.on('connection', function (socket) {
 			rooms[data.rid].socket_ids = {};
 		}
 		rooms[data.rid].socket_ids[data.id] = data.name;
-		roomCollection.findOne({rid: data.rid.toString()}, function (err, doc) {
-			if (err) {
-				console.log('entererror:' + err);
-			} else {
-				doc.id = data.id;
-				doc.name = data.name;
-				doc.order = data.order;
-				doc.socket = socket.id;
-				socket.on('uptodateArr', function (data) {
-					console.log('socket uptodate Arr ' + data.sid);
-					io.sockets.connected[data.sid].emit('uptodateArr', data);
-				});
-				socket.broadcast.to(data.rid).emit('newMember', doc);
-			}
+		roomCollection.findOne({rid: data.rid.toString()}).then(function (doc) {
+			doc.id = data.id;
+			doc.name = data.name;
+			doc.order = data.order;
+			doc.socket = socket.id;
+			socket.on('uptodateArr', function (data) {
+				console.log('socket uptodate Arr ' + data.sid);
+				io.sockets.connected[data.sid].emit('uptodateArr', data);
+			});
+			socket.broadcast.to(data.rid).emit('newMember', doc);
 		});
 	});
 	socket.on('quit', function (data) {
@@ -114,16 +114,12 @@ io.on('connection', function (socket) {
 		roomCollection.updateOne({'rid': data.rid.toString()}, {
 			$pull: {'members': {'id': data.id}},
 			$set: {'maker': data.admin, 'picture': data.picture}
-		}, function (err, result) {
-			if (err) {
-				console.log('quiterror:' + err);
-			} else {
-				console.log('member deleted');
-				console.log(result);
-				io.in(data.rid).emit('delegate', data);
-				socket.leave(data.rid);
-				delete rooms[data.rid].socket_ids[data.id];
-			}
+		}).then(function (result) {
+			console.log('member deleted');
+			console.log(result);
+			io.in(data.rid).emit('delegate', data);
+			socket.leave(data.rid);
+			delete rooms[data.rid].socket_ids[data.id];
 		});
 	});
 	socket.on('explode', function (rid) {
