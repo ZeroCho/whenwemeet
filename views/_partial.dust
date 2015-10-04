@@ -131,7 +131,7 @@
 	<header id="room-header">
 		<div id="show-aside"><i class="fa fa-list"></i></div>
 		<img src="{~lb}picture{~rb}" width="40" height="40"/>
-		<b id="title">{~lb}title{~rb}</b>
+		<b id="title" class="{~lb}color{~rb}-text">{~lb}title{~rb}</b>
 
 		<div id="room-people-info">
             {~lb}@repeat times=current{~rb}
@@ -140,8 +140,6 @@
             {~lb}@repeat times=vacant{~rb}
 			<i class="fa fa-child vacant"></i>
             {~lb}/repeat{~rb}
-			<!-- <span id="current-number">{~lb}current{~rb}</span>/
-			<span id="limit-number">{~lb}limit{~rb}</span> -->
 		</div>
 	</header>
 	<main id="room-main">
@@ -418,16 +416,28 @@
 
 		</div>
 		<div id="calendar-menu">
-			<button id="confirm-calendar"><span><i class="fa fa-check"></i></span>확정</button>
-			<button id="refresh-calendar"><i class="fa fa-refresh"><span class="sr-only">새로고침</span></i></button>
-			<button id="all-confirmed">결과보기</button>
+            {~lb}?confirm{~rb}
+			<button id="confirm-calendar" class="confirmed">
+                {~lb}:else{~rb}
+				<button id="confirm-calendar" class="">
+                    {~lb}/confirm{~rb}
+					<span><i class="fa fa-check"></i></span>확정
+				</button>
+				<button id="refresh-calendar"><i class="fa fa-refresh"><span class="sr-only">새로고침</span></i></button>
+                {~lb}?allConfirmed{~rb}
+				<button id="all-confirmed">결과보기</button>
+                {~lb}:else{~rb}
+				<button id="all-confirmed" style="display:none;">결과보기</button>
+                {~lb}/allConfirmed{~rb}
 		</div>
 	</main>
 	<footer id="room-footer">
 		<i class="chat-toggler fa fa-chevron-down"></i>
 
 		<div id="chat-wrapper">
-			<div id="chat-list"></div>
+			<div id="chat-list">
+                <p><span class="{~lb}color{~rb}-text">채팅을 시작합니다.</span></p>
+            </div>
 		</div>
 		<div id="chat">
 			<form class="input-group">
@@ -445,7 +455,6 @@
 		<div id="result"></div>
 		<div id="result-to-sns">
 			<p>결과 보내기</p>
-
 			<div id="result-to-kakao"><img src="/kakaolink_btn_medium.png" width="80"/></div>
 			<div id="result-to-fb"><img src="/facebook_invite.png" width="80"/></div>
 		</div>
@@ -486,6 +495,11 @@
 		<span class="profile-picture"><img src="{~lb}picture{~rb}" height="20"/></span>
 		&nbsp;
 		<span class="{~lb}color{~rb}-text">{~lb}name{~rb}</span>
+        {~lb}?confirm{~rb}
+        <span class="member-confirmed">확정!</span>
+        {~lb}:else{~rb}
+		<span class="member-confirmed" style="display:none;">확정!</span>
+        {~lb}/confirm{~rb}
 	</li>
 </script>
 <script type="text/html" id="wwm-intro">
@@ -586,19 +600,6 @@
 	<div id="admin-menu">
 		<ul>
             {~lb}?admin{~rb}
-			<!--
-			<li id="ban-people">
-				<form class="input-group">
-					<label for="ban-member-list">현재 참여자</label>
-					<select id="ban-member-list">
-						{~lb}#members{~rb}
-						<option value="{~lb}id{~rb}">{~lb}name{~rb}</option>
-						{~lb}/members{~rb}
-					</select>
-					<span class="input-group-btn"><button id="ban-people-btn">강퇴</button></span>
-				</form>
-			</li>
-			-->
 			<li>
 				<form class="input-group">
 					<label for="current-room-title">방 제목</label>
@@ -615,22 +616,22 @@
 			<li id="explode-room">방 폭파</li>
             {~lb}/admin{~rb}
 			<li id="change-color" class="prepare">
-                <table border="1">
-                    <tr>
-                        <td rowspan="2">색상변경</td>
-					<td class="color-option red"></td>
-					<td class="color-option orange"></td>
-					<td class="color-option yellow"></td>
-					<td class="color-option yellowgreen"></td>
-                    </tr>
-				<tr>
-					<td class="color-option skyblue"></td>
-					<td class="color-option purple"></td>
-					<td class="color-option violet"></td>
-					<td class="color-option pink"></td>
-				</tr>
-                </table>
-            </li>
+				<table border="1">
+					<tr>
+						<td rowspan="2">색상변경</td>
+						<td class="color-option red"></td>
+						<td class="color-option orange"></td>
+						<td class="color-option yellow"></td>
+						<td class="color-option yellowgreen"></td>
+					</tr>
+					<tr>
+						<td class="color-option skyblue"></td>
+						<td class="color-option purple"></td>
+						<td class="color-option violet"></td>
+						<td class="color-option pink"></td>
+					</tr>
+				</table>
+			</li>
 			<li id="invite">
 				<span>초대장 보내기</span>
 				<img src="/kakaolink_btn_medium.png" height="30" id="kakao-invite"/>

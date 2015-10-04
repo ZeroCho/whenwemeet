@@ -34,7 +34,8 @@ wwm.modal = (function (){
 			limit: limit,
 			picture: picture,
 			password: password,
-			members: JSON.stringify([{id: userInfo.id, name: userInfo.name, picture: userInfo.picture, confirm: false}])
+			members: JSON.stringify([{id: userInfo.id, name: userInfo.name, picture: userInfo.picture, confirm: false}]),
+			color: [maker, null, null, null, null, null, null, null]
 		};
 		var createRoomPromise;
 		e.preventDefault();

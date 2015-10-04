@@ -1,18 +1,22 @@
-wwm.lobby = (function (){
+wwm.lobby = (function () {
 	'use strict';
+	var stMap = {
+		socket: false
+	};
 	var jqMap;
 	var socket = io();
-	var getList, onSearchRoom, showRooms, showCreateroom, logout, enterRoom, refreshList, refreshProfile, showResult, setJqMap, initModule;
-	showCreateroom = function() {
+	var getList, onSearchRoom, showRooms, showCreateroom, logout, enterRoom, refreshList, refreshProfile, showResult, setJqMap, initModule, handleSocketEvent;
+	showCreateroom = function () {
 		wwm.modal.initModule($('#wwm-create-modal').html());
 	};
-	getList = function() {
+	getList = function () {
 		var spinner = new Spinner().spin();
 		var getListPromise = wwm.model.getRoomList(userInfo.id);
 		jqMap.$list.append(spinner.el);
 		getListPromise.done(function (res) {
 			showRooms(res);
-		});		getListPromise.fail(function (err) {
+		});
+		getListPromise.fail(function (err) {
 			if (err === 'no_room') {
 				jqMap.$list.html('<span class="info-message">방이 없습니다. +를 눌러 방을 만들어보세요.</span>');
 				return;
@@ -20,11 +24,11 @@ wwm.lobby = (function (){
 			console.error(err);
 			jqMap.$list.html(err.responseText);
 		});
-		getListPromise.always(function() {
+		getListPromise.always(function () {
 			$(spinner.el).remove();
 		});
 	};
-	onSearchRoom = function(e) {
+	onSearchRoom = function (e) {
 		var query = e;
 		var spinner = new Spinner().spin();
 		var searchPromise;
@@ -50,20 +54,20 @@ wwm.lobby = (function (){
 			console.error(err);
 			jqMap.$list.html(err.responseText);
 		});
-		searchPromise.always(function() {
+		searchPromise.always(function () {
 			$(spinner.el).remove();
 		});
 	};
-	showRooms = function(res) {
+	showRooms = function (res) {
 		var $frag = $(document.createDocumentFragment());
 		var tmpl, password, unlocked, parser;
 		var src = $('#wwm-room-list').html();
-		res.forEach(function(room) {
+		res.forEach(function (room) {
 			tmpl = dust.loadSource(dust.compile(src));
 			password = room.password || false;
 			unlocked = false;
 			if (password) {
-				room.members.some(function(member) {
+				room.members.some(function (member) {
 					if (member.id === userInfo.id) {
 						unlocked = true;
 						return unlocked;
@@ -82,7 +86,7 @@ wwm.lobby = (function (){
 				password: password,
 				unlocked: unlocked
 			};
-			dust.render(tmpl, parser, function(err, out) {
+			dust.render(tmpl, parser, function (err, out) {
 				if (err) {
 					return;
 				}
@@ -91,7 +95,7 @@ wwm.lobby = (function (){
 		});
 		jqMap.$list.html($frag);
 	};
-	logout = function() {
+	logout = function () {
 		console.info('logout');
 		history.pushState({mod: 'logout'}, '', '/');
 		delete window.userInfo;
@@ -99,7 +103,7 @@ wwm.lobby = (function (){
 		localStorage.removeItem('loginType');
 		wwm.login.initModule();
 	};
-	enterRoom = function(rid) {
+	enterRoom = function (rid) {
 		/* TODO: 처음 방에 들어갔을 시 멤버정보가 안뜨는 현상 수정하기 */
 		var $this = $(this);
 		var spinner = new Spinner().spin();
@@ -123,7 +127,8 @@ wwm.lobby = (function (){
 			picture: userInfo.picture
 		};
 		enterRoomPromise = wwm.model.enterRoom(data);
-		enterRoomPromise.done(function(res) {
+		enterRoomPromise.done(function (res) {
+			console.log(res);
 			if (res === 'no_room') {
 				alert('방이 없습니다');
 				return;
@@ -145,22 +150,22 @@ wwm.lobby = (function (){
 			history.pushState({mod: 'room', data: res}, '', '/room/' + rid);
 			wwm.room.initModule(res, 'enter');
 		});
-		enterRoomPromise.fail(function(err) {
+		enterRoomPromise.fail(function (err) {
 			console.error(err.responseText);
 			alert('오류발생! 콘솔확인');
 		});
-		enterRoomPromise.always(function() {
+		enterRoomPromise.always(function () {
 			$(spinner.el).remove();
 		});
 	};
-	refreshList = function() {
+	refreshList = function () {
 		console.info('refreshlist');
 		getList();
 	};
-	refreshProfile = function() {
+	refreshProfile = function () {
 		var userPromise = wwm.model.getUser(userInfo.id);
 		var json = JSON.parse(localStorage.login);
-		userPromise.done(function(res) {
+		userPromise.done(function (res) {
 			jqMap.$profilePicture.attr('src', res.picture);
 			jqMap.$profileName.text(res.name);
 			userInfo.picture = res.picture;
@@ -170,11 +175,11 @@ wwm.lobby = (function (){
 			localStorage.login = JSON.stringify(json);
 		});
 	};
-	showResult = function(rid) {
+	showResult = function (rid) {
 		var resultPromise, data = {};
 		if (rid) {
 			resultPromise = wwm.model.getRoomInfo(rid);
-			resultPromise.done(function(doc) {
+			resultPromise.done(function (doc) {
 				if (doc === 'no_room') {
 					alert('방이 없습니다');
 				} else {
@@ -185,7 +190,7 @@ wwm.lobby = (function (){
 					wwm.confirm.initModule(data);
 				}
 			});
-			resultPromise.fail(function(err) {
+			resultPromise.fail(function (err) {
 				console.error(err);
 			});
 		} else {
@@ -194,7 +199,7 @@ wwm.lobby = (function (){
 			wwm.confirm.initModule(data);
 		}
 	};
-	setJqMap = function($con) {
+	setJqMap = function ($con) {
 		jqMap = {
 			$con: $con,
 			$showCreateroom: $con.find('#show-createroom-modal'),
@@ -209,8 +214,53 @@ wwm.lobby = (function (){
 			$profileName: $con.find('#profile-name')
 		};
 	};
-	initModule = function() {
-		var name, picture, src, first;
+	handleSocketEvent = function () {
+		if (stMap.socket) {
+			return;
+		}
+		socket.on('titleChanged', function (data) {
+			var $rooms = $('.room');
+			var rid = $rooms.map(function (idx, item) {
+				$(item).data('rid');
+			}).get();
+			rid.every(function (room, i) {
+				if (data.rid === room) {
+					$rooms.eq(i).find('.title').text(data.title);
+					return false;
+				}
+				return true;
+			});
+		});
+		socket.on('currentChanged', function (data) {
+			var $rooms = $('.room');
+			var rid = $rooms.map(function (idx, item) {
+				$(item).data('rid');
+			}).get();
+			rid.every(function (room, i) {
+				if (data.rid === room) {
+					$rooms.eq(i).find('.current').text(data.number);
+					return false;
+				}
+				return true;
+			});
+		});
+		socket.on('limitChanged', function (data) {
+			var $rooms = $('.room');
+			var rid = $rooms.map(function (idx, item) {
+				$(item).data('rid');
+			}).get();
+			rid.every(function (room, i) {
+				if (data.rid === room) {
+					$rooms.eq(i).find('.total').text(data.number);
+					return false;
+				}
+				return true;
+			});
+		});
+		stMap.socket = true;
+	};
+	initModule = function () {
+		var src, first;
 		if (!localStorage.login) {
 			history.pushState({mod: 'login'}, '', '/login');
 			wwm.login.initModule();
@@ -218,24 +268,25 @@ wwm.lobby = (function (){
 		if (!localStorage.first) {
 			localStorage.first = 'true';
 		}
-		first  = JSON.parse(localStorage.first);
+		first = JSON.parse(localStorage.first);
 		if (first) {
 			wwm.intro.initModule($('#wwm-intro').html());
 		}
-		if (!window.userInfo) {window.userInfo = JSON.parse(localStorage.login);}
+		if (!window.userInfo) {
+			window.userInfo = JSON.parse(localStorage.login);
+		}
 		src = $('#wwm-lobby').text();
-		name =  userInfo.name;
-		picture = userInfo.picture;
 		dust.render(dust.loadSource(dust.compile(src)), {
-			name: name,
-			picture: picture
-		}, function(err, out) {
+			name: userInfo.name,
+			picture: userInfo.picture
+		}, function (err, out) {
 			if (err) {
 				console.error(err);
 				alert('rendering error! 콘솔 확인');
 			} else {
 				wwm.shell.view.html(out).fadeIn('slow');
 				setJqMap(wwm.shell.view);
+				handleSocketEvent();
 				jqMap.$main.showSVGLogo('50%');
 				getList();
 				jqMap.$showCreateroom.click(showCreateroom);
@@ -245,45 +296,6 @@ wwm.lobby = (function (){
 				jqMap.$refreshProfile.click(refreshProfile);
 				jqMap.$list.on('click', '.room', enterRoom);
 				jqMap.$list.on('click', '.result', showResult);
-				socket.on('titleChanged', function(data) {
-					var $rooms = $('.room');
-					var rid = $rooms.map(function(idx, item) {
-						$(item).data('rid');
-					}).get();
-					rid.every(function(room, i) {
-						if (data.rid === room) {
-							$rooms.eq(i).find('.title').text(data.title);
-							return false;
-						}
-						return true;
-					});
-				});
-				socket.on('currentChanged', function(data) {
-					var $rooms = $('.room');
-					var rid = $rooms.map(function(idx, item) {
-						$(item).data('rid');
-					}).get();
-					rid.every(function(room, i) {
-						if (data.rid === room) {
-							$rooms.eq(i).find('.current').text(data.number);
-							return false;
-						}
-						return true;
-					});
-				});
-				socket.on('limitChanged', function(data) {
-					var $rooms = $('.room');
-					var rid = $rooms.map(function(idx, item) {
-						$(item).data('rid');
-					}).get();
-					rid.every(function(room, i) {
-						if (data.rid === room) {
-							$rooms.eq(i).find('.total').text(data.number);
-							return false;
-						}
-						return true;
-					});
-				});
 			}
 		});
 	};

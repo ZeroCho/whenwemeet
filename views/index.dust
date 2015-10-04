@@ -9,10 +9,10 @@
 	<link rel="stylesheet" href="/dist/whenwemeet.css"/>
 </head>
 <body>
-	<div id="whenwemeet">
-		<div id="view">
-			<div id="logo">
-				<svg version="1.1" 
+<div id="whenwemeet">
+	<div id="view">
+		<div id="logo">
+			<svg version="1.1"
 					xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 					x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" enable-background="new 0 0 300 300" xml:space="preserve">
 				<foreignobject  x="20" y="0" height="260" width="260">
@@ -41,21 +41,26 @@
 					<polygon fill="#FFFFFF" points="182.5,172.5 257.5,172.5 202.5,241.563 257.5,241.563 252.5,257.5 172.5,257.5 227.5,188.438 177.5,188.438"/>
 				</g>
 				</svg>
-			</div>
 		</div>
-		<div id="modal"></div>
-		<div id="intro"></div>
 	</div>
-	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
-	<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
-	<script src="/bower_components/dustjs-linkedin-helpers/dist/dust-helpers.min.js"></script>
-	<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
-	<script src="/bower_components/spin.js/spin.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="/cordova.js"></script>
-	{>"./_partial"/}
-	<script src="/dist/whenwemeet.js"></script>
-	<script>
+	<div id="modal"></div>
+	<div id="intro"></div>
+</div>
+<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="/bower_components/dustjs-linkedin/dist/dust-full.min.js"></script>
+<script src="/bower_components/dustjs-linkedin-helpers/dist/dust-helpers.min.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script src="/bower_components/spin.js/spin.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/cordova.js"></script>
+<script>
+	document.addEventListener('deviceready', function () {
+        console.log('device ready');
+	});
+</script>
+    {>"./_partial"/}
+<script src="/dist/whenwemeet.js"></script>
+<script>
 	$(function () {
 		var kakaoKey = 'a35623411563ec424430d3bd5dc7a93e';
 		$.ajaxSetup({cache: true});
@@ -69,19 +74,19 @@
 		Kakao.cleanup();
 		Kakao.init(kakaoKey);
 		wwm.initModule();
-		{@select key="{mod}"}
-			{@eq value="room"}
+        {@select key="{mod}"}
+            {@eq value="room"}
 				wwm.lobby.enterRoom('{rid}');
-			{/eq}
-			{@eq value="search"}
+            {/eq}
+            {@eq value="search"}
 				wwm.lobby.searchRoom('{query}');
-			{/eq}
-			{@eq value="result"}
+            {/eq}
+            {@eq value="result"}
 				wwm.lobby.enterRoom('{rid}');
 				wwm.lobby.showResult('{rid}');
-			{/eq}
-		{/select}
+            {/eq}
+        {/select}
 	});
-	</script>
+</script>
 </body>
 </html>

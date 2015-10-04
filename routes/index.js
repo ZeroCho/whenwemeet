@@ -2,13 +2,16 @@ var express = require('express');
 var router = express.Router();
 var nodemailer = require('nodemailer');
 var res;
+var mongoClient = require('../mongodb');
 var errorHandler = function (err) {
 	console.error(err);
 	res.send(err);
 };
-module.exports = function (db) {
-	var memberCollection = db.collection('members');
-	var roomCollection = db.collection('rooms');
+mongoClient.then(function (db) {
+	var memberCollection, roomCollection;
+	console.log("app:Connected correctly to server");
+	memberCollection = db.collection('members');
+	roomCollection = db.collection('rooms');
 	router.get('/', function (req, res) {
 		res.render('index', {
 			title: '우리언제만나'
@@ -158,7 +161,8 @@ module.exports = function (db) {
 				'members': members,
 				'limit': limit,
 				'day': null,
-				'night': null
+				'night': null,
+				'color': [maker, null, null, null, null, null, null, null]
 			});
 		}).then(function (r) {
 			console.log('addroom success');
@@ -171,9 +175,7 @@ module.exports = function (db) {
 		var pid = req.body.pid;
 		var name = req.body.name;
 		var picture = req.body.picture;
-		var room;
 		roomCollection.findOne({rid: rid}).then(function (doc) {
-			room = doc;
 			var i, alreadyMember = false;
 			var number = doc.members.length;
 			if (doc === null) {
@@ -194,8 +196,10 @@ module.exports = function (db) {
 					break;
 				}
 			}
+			console.log('alreadyMember?' + alreadyMember);
 			if (alreadyMember) {
 				console.log('enterroom result' + doc);
+				doc.alreadyMember = true;
 				res.send(doc);
 			} else {
 				console.log(number + ' ' + doc.limit);
@@ -207,7 +211,7 @@ module.exports = function (db) {
 					res.send('wrong_password');
 					return;
 				}
-				return roomCollection.updateOne({rid: rid}, {
+				return roomCollection.findOneAndUpdate({rid: rid, color: null}, {
 					$push: {
 						members: {
 							id: pid,
@@ -215,18 +219,16 @@ module.exports = function (db) {
 							picture: picture,
 							confirm: false
 						}
-					}
-				});
+					},
+					$set: {'color.$': pid}
+				}, {returnOriginal: false});
 			}
-		}).then(function () {
-			console.log('adding a member to room');
-			room.members.push({
-				id: pid,
-				name: name,
-				picture: picture,
-				confirm: false
-			});
-			res.send(room);
+		}).then(function (r) {
+			if (r) {
+				console.log('adding a member to room');
+				console.log(r);
+				res.send(r.value);
+			}
 		}).catch(errorHandler);
 	});
 	router.post('/roominfo/:rid', function (req, res) {
@@ -287,7 +289,7 @@ module.exports = function (db) {
 			res.send(docs);
 		}).catch(errorHandler);
 	});
-	// for debugging
+// for debugging
 	router.get('/getallmembers', function (req, res) {
 		memberCollection.find({}).toArray().then(function (docs) {
 			console.log(docs);
@@ -312,5 +314,5 @@ module.exports = function (db) {
 			res.send(docs);
 		}).catch(errorHandler);
 	});
-	return router;
-};
+}).catch(errorHandler);
+module.exports = router;

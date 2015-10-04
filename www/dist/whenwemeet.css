@@ -380,6 +380,12 @@ svg .triangle-3 { fill: greenyellow; }
 	line-height: 1;
 	width: 30%;
 }
+.chosen {
+	border: 1px solid greenyellow;
+}
+.color-option {
+	cursor: pointer;
+}
 .input-group input:not(:first-child):not(:last-child), .input-group select:not(:first-child):not(:last-child) {
 	border-radius: 0;
 }
@@ -575,9 +581,7 @@ td.busy {
 #confirm-calendar span {
 	display: none;
 }
-#all-confirmed {
-	display: none;
-}
+
 #room-footer {
 	background: #006666;
 	position: fixed;
@@ -654,7 +658,7 @@ td.busy {
 	background: orange !important;
 }
 .yellow {
-	background: yellow !important;
+	background: gold !important;
 }
 .yellowgreen {
 	background: yellowgreen !important;
@@ -673,6 +677,8 @@ td.busy {
 }
 .toggle-member {
 	display: inline-block;
+	cursor: pointer;
+	width: 12.5%;
 }
 .online {
 	color: lawngreen;
@@ -695,7 +701,7 @@ td.busy {
 	color: orange;
 }
 .yellow-text {
-	color: yellow;
+	color: gold;
 }
 .yellowgreen-text {
 	color: yellowgreen;
